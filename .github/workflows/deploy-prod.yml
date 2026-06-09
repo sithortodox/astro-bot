@@ -1,7 +1,11 @@
-name: Deploy
+name: Deploy to Production
 
 on:
   workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "deploy" to confirm'
+        required: true
 
 jobs:
   deploy:
@@ -9,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy to server
+      - name: Deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
