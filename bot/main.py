@@ -3,6 +3,7 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiohttp import web
 
 from bot.config import settings
 from bot.models import Base
@@ -11,7 +12,7 @@ from bot.handlers import start, tarot, numerology, horoscope, lunar, history, pr
 from bot.middlewares.user import UserMiddleware, RateLimitMiddleware
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=getattr(logging, settings.log_level.upper(), logging.INFO),
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
@@ -54,10 +55,30 @@ async def main():
     dp.startup.register(on_startup)
 
     logger.info("Bot starting...")
-    try:
-        await dp.start_polling(bot)
-    finally:
-        await bot.session.close()
+
+    if settings.webhook_url:
+        from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+
+        app = web.Application()
+        SimpleRequestHandler(dp, bot, secret_token=settings.webhook_secret).register(app, path="/webhook")
+        setup_application(app, dp, bot=bot)
+
+        runner = web.AppRunner(app)
+        await runner.setup()
+        site = web.TCPSite(runner, "0.0.0.0", 8080)
+        await site.start()
+
+        await bot.set_webhook(
+            url=f"{settings.webhook_url}/webhook",
+            secret_token=settings.webhook_secret,
+        )
+        logger.info(f"Webhook set to {settings.webhook_url}/webhook")
+        await asyncio.Event().wait()
+    else:
+        try:
+            await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
+        finally:
+            await bot.session.close()
 
 
 if __name__ == "__main__":

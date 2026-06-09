@@ -9,6 +9,10 @@ class Settings(BaseSettings):
     ollama_url: str = Field("http://localhost:11434", alias="OLLAMA_URL")
     ollama_model: str = Field("gemma3:4b", alias="OLLAMA_MODEL")
     admin_ids: list[int] = Field(default_factory=list, alias="ADMIN_IDS")
+    log_level: str = Field("INFO", alias="LOG_LEVEL")
+    redis_password: str = Field("", alias="REDIS_PASSWORD")
+    webhook_url: str = Field("", alias="WEBHOOK_URL")
+    webhook_secret: str = Field("", alias="WEBHOOK_SECRET")
 
     @field_validator("admin_ids", mode="before")
     @classmethod

@@ -52,6 +52,7 @@ htmlcov/
 .mypy_cache/
 .ruff_cache/
 
-#临时 файлы
+# Временные файлы
 /tmp/
 *.tmp
+TZ.md
