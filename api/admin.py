@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException, Depends, Header
 from sqlalchemy import select, func
 from datetime import date
-from typing import Optional
 import hashlib
 import hmac
 
@@ -29,7 +28,7 @@ async def get_stats(admin: bool = Depends(verify_admin_key)):
     async with async_session() as session:
         total_users = await session.scalar(select(func.count(User.id)))
         premium_users = await session.scalar(
-            select(func.count(User.id)).where(User.is_premium == True)
+            select(func.count(User.id)).where(User.is_premium)
         )
         today = date.today().isoformat()
         active_today = await session.scalar(

@@ -342,7 +342,7 @@ MINOR_ARCANA_DATA = {
 
 def generate_minor_arcana():
     cards = []
-    number_names = {
+    _number_names = {
         0: "Ace", 1: "Two", 2: "Three", 3: "Four", 4: "Five",
         5: "Six", 6: "Seven", 7: "Eight", 8: "Nine", 9: "Ten",
         10: "Page", 11: "Knight", 12: "Queen", 13: "King",
@@ -352,7 +352,6 @@ def generate_minor_arcana():
         for i, (name_en, name_ru, description) in enumerate(suit_data["cards"]):
             card_id = f"minor_{suit_en}_{i:02d}_{name_en.lower()}"
 
-            is_reversed = False
             upright = description
             reversed_text = f"Перевёрнутый {name_ru} {suit_data['suit_ru']} указывает на задержки, препятствия или нереализованный потенциал в области: {suit_data['theme']}."
 

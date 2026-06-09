@@ -6,8 +6,8 @@ from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKe
 from aiogram.filters import Command
 
 from bot.database import async_session
-from bot.models import User, History
-from bot.handlers.start import get_user, get_or_create_user
+from bot.models import History
+from bot.handlers.start import get_or_create_user
 from bot.services.ai_service import adapt_text
 
 router = Router()

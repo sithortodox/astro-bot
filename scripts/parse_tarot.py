@@ -1,8 +1,5 @@
 import json
-import re
 from pathlib import Path
-from bs4 import BeautifulSoup
-import requests
 
 
 BASE_URL = "https://sacred-texts.com/tarot/pkt/"

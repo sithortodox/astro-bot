@@ -1,7 +1,5 @@
 import ephem
-import hashlib
 from datetime import datetime, date, timedelta
-from typing import Optional
 
 # Cache for lunar data
 _lunar_cache: dict = {}

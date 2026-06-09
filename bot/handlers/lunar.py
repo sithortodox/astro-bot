@@ -6,8 +6,6 @@ from bot.services.lunar_service import (
     get_lunar_recommendation,
     get_daily_lunar_summary,
     get_lunar_calendar,
-    get_next_full_moon,
-    get_next_new_moon,
 )
 from bot.services.ai_service import adapt_text
 from bot.handlers.start import get_user

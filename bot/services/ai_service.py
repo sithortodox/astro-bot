@@ -1,6 +1,5 @@
 import httpx
 import logging
-from typing import Optional
 
 from bot.config import settings
 

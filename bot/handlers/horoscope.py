@@ -1,9 +1,8 @@
 from aiogram import Router
 from aiogram.types import Message
-from sqlalchemy import select
 
 from bot.database import async_session
-from bot.models import User, History
+from bot.models import History
 from bot.handlers.start import get_user
 from bot.services.horoscope_service import get_daily_horoscope
 from bot.services.ai_service import adapt_text

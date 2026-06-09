@@ -48,7 +48,7 @@ async def get_or_create_user(telegram_id: int, username: str = None, first_name:
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
-    user = await get_or_create_user(
+    await get_or_create_user(
         message.from_user.id,
         message.from_user.username,
         message.from_user.first_name,

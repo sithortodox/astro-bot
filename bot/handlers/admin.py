@@ -1,13 +1,12 @@
-from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram import Router
+from aiogram.types import Message
 from aiogram.filters import Command, CommandObject
 from sqlalchemy import select, func
-from datetime import date, datetime
+from datetime import date
 
 from bot.config import settings
 from bot.database import async_session
 from bot.models import User, History, Payment
-from bot.handlers.start import get_user
 
 router = Router()
 
@@ -46,7 +45,7 @@ async def cmd_stats(message: Message):
     async with async_session() as session:
         total_users = await session.scalar(select(func.count(User.id)))
         premium_users = await session.scalar(
-            select(func.count(User.id)).where(User.is_premium == True)
+            select(func.count(User.id)).where(User.is_premium)
         )
         today = date.today().isoformat()
         active_today = await session.scalar(

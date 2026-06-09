@@ -1,10 +1,8 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, LabeledPrice
+from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters import Command
 from datetime import datetime
 
-from bot.database import async_session
-from bot.models import User
 from bot.handlers.start import get_user
 from bot.services.payment_service import (
     PRODUCTS,
