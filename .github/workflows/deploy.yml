@@ -2,8 +2,14 @@ name: Deploy
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
+    inputs:
+      server_host:
+        description: 'Server host IP'
+        required: true
+      server_user:
+        description: 'SSH user'
+        required: true
+        default: 'root'
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -11,7 +17,6 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
 
     steps:
       - uses: actions/checkout@v4
@@ -19,8 +24,8 @@ jobs:
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
+          host: ${{ github.event.inputs.server_host }}
+          username: ${{ github.event.inputs.server_user }}
           key: ${{ secrets.SERVER_KEY }}
           script: |
             cd /opt/astro-bot
@@ -33,4 +38,4 @@ jobs:
       - name: Health check
         run: |
           sleep 30
-          curl -f http://${{ secrets.SERVER_HOST }}:8000/health || exit 1
+          curl -f http://${{ github.event.inputs.server_host }}:8000/health || exit 1
