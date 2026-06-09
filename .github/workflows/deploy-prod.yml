@@ -2,10 +2,6 @@ name: Deploy to Production
 
 on:
   workflow_dispatch:
-    inputs:
-      confirm:
-        description: 'Type "deploy" to confirm'
-        required: true
 
 jobs:
   deploy:
@@ -23,19 +19,15 @@ jobs:
             cd /opt/astro-bot 2>/dev/null || git clone https://github.com/sithortodox/astro-bot.git /opt/astro-bot
             cd /opt/astro-bot
             git pull origin main
-            if [ ! -f .env ]; then
-              cat > .env << 'ENVEOF'
-BOT_TOKEN=${{ secrets.BOT_TOKEN }}
-DATABASE_URL=postgresql+asyncpg://astro:astro_secret@postgres:5432/astro_bot
-REDIS_URL=redis://redis:6379/0
-OLLAMA_URL=http://ollama:11434
-OLLAMA_MODEL=gemma3:4b
-POSTGRES_USER=astro
-POSTGRES_PASSWORD=astro_secret
-POSTGRES_DB=astro_bot
-ADMIN_IDS=${{ secrets.ADMIN_IDS }}
-ENVEOF
-            fi
+            echo "BOT_TOKEN=${{ secrets.BOT_TOKEN }}" > .env
+            echo "DATABASE_URL=postgresql+asyncpg://astro:astro_secret@postgres:5432/astro_bot" >> .env
+            echo "REDIS_URL=redis://redis:6379/0" >> .env
+            echo "OLLAMA_URL=http://ollama:11434" >> .env
+            echo "OLLAMA_MODEL=gemma3:4b" >> .env
+            echo "POSTGRES_USER=astro" >> .env
+            echo "POSTGRES_PASSWORD=astro_secret" >> .env
+            echo "POSTGRES_DB=astro_bot" >> .env
+            echo "ADMIN_IDS=${{ secrets.ADMIN_IDS }}" >> .env
             docker compose down || true
             docker compose up -d --build
             sleep 15
