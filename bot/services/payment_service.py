@@ -9,7 +9,7 @@ from bot.models import User, Payment
 logger = logging.getLogger(__name__)
 
 # Products configuration
-PRODUCTS = {
+PRODUCTS: dict[str, dict[str, int | str]] = {
     "premium_monthly": {
         "name": "Premium Monthly",
         "price_stars": 100,
@@ -77,7 +77,7 @@ async def activate_premium(user_id: int, product: str, payment_id: str, provider
         if not user:
             return False
 
-        duration = product_data.get("duration_days", 0)
+        duration = int(product_data.get("duration_days", 0))
         if duration > 0:
             if user.premium_until:
                 try:

@@ -52,7 +52,7 @@ class RateLimitMiddleware(BaseMiddleware):
         data: Dict[str, Any],
     ) -> Any:
         if isinstance(event, Message) and event.from_user:
-            user: User = data.get("db_user")
+            user: User | None = data.get("db_user")
             if not user:
                 return await handler(event, data)
 
