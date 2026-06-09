@@ -30,7 +30,7 @@ def create_backup():
     ]
 
     env = os.environ.copy()
-    env["PGPASSWORD"] = os.getenv("POSTGRES_PASSWORD", "astro_secret")
+    env["PGPASSWORD"] = os.getenv("POSTGRES_PASSWORD")
 
     try:
         subprocess.run(cmd, env=env, check=True, capture_output=True)
