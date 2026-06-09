@@ -2,14 +2,6 @@ name: Deploy
 
 on:
   workflow_dispatch:
-    inputs:
-      server_host:
-        description: 'Server host IP'
-        required: true
-      server_user:
-        description: 'SSH user'
-        required: true
-        default: 'root'
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -24,18 +16,31 @@ jobs:
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ github.event.inputs.server_host }}
-          username: ${{ github.event.inputs.server_user }}
-          key: ${{ secrets.SERVER_KEY }}
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
           script: |
-            cd /opt/astro-bot
+            cd /opt/astro-bot 2>/dev/null || git clone https://github.com/sithortodox/astro-bot.git /opt/astro-bot && cd /opt/astro-bot
             git pull origin main
-            docker-compose down
-            docker-compose build --no-cache
-            docker-compose up -d
-            docker-compose logs --tail=20 bot
-
-      - name: Health check
-        run: |
-          sleep 30
-          curl -f http://${{ github.event.inputs.server_host }}:8000/health || exit 1
+            
+            if [ ! -f .env ]; then
+              cat > .env << 'ENVEOF'
+BOT_TOKEN=${{ secrets.BOT_TOKEN }}
+DATABASE_URL=postgresql+asyncpg://astro:astro_secret@postgres:5432/astro_bot
+REDIS_URL=redis://redis:6379/0
+OLLAMA_URL=http://ollama:11434
+OLLAMA_MODEL=gemma3:4b
+POSTGRES_USER=astro
+POSTGRES_PASSWORD=astro_secret
+POSTGRES_DB=astro_bot
+ADMIN_IDS=${{ secrets.ADMIN_IDS }}
+ENVEOF
+            fi
+            
+            docker compose down || true
+            docker compose pull || true
+            docker compose up -d --build
+            
+            sleep 10
+            docker compose ps
+            docker compose logs --tail=30 bot
