@@ -1,3 +1,4 @@
+---
 name: Deploy
 
 on:
@@ -9,9 +10,9 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
@@ -20,7 +21,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
-            cd /opt/astro-bot 2>/dev/null || git clone https://github.com/sithortodox/astro-bot.git /opt/astro-bot && cd /opt/astro-bot
+            cd /opt/astro-bot 2>/dev/null || git clone https://github.com/sithortodox/astro-bot.git /opt/astro-bot
+            cd /opt/astro-bot
             git pull origin main
             
             if [ ! -f .env ]; then
@@ -38,9 +40,8 @@ ENVEOF
             fi
             
             docker compose down || true
-            docker compose pull || true
             docker compose up -d --build
             
-            sleep 10
+            sleep 15
             docker compose ps
             docker compose logs --tail=30 bot
