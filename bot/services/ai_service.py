@@ -5,35 +5,34 @@ from bot.config import settings
 
 logger = logging.getLogger(__name__)
 
-# Prompt templates for different contexts
 PROMPTS = {
     "tarot": (
-        "You are a mystical tarot reader. Adapt this tarot reading for a personal consultation. "
-        "Keep the core meaning but make it warm, personal, and insightful. "
-        "Add the user's name if provided. Do not change the card meaning or keywords. "
-        "Write in Russian. Keep it under 150 words.\n\n{context}\n\n{content}"
+        "Ты — мистический таролог. Адаптируй это расклад таро для личной консультации. "
+        "Сохрани основной смысл, но сделай его тёплым, личным и проникновенным. "
+        "Добавь имя пользователя, если оно есть. Не меняй значение карты и ключевые слова. "
+        "Пиши на русском. Не более 150 слов.\n\n{context}\n\n{content}"
     ),
     "numerology": (
-        "You are a wise numerologist. Adapt this numerology reading for a personal consultation. "
-        "Make it encouraging and insightful. Add the user's name if provided. "
-        "Do not change the numbers or their core meanings. "
-        "Write in Russian. Keep it under 100 words.\n\n{context}\n\n{content}"
+        "Ты — мудрый нумеролог. Адаптируй это нумерологическое чтение для личной консультации. "
+        "Сделай его воодушевляющим и проникновенным. Добавь имя пользователя, если оно есть. "
+        "Не меняй числа и их основные значения. "
+        "Пиши на русском. Не более 100 слов.\n\n{context}\n\n{content}"
     ),
     "horoscope": (
-        "You are a friendly astrologer. Adapt this daily horoscope to be warm and personal. "
-        "Add the user's name and zodiac sign if provided. "
-        "Keep the core prediction but make it feel like a personal message. "
-        "Write in Russian. Keep it under 80 words.\n\n{context}\n\n{content}"
+        "Ты — дружелюбный астролог. Адаптируй этот ежедневный гороскоп, чтобы он был тёплым и личным. "
+        "Добавь имя пользователя и знак зодиака, если они есть. "
+        "Сохрани основное предсказание, но сделай его личным сообщением. "
+        "Пиши на русском. Не более 80 слов.\n\n{context}\n\n{content}"
     ),
     "lunar": (
-        "You are a gentle lunar guide. Adapt this lunar recommendation to be soothing and helpful. "
-        "Make it feel like advice from a wise friend. "
-        "Write in Russian. Keep it under 80 words.\n\n{context}\n\n{content}"
+        "Ты — добрый лунный гид. Адаптируй эту лунную рекомендацию, чтобы она была успокаивающей и полезной. "
+        "Сделай её советом от мудрого друга. "
+        "Пиши на русском. Не более 80 слов.\n\n{context}\n\n{content}"
     ),
     "general": (
-        "Adapt this text to be warm, personal, and helpful. "
-        "Add the user's name if provided. Keep the core meaning. "
-        "Write in Russian.\n\n{context}\n\n{content}"
+        "Адаптируй этот текст, чтобы он был тёплым, личным и полезным. "
+        "Добавь имя пользователя, если оно есть. Сохрани основной смысл. "
+        "Пиши на русском.\n\n{context}\n\n{content}"
     ),
 }
 
@@ -42,14 +41,14 @@ def build_context(user=None, extra: str = "") -> str:
     parts = []
     if user:
         if user.first_name:
-            parts.append(f"Name: {user.first_name}")
+            parts.append(f"Имя: {user.first_name}")
         if user.zodiac_sign:
-            parts.append(f"Zodiac: {user.zodiac_sign}")
+            parts.append(f"Знак зодиака: {user.zodiac_sign}")
         if user.birth_date:
-            parts.append(f"Birth date: {user.birth_date}")
+            parts.append(f"Дата рождения: {user.birth_date}")
     if extra:
         parts.append(extra)
-    return "User info: " + ", ".join(parts) if parts else ""
+    return "Информация о пользователе: " + ", ".join(parts) if parts else ""
 
 
 async def adapt_text(
@@ -60,65 +59,63 @@ async def adapt_text(
     temperature: float = 0.7,
     max_retries: int = 2,
 ) -> str:
-    if not settings.ollama_url:
+    if not settings.gigachat_api_key:
         return text
 
     context = build_context(user, extra_context)
     prompt_template = PROMPTS.get(context_type, PROMPTS["general"])
     prompt = prompt_template.format(context=context, content=text)
 
+    headers = {
+        "Authorization": f"Bearer {settings.gigachat_api_key}",
+        "Content-Type": "application/json",
+    }
+
+    payload = {
+        "model": settings.gigachat_model,
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": temperature,
+        "top_p": 0.9,
+        "max_tokens": 200,
+    }
+
     for attempt in range(max_retries + 1):
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
+            async with httpx.AsyncClient(timeout=30.0, verify=False) as client:
                 response = await client.post(
-                    f"{settings.ollama_url}/api/generate",
-                    json={
-                        "model": settings.ollama_model,
-                        "prompt": prompt,
-                        "stream": False,
-                        "options": {
-                            "temperature": temperature,
-                            "top_p": 0.9,
-                            "num_predict": 200,
-                        },
-                    },
+                    f"{settings.gigachat_url}/chat/completions",
+                    headers=headers,
+                    json=payload,
                 )
                 if response.status_code == 200:
                     data = response.json()
-                    result = data.get("response", "").strip()
+                    result = data.get("choices", [{}])[0].get("message", {}).get("content", "").strip()
                     if result and len(result) > 20:
                         return result
-                    logger.warning(f"Ollama returned short response (attempt {attempt + 1})")
+                    logger.warning(f"GigaChat вернул короткий ответ (попытка {attempt + 1})")
                 else:
-                    logger.warning(f"Ollama returned status {response.status_code}")
+                    logger.warning(f"GigaChat вернул статус {response.status_code}: {response.text[:200]}")
         except httpx.ConnectError:
-            logger.warning(f"Cannot connect to Ollama at {settings.ollama_url}")
+            logger.warning(f"Не удалось подключиться к GigaChat: {settings.gigachat_url}")
             break
         except httpx.TimeoutException:
-            logger.warning(f"Ollama timeout (attempt {attempt + 1})")
+            logger.warning(f"GigaChat таймаут (попытка {attempt + 1})")
         except Exception as e:
-            logger.error(f"Ollama error: {e}")
+            logger.error(f"GigaChat ошибка: {e}")
             break
 
     return text
 
 
-async def check_ollama_health() -> bool:
+async def check_gigachat_health() -> bool:
+    if not settings.gigachat_api_key:
+        return False
     try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
-            response = await client.get(f"{settings.ollama_url}/api/tags")
+        async with httpx.AsyncClient(timeout=10.0, verify=False) as client:
+            response = await client.get(
+                f"{settings.gigachat_url}/models",
+                headers={"Authorization": f"Bearer {settings.gigachat_api_key}"},
+            )
             return response.status_code == 200
     except Exception:
         return False
-
-
-async def list_models() -> list[str]:
-    try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
-            response = await client.get(f"{settings.ollama_url}/api/tags")
-            if response.status_code == 200:
-                data = response.json()
-                return [m.get("name", "") for m in data.get("models", [])]
-    except Exception:
-        pass
-    return []

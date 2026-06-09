@@ -30,23 +30,6 @@ services:
       retries: 5
     networks: [backend]
 
-  ollama:
-    image: ollama/ollama:0.4.7
-    restart: unless-stopped
-    volumes:
-      - ollama_data:/root/.ollama
-    deploy:
-      resources:
-        limits:
-          memory: 4G
-    healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:11434/api/tags || exit 1"]
-      interval: 10s
-      timeout: 10s
-      retries: 10
-      start_period: 60s
-    networks: [backend]
-
   migrate:
     image: astro-bot:latest
     build:
@@ -69,14 +52,13 @@ services:
         condition: service_completed_successfully
       redis:
         condition: service_healthy
-      ollama:
-        condition: service_healthy
     environment:
       BOT_TOKEN: ${BOT_TOKEN}
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
-      OLLAMA_URL: http://ollama:11434
-      OLLAMA_MODEL: ${OLLAMA_MODEL:-gemma3:4b}
+      GIGACHAT_API_KEY: ${GIGACHAT_API_KEY:-}
+      GIGACHAT_URL: ${GIGACHAT_URL:-https://gigachat.devices.sberbank.ru/api/v1}
+      GIGACHAT_MODEL: ${GIGACHAT_MODEL:-GigaChat-Lite}
       ADMIN_IDS: ${ADMIN_IDS:-}
     volumes:
       - ./knowledge_base:/app/knowledge_base:ro
@@ -115,4 +97,3 @@ networks:
 volumes:
   postgres_data:
   redis_data:
-  ollama_data:

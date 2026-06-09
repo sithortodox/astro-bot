@@ -6,13 +6,15 @@ class Settings(BaseSettings):
     bot_token: str = Field(..., alias="BOT_TOKEN")
     database_url: str = Field(..., alias="DATABASE_URL")
     redis_url: str = Field("redis://localhost:6379/0", alias="REDIS_URL")
-    ollama_url: str = Field("http://localhost:11434", alias="OLLAMA_URL")
-    ollama_model: str = Field("gemma3:4b", alias="OLLAMA_MODEL")
     admin_ids: list[int] = Field(default_factory=list, alias="ADMIN_IDS")
     log_level: str = Field("INFO", alias="LOG_LEVEL")
     redis_password: str = Field("", alias="REDIS_PASSWORD")
     webhook_url: str = Field("", alias="WEBHOOK_URL")
     webhook_secret: str = Field("", alias="WEBHOOK_SECRET")
+
+    gigachat_api_key: str = Field("", alias="GIGACHAT_API_KEY")
+    gigachat_url: str = Field("https://gigachat.devices.sberbank.ru/api/v1", alias="GIGACHAT_URL")
+    gigachat_model: str = Field("GigaChat-Lite", alias="GIGACHAT_MODEL")
 
     @field_validator("admin_ids", mode="before")
     @classmethod
