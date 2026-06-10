@@ -336,7 +336,7 @@ async def callback_action_tarot(callback_query: CallbackQuery):
     await callback_query.answer()
     from bot.handlers.tarot import (
         draw_card, draw_cards, format_card_short, format_card_full,
-        format_card_with_position, save_history,
+        save_history,
     )
     from bot.services.ai_service import adapt_text
     from bot.services.card_images import get_card_image
@@ -390,16 +390,21 @@ async def callback_action_tarot(callback_query: CallbackQuery):
             await callback_query.answer("\u274c Ошибка")
             return
 
+        from bot.handlers.tarot import format_card_interpretation
+
         drawn = draw_cards(3)
-        positions = ["Прошлое", "Настоящее", "Будущее"]
-        descriptions = []
         media = []
+        card_names = []
+        interpretations = []
 
         for i, (card, is_rev) in enumerate(drawn):
-            pos = positions[i] if i < 3 else f"Карта {i+1}"
-            text = format_card_with_position(card, is_rev, pos)
-            text = await adapt_text(text, user, context_type="tarot")
-            descriptions.append(text)
+            name = card.get('name_ru', card.get('name', '?'))
+            prefix = "\u2b07\ufe0f " if is_rev else ""
+            card_names.append(f"{prefix}{name}")
+
+            interp = format_card_interpretation(card, is_rev)
+            interp = await adapt_text(interp, user, context_type="tarot")
+            interpretations.append(interp)
 
             img_buf = get_card_image(card["id"], is_rev)
             if img_buf:
@@ -408,19 +413,23 @@ async def callback_action_tarot(callback_query: CallbackQuery):
                     media=BufferedInputFile(img_buf.read(), filename=f"{card['id']}.png"),
                 ))
 
-        full_text = "\n\n".join(descriptions)
+        header = "\U0001f0cf Тебе выпали: " + " | ".join(card_names)
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:tarot")]
         ])
 
         if media and len(media) == 3:
-            if len(full_text) <= 1024:
-                media[-1].caption = full_text
-                media[-1].parse_mode = None
+            media[-1].caption = header
+            media[-1].parse_mode = None
             await bot_instance.send_media_group(chat_id=callback_query.message.chat.id, media=media)
-            if len(full_text) > 1024:
-                await callback_query.message.answer(full_text, reply_markup=keyboard)
+            interp_text = "\n\n".join(interpretations)
+            if len(interp_text) > 4000:
+                for part in interpretations:
+                    await callback_query.message.answer(part)
+            else:
+                await callback_query.message.answer(interp_text, reply_markup=keyboard)
         else:
+            full_text = header + "\n\n" + "\n\n".join(interpretations)
             await callback_query.message.answer(full_text, reply_markup=keyboard)
 
         await save_history(user.id, "tarot3", "3 cards")

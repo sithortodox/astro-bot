@@ -66,7 +66,25 @@ def format_card_full(card: dict, is_reversed: bool = False) -> str:
 def format_card_with_position(card: dict, is_reversed: bool, position: str) -> str:
     emoji_map = {"Прошлое": "\u23f0", "Настоящее": "\u2714\ufe0f", "Будущее": "\U0001f52e"}
     emoji = emoji_map.get(position, "\u25b6")
-    return f"{emoji} {position}\n{format_card_short(card, is_reversed)}"
+    prefix = "\u2b07\ufe0f " if is_reversed else ""
+    name = card.get('name_ru', card.get('name', '?'))
+    return f"{emoji} {position}\n{prefix}{name}"
+
+
+def format_card_interpretation(card: dict, is_reversed: bool) -> str:
+    prefix = "\u2b07\ufe0f Перевёрнутая " if is_reversed else ""
+    name = card.get('name_ru', card.get('name', '?'))
+    meaning = card.get("reversed_meaning" if is_reversed else "upright_meaning", "")
+    lines = [
+        f"{prefix}{name}",
+        "",
+        meaning,
+        "",
+        f"\u2764\ufe0f Любовь: {card.get('love', 'N/A')}",
+        f"\u2605 Карьера: {card.get('career', 'N/A')}",
+        f"\u2728 Финансы: {card.get('finance', 'N/A')}",
+    ]
+    return "\n".join(lines)
 
 
 @router.message(Command("tarot"))
