@@ -15,15 +15,17 @@ ZODIAC_EMOJI = {
 
 async def generate_horoscope(zodiac_sign: str, period: str, user=None) -> str:
     emoji = ZODIAC_EMOJI.get(zodiac_sign, "")
+    from bot.services.ai_service import adapt_text
 
     if period == "weekly":
-        from bot.services.ai_service import adapt_text
         content = f"Знак зодиака: {zodiac_sign}. Составь гороскоп на неделю."
         text = await adapt_text(content, user, context_type="horoscope_weekly")
         return f"{emoji} Гороскоп на неделю: {zodiac_sign}\n\n{text}"
 
     horoscope = get_daily_horoscope(zodiac_sign)
-    return f"{emoji} Гороскоп на сегодня: {zodiac_sign}\n\n{horoscope}"
+    content = f"Знак зодиака: {zodiac_sign}. Гороскоп на сегодня: {horoscope}"
+    text = await adapt_text(content, user, context_type="horoscope")
+    return f"{emoji} Гороскоп на сегодня: {zodiac_sign}\n\n{text}"
 
 
 @router.message(Command("horoscope"))
