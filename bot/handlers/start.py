@@ -499,7 +499,6 @@ async def callback_action_numerology(callback_query: CallbackQuery):
 async def callback_action_horoscope(callback_query: CallbackQuery):
     await callback_query.answer()
     from bot.handlers.horoscope import generate_horoscope
-    from bot.services.ai_service import adapt_text
 
     user = await get_user(callback_query.from_user.id)
     if not user:
@@ -516,8 +515,7 @@ async def callback_action_horoscope(callback_query: CallbackQuery):
         return
 
     period = callback_query.data.split(":")[2]
-    response = generate_horoscope(user.zodiac_sign, period)
-    response = await adapt_text(response, user, context_type="horoscope")
+    response = await generate_horoscope(user.zodiac_sign, period, user)
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:horoscope")]
