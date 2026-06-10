@@ -60,6 +60,48 @@ def get_settings_keyboard() -> InlineKeyboardMarkup:
     ])
 
 
+def get_year_keyboard() -> InlineKeyboardMarkup:
+    years = list(range(2010, 1959, -1))
+    keyboard = []
+    for i in range(0, len(years), 5):
+        row = [InlineKeyboardButton(text=str(y), callback_data=f"bd:y:{y}") for y in years[i:i+5]]
+        keyboard.append(row)
+    keyboard.append([InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:settings")])
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+
+MONTHS = [
+    ("\u2762 Январь", "01"), ("\u2766 Февраль", "02"), ("\U0001f33c Март", "03"),
+    ("\U0001f33a Апрель", "04"), ("\U0001f33b Май", "05"), ("\U0001f33f Июнь", "06"),
+    ("\U0001f33e Июль", "08"), ("\U0001f342 Август", "08"), ("\U0001f341 Сентябрь", "09"),
+    ("\U0001f343 Октябрь", "10"), ("\U0001f344 Ноябрь", "11"), ("\u2744 Декабрь", "12"),
+]
+
+
+def get_month_keyboard(year: int) -> InlineKeyboardMarkup:
+    keyboard = []
+    for i in range(0, len(MONTHS), 3):
+        row = []
+        for name, num in MONTHS[i:i+3]:
+            row.append(InlineKeyboardButton(text=name, callback_data=f"bd:m:{year}:{num}"))
+        keyboard.append(row)
+    keyboard.append([InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="bd:back:year")])
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+
+def get_day_keyboard(year: int, month: int) -> InlineKeyboardMarkup:
+    import calendar
+    days_in_month = calendar.monthrange(year, month)[1]
+    keyboard = []
+    for i in range(1, days_in_month + 1, 7):
+        row = []
+        for d in range(i, min(i + 7, days_in_month + 1)):
+            row.append(InlineKeyboardButton(text=str(d), callback_data=f"bd:d:{year}:{month:02d}:{d:02d}"))
+        keyboard.append(row)
+    keyboard.append([InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data=f"bd:back:month:{year}")])
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+
 async def get_user(telegram_id: int) -> User | None:
     async with async_session() as session:
         result = await session.execute(
@@ -90,6 +132,10 @@ class Onboarding(StatesGroup):
     birth_date = State()
     birth_time = State()
     birth_place = State()
+
+
+class SettingsPlace(StatesGroup):
+    waiting_place = State()
 
 
 def _make_fake_msg(callback_query: CallbackQuery, text: str = "") -> Message:
@@ -452,31 +498,161 @@ async def callback_action_setzodiac(callback_query: CallbackQuery):
 async def callback_action_setbirth(callback_query: CallbackQuery):
     await callback_query.answer()
     await callback_query.message.answer(
-        "Отправь дату рождения в формате:\n"
-        "/setbirth ДД.ММ.ГГГГ\n\n"
-        "Пример: /setbirth 15.03.1990"
+        "\U0001f4c5 Выбери год рождения:",
+        reply_markup=get_year_keyboard()
+    )
+
+
+@router.callback_query(F.data.startswith("bd:y:"))
+async def callback_bd_year(callback_query: CallbackQuery):
+    year = int(callback_query.data.split(":")[2])
+    await callback_query.answer()
+    await callback_query.message.answer(
+        f"\U0001f4c5 {year} — выбери месяц:",
+        reply_markup=get_month_keyboard(year)
+    )
+
+
+@router.callback_query(F.data.startswith("bd:m:"))
+async def callback_bd_month(callback_query: CallbackQuery):
+    parts = callback_query.data.split(":")
+    year, month = int(parts[2]), int(parts[3])
+    await callback_query.answer()
+    await callback_query.message.answer(
+        f"\U0001f4c5 {year}/{month:02d} — выбери день:",
+        reply_markup=get_day_keyboard(year, month)
+    )
+
+
+@router.callback_query(F.data.startswith("bd:d:"))
+async def callback_bd_day(callback_query: CallbackQuery):
+    parts = callback_query.data.split(":")
+    year, month, day = int(parts[2]), int(parts[3]), int(parts[4])
+    date_str = f"{day:02d}.{month:02d}.{year}"
+    
+    async with async_session() as session:
+        result = await session.execute(
+            select(User).where(User.telegram_id == callback_query.from_user.id)
+        )
+        user = result.scalar_one_or_none()
+        if user:
+            user.birth_date = date_str
+            await session.commit()
+    
+    await callback_query.answer()
+    await callback_query.message.answer(f"\u2705 Дата рождения установлена: {date_str}")
+
+
+@router.callback_query(F.data == "bd:back:year")
+async def callback_bd_back_year(callback_query: CallbackQuery):
+    await callback_query.answer()
+    await callback_query.message.answer(
+        "\U0001f4c5 Выбери год рождения:",
+        reply_markup=get_year_keyboard()
+    )
+
+
+@router.callback_query(F.data.startswith("bd:back:month:"))
+async def callback_bd_back_month(callback_query: CallbackQuery):
+    year = int(callback_query.data.split(":")[3])
+    await callback_query.answer()
+    await callback_query.message.answer(
+        f"\U0001f4c5 {year} — выбери месяц:",
+        reply_markup=get_month_keyboard(year)
     )
 
 
 @router.callback_query(F.data == "action:settime")
 async def callback_action_settime(callback_query: CallbackQuery):
     await callback_query.answer()
-    await callback_query.message.answer(
-        "Отправь время рождения в формате:\n"
-        "/settime ЧЧ:ММ\n\n"
-        "Пример: /settime 14:30\n\n"
-        "Если не знаешь время, отправь /settime -"
-    )
+    hours = list(range(0, 24))
+    keyboard = []
+    for i in range(0, 24, 6):
+        row = [InlineKeyboardButton(text=f"{h:02d}", callback_data=f"bt:h:{h:02d}") for h in hours[i:i+6]]
+        keyboard.append(row)
+    keyboard.append([InlineKeyboardButton(text="\u274c Не знаю", callback_data="bt:skip")])
+    keyboard.append([InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:settings")])
+    markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
+    await callback_query.message.answer("\U0001f552 Выбери час рождения:", reply_markup=markup)
+
+
+@router.callback_query(F.data.startswith("bt:h:"))
+async def callback_bt_hour(callback_query: CallbackQuery):
+    hour = int(callback_query.data.split(":")[2])
+    minutes = [0, 15, 30, 45]
+    keyboard = []
+    row = [InlineKeyboardButton(text=f":{m:02d}", callback_data=f"bt:m:{hour:02d}:{m:02d}") for m in minutes]
+    keyboard.append(row)
+    keyboard.append([InlineKeyboardButton(text="\u274c Не знаю", callback_data="bt:skip")])
+    keyboard.append([InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="action:settime")])
+    markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
+    await callback_query.answer()
+    await callback_query.message.answer(f"\U0001f552 {hour:02d}:__ — выбери минуты:", reply_markup=markup)
+
+
+@router.callback_query(F.data.startswith("bt:m:"))
+async def callback_bt_minute(callback_query: CallbackQuery):
+    parts = callback_query.data.split(":")
+    hour, minute = int(parts[2]), int(parts[3])
+    time_str = f"{hour:02d}:{minute:02d}"
+    
+    async with async_session() as session:
+        result = await session.execute(
+            select(User).where(User.telegram_id == callback_query.from_user.id)
+        )
+        user = result.scalar_one_or_none()
+        if user:
+            user.birth_time = time_str
+            await session.commit()
+    
+    await callback_query.answer()
+    await callback_query.message.answer(f"\u2705 Время рождения установлено: {time_str}")
+
+
+@router.callback_query(F.data == "bt:skip")
+async def callback_bt_skip(callback_query: CallbackQuery):
+    async with async_session() as session:
+        result = await session.execute(
+            select(User).where(User.telegram_id == callback_query.from_user.id)
+        )
+        user = result.scalar_one_or_none()
+        if user:
+            user.birth_time = None
+            await session.commit()
+    
+    await callback_query.answer()
+    await callback_query.message.answer("\u2705 Время рождения пропущено")
 
 
 @router.callback_query(F.data == "action:setplace")
-async def callback_action_setplace(callback_query: CallbackQuery):
+async def callback_action_setplace(callback_query: CallbackQuery, state: FSMContext):
+    await state.set_state(SettingsPlace.waiting_place)
     await callback_query.answer()
     await callback_query.message.answer(
-        "Отправь место рождения (город):\n"
-        "/setplace Москва\n\n"
-        "Если не знаешь, отправь /setplace -"
+        "\U0001f4cd Отправь город рождения:\n\n"
+        "Пример: Москва\n\n"
+        "Если не знаешь — нажми кнопку ниже.",
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="\u274c Не знаю", callback_data="bp:skip")],
+            [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:settings")],
+        ])
     )
+
+
+@router.callback_query(F.data == "bp:skip")
+async def callback_bp_skip(callback_query: CallbackQuery, state: FSMContext):
+    await state.clear()
+    async with async_session() as session:
+        result = await session.execute(
+            select(User).where(User.telegram_id == callback_query.from_user.id)
+        )
+        user = result.scalar_one_or_none()
+        if user:
+            user.birth_place = None
+            await session.commit()
+    
+    await callback_query.answer()
+    await callback_query.message.answer("\u2705 Место рождения пропущено")
 
 
 @router.callback_query(F.data == "action:premium")
@@ -622,6 +798,26 @@ async def cmd_setplace(message: Message):
             await message.answer(f"\U0001f4cd Место рождения установлено: {display}")
         else:
             await message.answer("Сначала нажми /start")
+
+
+@router.message(SettingsPlace.waiting_place)
+async def handle_place_input(message: Message, state: FSMContext):
+    place = message.text.strip()
+    if place == "-":
+        place = None
+
+    async with async_session() as session:
+        result = await session.execute(
+            select(User).where(User.telegram_id == message.from_user.id)
+        )
+        user = result.scalar_one_or_none()
+        if user:
+            user.birth_place = place
+            await session.commit()
+
+    await state.clear()
+    display = place or "Неизвестно"
+    await message.answer(f"\U0001f4cd Место рождения установлено: {display}")
 
 
 async def cmd_profile(message: Message):
