@@ -419,8 +419,10 @@ async def callback_action_tarot(callback_query: CallbackQuery):
         ])
 
         if media and len(media) == 3:
-            media[-1].caption = header
-            media[-1].parse_mode = None
+            media[-1] = InputMediaPhoto(
+                media=media[-1].media,
+                caption=header,
+            )
             await bot_instance.send_media_group(chat_id=callback_query.message.chat.id, media=media)
             interp_text = "\n\n".join(interpretations)
             if len(interp_text) > 4000:
