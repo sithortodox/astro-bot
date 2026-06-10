@@ -109,9 +109,10 @@ async def cmd_broadcast(message: Message, command: CommandObject):
     sent = 0
     failed = 0
 
-    from bot.main import bot_instance
+    from bot.state import bot_instance
     if not bot_instance:
-        return "Bot not initialized"
+        await message.answer("⚠️ Бот не инициализирован")
+        return
     for user_id in user_ids:
         try:
             await bot_instance.send_message(user_id, f" Broadcast:\n\n{text}")

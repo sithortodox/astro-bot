@@ -10,14 +10,13 @@ from bot.models import Base
 from bot.database import engine
 from bot.handlers import start, tarot, numerology, horoscope, lunar, history, premium, admin
 from bot.middlewares.user import UserMiddleware, RateLimitMiddleware
+import bot.state as state
 
 logging.basicConfig(
     level=getattr(logging, settings.log_level.upper(), logging.INFO),
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
-
-bot_instance = None
 
 
 async def on_startup():
@@ -27,13 +26,11 @@ async def on_startup():
 
 
 async def main():
-    global bot_instance
-
     bot = Bot(
         token=settings.bot_token,
         default=DefaultBotProperties(parse_mode="HTML"),
     )
-    bot_instance = bot
+    state.bot_instance = bot
 
     storage = MemoryStorage()
     dp = Dispatcher(storage=storage)

@@ -1,12 +1,11 @@
 import ephem
 from datetime import datetime, date, timedelta
-from typing import Optional
 
 # Cache for lunar data
 _lunar_cache: dict = {}
 
 
-def get_lunar_phase(target_date: Optional[date] = None) -> tuple[str, str, float]:
+def get_lunar_phase(target_date: date | None = None) -> tuple[str, str, float]:
     if target_date is None:
         target_date = date.today()
 
@@ -43,7 +42,7 @@ def get_lunar_phase(target_date: Optional[date] = None) -> tuple[str, str, float
     return result
 
 
-def get_moon_sign(target_date: Optional[date] = None) -> str:
+def get_moon_sign(target_date: date | None = None) -> str:
     if target_date is None:
         target_date = date.today()
 
@@ -63,7 +62,7 @@ def get_moon_sign(target_date: Optional[date] = None) -> str:
     return f"{emoji} {name}"
 
 
-def get_next_full_moon(from_date: Optional[date] = None) -> date:
+def get_next_full_moon(from_date: date | None = None) -> date:
     if from_date is None:
         from_date = date.today()
 
@@ -79,7 +78,7 @@ def get_next_full_moon(from_date: Optional[date] = None) -> date:
     return from_date + timedelta(days=14)
 
 
-def get_next_new_moon(from_date: Optional[date] = None) -> date:
+def get_next_new_moon(from_date: date | None = None) -> date:
     if from_date is None:
         from_date = date.today()
 
