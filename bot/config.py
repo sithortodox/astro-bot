@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     gigachat_api_key: str = Field("", alias="GIGACHAT_API_KEY")
     gigachat_url: str = Field("https://gigachat.devices.sberbank.ru/api/v1", alias="GIGACHAT_URL")
     gigachat_model: str = Field("GigaChat-Lite", alias="GIGACHAT_MODEL")
+    gigachat_oauth_url: str = Field("https://ngw.devices.sberbank.ru:9443/api/v2/oauth", alias="GIGACHAT_OAUTH_URL")
 
     @field_validator("admin_ids", mode="before")
     @classmethod

@@ -45,7 +45,16 @@ def test_numerology_service():
 
     assert reduce_to_single(123) == 6
     assert reduce_to_single(999) == 9
+    assert reduce_to_single(10) == 1
     assert calculate_life_path("01.01.2000") > 0
+
+
+def test_numerology_life_path():
+    from bot.services.numerology_service import calculate_life_path
+
+    assert calculate_life_path("01.01.1990") == 3
+    assert calculate_life_path("29.11.1975") == 8
+    assert calculate_life_path("15.08.1985") == 1
 
 
 def test_horoscope_service():

@@ -1,9 +1,13 @@
 import httpx
 import logging
+import time
+import uuid
 
 from bot.config import settings
 
 logger = logging.getLogger(__name__)
+
+_token_cache: dict = {"token": None, "expires_at": 0}
 
 PROMPTS = {
     "tarot": (
@@ -51,6 +55,27 @@ def build_context(user=None, extra: str = "") -> str:
     return "Информация о пользователе: " + ", ".join(parts) if parts else ""
 
 
+async def _get_access_token() -> str:
+    if _token_cache["token"] and time.time() < _token_cache["expires_at"] - 60:
+        return _token_cache["token"]
+
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        response = await client.post(
+            settings.gigachat_oauth_url,
+            headers={
+                "Authorization": f"Basic {settings.gigachat_api_key}",
+                "RqUID": str(uuid.uuid4()),
+            },
+            data={"scope": "GIGACHAT_API_PERS"},
+        )
+        response.raise_for_status()
+        data = response.json()
+        _token_cache["token"] = data["access_token"]
+        _token_cache["expires_at"] = data["expires_at"] / 1000
+        logger.info("GigaChat access token obtained")
+        return _token_cache["token"]
+
+
 async def adapt_text(
     text: str,
     user=None,
@@ -66,8 +91,14 @@ async def adapt_text(
     prompt_template = PROMPTS.get(context_type, PROMPTS["general"])
     prompt = prompt_template.format(context=context, content=text)
 
+    try:
+        access_token = await _get_access_token()
+    except Exception as e:
+        logger.error(f"Failed to get GigaChat access token: {e}")
+        return text
+
     headers = {
-        "Authorization": f"Bearer {settings.gigachat_api_key}",
+        "Authorization": f"Bearer {access_token}",
         "Content-Type": "application/json",
     }
 
@@ -81,7 +112,7 @@ async def adapt_text(
 
     for attempt in range(max_retries + 1):
         try:
-            async with httpx.AsyncClient(timeout=30.0, verify=False) as client:
+            async with httpx.AsyncClient(timeout=30.0) as client:
                 response = await client.post(
                     f"{settings.gigachat_url}/chat/completions",
                     headers=headers,
@@ -93,6 +124,15 @@ async def adapt_text(
                     if result and len(result) > 20:
                         return result
                     logger.warning(f"GigaChat вернул короткий ответ (попытка {attempt + 1})")
+                elif response.status_code == 401:
+                    _token_cache["token"] = None
+                    _token_cache["expires_at"] = 0
+                    try:
+                        access_token = await _get_access_token()
+                        headers["Authorization"] = f"Bearer {access_token}"
+                    except Exception:
+                        pass
+                    logger.warning(f"GigaChat токен истёк, получен новый (попытка {attempt + 1})")
                 else:
                     logger.warning(f"GigaChat вернул статус {response.status_code}: {response.text[:200]}")
         except httpx.ConnectError:
@@ -111,10 +151,11 @@ async def check_gigachat_health() -> bool:
     if not settings.gigachat_api_key:
         return False
     try:
-        async with httpx.AsyncClient(timeout=10.0, verify=False) as client:
+        access_token = await _get_access_token()
+        async with httpx.AsyncClient(timeout=10.0) as client:
             response = await client.get(
                 f"{settings.gigachat_url}/models",
-                headers={"Authorization": f"Bearer {settings.gigachat_api_key}"},
+                headers={"Authorization": f"Bearer {access_token}"},
             )
             return response.status_code == 200
     except Exception:
