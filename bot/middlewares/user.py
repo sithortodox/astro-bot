@@ -6,6 +6,7 @@ from datetime import date
 
 from bot.database import async_session
 from bot.models import User
+from bot.config import settings
 from bot.services.payment_service import is_premium
 
 
@@ -61,6 +62,9 @@ class RateLimitMiddleware(BaseMiddleware):
                 user.daily_requests = 0
                 return await handler(event, data)
 
+            if event.from_user.id in settings.admin_ids:
+                return await handler(event, data)
+
             today = date.today().isoformat()
 
             if user.last_request_date != today:
@@ -69,9 +73,9 @@ class RateLimitMiddleware(BaseMiddleware):
 
             if user.daily_requests >= self.max_free_requests:
                 await event.answer(
-                    "\u26a0\ufe0f Daily limit reached!\n\n"
-                    "You've used all free requests for today.\n"
-                    "Upgrade to Premium for unlimited access:\n"
+                    "\u26a0\ufe0f Достигнут дневной лимит!\n\n"
+                    "Ты использовал все бесплатные запросы на сегодня.\n"
+                    "Обновись до Премиум для безлимитного доступа:\n"
                     "/premium"
                 )
                 return
