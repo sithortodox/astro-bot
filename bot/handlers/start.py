@@ -2,6 +2,7 @@ from aiogram import Router, F
 from aiogram.types import (
     Message, CallbackQuery,
     InlineKeyboardMarkup, InlineKeyboardButton,
+    InputMediaPhoto,
 )
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
@@ -383,21 +384,45 @@ async def callback_action_tarot(callback_query: CallbackQuery):
         await save_history(user.id, "tarot1", response)
 
     elif action == "tarot3":
+        from bot.state import bot_instance
+
+        if not bot_instance:
+            await callback_query.answer("\u274c Ошибка")
+            return
+
         drawn = draw_cards(3)
         positions = ["Прошлое", "Настоящее", "Будущее"]
+        descriptions = []
+        media = []
+
         for i, (card, is_rev) in enumerate(drawn):
             pos = positions[i] if i < 3 else f"Карта {i+1}"
             text = format_card_with_position(card, is_rev, pos)
             text = await adapt_text(text, user, context_type="tarot")
-            keyboard = InlineKeyboardMarkup(inline_keyboard=[
-                [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:tarot")]
-            ]) if i == len(drawn) - 1 else None
+            descriptions.append(text)
+
             img_buf = get_card_image(card["id"], is_rev)
             if img_buf:
-                photo = BufferedInputFile(img_buf.read(), filename=f"{card['id']}.png")
-                await callback_query.message.answer_photo(photo=photo, caption=text, reply_markup=keyboard)
-            else:
-                await callback_query.message.answer(text, reply_markup=keyboard)
+                img_buf.seek(0)
+                media.append(InputMediaPhoto(
+                    media=BufferedInputFile(img_buf.read(), filename=f"{card['id']}.png"),
+                ))
+
+        full_text = "\n\n".join(descriptions)
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:tarot")]
+        ])
+
+        if media and len(media) == 3:
+            if len(full_text) <= 1024:
+                media[-1].caption = full_text
+                media[-1].parse_mode = None
+            await bot_instance.send_media_group(chat_id=callback_query.message.chat.id, media=media)
+            if len(full_text) > 1024:
+                await callback_query.message.answer(full_text, reply_markup=keyboard)
+        else:
+            await callback_query.message.answer(full_text, reply_markup=keyboard)
+
         await save_history(user.id, "tarot3", "3 cards")
 
 
