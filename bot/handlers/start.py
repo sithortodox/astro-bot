@@ -5,10 +5,11 @@ from aiogram.types import (
     ReplyKeyboardMarkup, KeyboardButton,
 )
 from aiogram.filters import CommandStart, Command
-from sqlalchemy import select
+from sqlalchemy import select, func
+from datetime import date
 
 from bot.database import async_session
-from bot.models import User
+from bot.models import User, Payment
 from bot.config import settings
 
 router = Router()
@@ -177,14 +178,73 @@ async def msg_admin(message: Message):
     await message.answer(text, reply_markup=get_admin_keyboard())
 
 
+async def _admin_stats(callback_query: CallbackQuery):
+    async with async_session() as session:
+        total_users = await session.scalar(select(func.count(User.id)))
+        premium_users = await session.scalar(
+            select(func.count(User.id)).where(User.is_premium)
+        )
+        today = date.today().isoformat()
+        active_today = await session.scalar(
+            select(func.count(User.id)).where(User.last_request_date == today)
+        )
+        total_requests = await session.scalar(select(func.sum(User.total_requests)))
+        total_payments = await session.scalar(select(func.count(Payment.id)))
+    text = (
+        f"\U0001f4ca Статистика\n\n"
+        f"\U0001f465 Всего пользователей: {total_users}\n"
+        f"\U0001f48e Премиум: {premium_users}\n"
+        f"\U0001f525 Активны сегодня: {active_today}\n"
+        f"\U0001f4c8 Всего запросов: {total_requests or 0}\n"
+        f"\U0001f4b3 Всего платежей: {total_payments or 0}"
+    )
+    await callback_query.message.answer(text)
+
+
+async def _admin_users(callback_query: CallbackQuery):
+    async with async_session() as session:
+        result = await session.execute(
+            select(User).order_by(User.created_at.desc()).limit(20)
+        )
+        users = result.scalars().all()
+    if not users:
+        await callback_query.message.answer("\U0001f4cb Пользователей пока нет")
+        return
+    lines = ["\U0001f465 Последние пользователи:\n"]
+    for u in users:
+        premium = "\U0001f48e" if u.is_premium else ""
+        lines.append(
+            f"  {u.telegram_id} | @{u.username or '?'} | "
+            f"{u.first_name or '?'} | {u.zodiac_sign or '?'} {premium}"
+        )
+    await callback_query.message.answer("\n".join(lines))
+
+
+async def _admin_broadcast(callback_query: CallbackQuery):
+    await callback_query.message.answer(
+        "Отправь сообщение для рассылки в формате:\n"
+        "/broadcast Текст сообщения"
+    )
+
+
+async def _admin_ban(callback_query: CallbackQuery):
+    await callback_query.message.answer(
+        "Отправь команду:\n/ban USER_ID"
+    )
+
+
+async def _admin_setpremium(callback_query: CallbackQuery):
+    await callback_query.message.answer(
+        "Отправь команду:\n/setpremium USER_ID"
+    )
+
+
 @router.callback_query(F.data == "admin:stats")
 async def callback_admin_stats(callback_query: CallbackQuery):
     if callback_query.from_user.id not in settings.admin_ids:
         await callback_query.answer("\u274c Нет доступа")
         return
-    from bot.handlers.admin import cmd_stats
-    fake_msg = _make_fake_msg(callback_query, "/stats")
-    await cmd_stats(fake_msg)
+    await _admin_stats(callback_query)
     await callback_query.answer()
 
 
@@ -193,9 +253,7 @@ async def callback_admin_users(callback_query: CallbackQuery):
     if callback_query.from_user.id not in settings.admin_ids:
         await callback_query.answer("\u274c Нет доступа")
         return
-    from bot.handlers.admin import cmd_users
-    fake_msg = _make_fake_msg(callback_query, "/users")
-    await cmd_users(fake_msg)
+    await _admin_users(callback_query)
     await callback_query.answer()
 
 
@@ -204,10 +262,7 @@ async def callback_admin_broadcast(callback_query: CallbackQuery):
     if callback_query.from_user.id not in settings.admin_ids:
         await callback_query.answer("\u274c Нет доступа")
         return
-    await callback_query.message.answer(
-        "Отправь сообщение для рассылки в формате:\n"
-        "/broadcast Текст сообщения"
-    )
+    await _admin_broadcast(callback_query)
     await callback_query.answer()
 
 
@@ -216,10 +271,7 @@ async def callback_admin_ban(callback_query: CallbackQuery):
     if callback_query.from_user.id not in settings.admin_ids:
         await callback_query.answer("\u274c Нет доступа")
         return
-    await callback_query.message.answer(
-        "Отправь команду:\n"
-        "/ban USER_ID"
-    )
+    await _admin_ban(callback_query)
     await callback_query.answer()
 
 
@@ -228,10 +280,7 @@ async def callback_admin_setpremium(callback_query: CallbackQuery):
     if callback_query.from_user.id not in settings.admin_ids:
         await callback_query.answer("\u274c Нет доступа")
         return
-    await callback_query.message.answer(
-        "Отправь команду:\n"
-        "/setpremium USER_ID"
-    )
+    await _admin_setpremium(callback_query)
     await callback_query.answer()
 
 
