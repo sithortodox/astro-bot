@@ -60,6 +60,7 @@ services:
       GIGACHAT_URL: ${GIGACHAT_URL:-https://gigachat.devices.sberbank.ru/api/v1}
       GIGACHAT_MODEL: ${GIGACHAT_MODEL:-GigaChat-Lite}
       ADMIN_IDS: ${ADMIN_IDS:-}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
     volumes:
       - ./knowledge_base:/app/knowledge_base:ro
     deploy:
