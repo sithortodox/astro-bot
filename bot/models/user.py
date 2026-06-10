@@ -16,6 +16,8 @@ class User(Base):
     first_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     zodiac_sign: Mapped[str | None] = mapped_column(String(50), nullable=True)
     birth_date: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    birth_time: Mapped[str | None] = mapped_column(String(5), nullable=True)
+    birth_place: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     # Subscription
     is_premium: Mapped[bool] = mapped_column(Boolean, default=False)

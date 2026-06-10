@@ -7,6 +7,9 @@ from bot.models import User, History
 from bot.handlers.start import get_user, get_or_create_user
 from bot.services.numerology_service import (
     calculate_life_path,
+    calculate_birth_day_number,
+    calculate_soul_number,
+    calculate_personality_from_place,
     calculate_destiny_number,
     calculate_personality_number,
 )
@@ -30,6 +33,9 @@ async def cmd_numerology(message: Message):
         return
 
     life_path = calculate_life_path(user.birth_date)
+    birth_day = calculate_birth_day_number(user.birth_date)
+    soul = calculate_soul_number(user.birth_time)
+    place_personality = calculate_personality_from_place(user.birth_place)
     name = user.first_name or "Пользователь"
     destiny = calculate_destiny_number(name)
     personality = calculate_personality_number(name)
@@ -38,11 +44,32 @@ async def cmd_numerology(message: Message):
         f"\U0001f52e Нумерология для {name}\n\n"
         f"\u2728 Число жизненного пути: {life_path}\n"
         f"{get_life_path_meaning(life_path)}\n\n"
+        f"\U0001f4c5 Число дня рождения: {birth_day}\n"
+        f"{get_birth_day_meaning(birth_day)}\n\n"
+    )
+
+    if soul is not None:
+        response += (
+            f"\U0001f525 Число души: {soul}\n"
+            f"{get_soul_meaning(soul)}\n\n"
+        )
+
+    if place_personality is not None:
+        response += (
+            f"\U0001f4cd Число места: {place_personality}\n"
+            f"{get_place_meaning(place_personality)}\n\n"
+        )
+
+    response += (
         f"\U0001f31f Число судьбы: {destiny}\n"
         f"{get_destiny_meaning(destiny)}\n\n"
         f"\U0001f451 Число личности: {personality}\n"
         f"{get_personality_meaning(personality)}"
     )
+
+    if user.birth_time or user.birth_place:
+        response += "\n\n\U0001f4a1 Дополнительные числа рассчитаны на основе времени и места рождения."
+
     response = await adapt_text(response, user, context_type="numerology")
     await message.answer(response)
 
@@ -99,6 +126,51 @@ def get_life_path_meaning(number: int) -> str:
         9: "\U0001f30d Гуманист. Ты сострадательный, идеалистичный и помогаешь другим.",
     }
     return meanings.get(number, "\U0001f31f Уникальная вибрация твоего жизненного пути.")
+
+
+def get_birth_day_meaning(number: int) -> str:
+    meanings = {
+        1: "Ты родился под знаком первопроходца. Тебе суждено начинать новое.",
+        2: "Ты несёшь энергию сотрудничества и дипломатии.",
+        3: "Ты творческая личность с даром выражения.",
+        4: "Ты несёшь энергию стабильности и порядка.",
+        5: "Ты несёшь энергию перемен и свободы.",
+        6: "Ты несёшь энергию гармонии и заботы.",
+        7: "Ты несёшь энергию духовного поиска.",
+        8: "Ты несёшь энергию успеха и изобилия.",
+        9: "Ты несёшь энергию служения и завершения.",
+    }
+    return meanings.get(number, "Твоя энергия уникальна.")
+
+
+def get_soul_meaning(number: int) -> str:
+    meanings = {
+        1: "Твоя душа жаждет лидерства и самостоятельности.",
+        2: "Твоя душа ищет гармонии и глубоких связей.",
+        3: "Твоя душа стремится к творчеству самовыражения.",
+        4: "Твоя душа渴求 стабильности и порядка.",
+        5: "Твоя душа жаждет свободы и приключений.",
+        6: "Твоя душа стремится к заботе и любви.",
+        7: "Твоя душа ищет мудрость и истину.",
+        8: "Твоя душа渴ет успеха и признания.",
+        9: "Твоя душа стремится к служению человечеству.",
+    }
+    return meanings.get(number, "Твоя душе уникальна.")
+
+
+def get_place_meaning(number: int) -> str:
+    meanings = {
+        1: "Место рождения даёт тебе энергию лидерства.",
+        2: "Место рождения даёт тебе энергию сотрудничества.",
+        3: "Место рождения даёт тебе творческую энергию.",
+        4: "Место рождения даёт тебе энергию стабильности.",
+        5: "Место рождения даёт тебе энергию перемен.",
+        6: "Место рождения даёт тебе энергию гармонии.",
+        7: "Место рождения даёт тебе духовную энергию.",
+        8: "Место рождения даёт тебе энергию успеха.",
+        9: "Место рождения даёт тебе энергию служения.",
+    }
+    return meanings.get(number, "Место рождения даёт тебе уникальную энергию.")
 
 
 def get_destiny_meaning(number: int) -> str:

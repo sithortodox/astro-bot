@@ -5,6 +5,8 @@ from aiogram.types import (
     ReplyKeyboardMarkup, KeyboardButton,
 )
 from aiogram.filters import CommandStart, Command
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
 from sqlalchemy import select, func
 from datetime import date
 
@@ -51,6 +53,8 @@ def get_settings_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="\u2698\ufe0f Знак зодиака", callback_data="action:setzodiac")],
         [InlineKeyboardButton(text="\U0001f4c5 Дата рождения", callback_data="action:setbirth")],
+        [InlineKeyboardButton(text="\U0001f552 Время рождения", callback_data="action:settime")],
+        [InlineKeyboardButton(text="\U0001f4cd Место рождения", callback_data="action:setplace")],
         [InlineKeyboardButton(text="\U0001f48e Премиум", callback_data="action:premium")],
         [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:main")],
     ])
@@ -82,6 +86,12 @@ async def get_or_create_user(telegram_id: int, username: str | None = None, firs
         return user
 
 
+class Onboarding(StatesGroup):
+    birth_date = State()
+    birth_time = State()
+    birth_place = State()
+
+
 def _make_fake_msg(callback_query: CallbackQuery, text: str = "") -> Message:
     return Message(
         message_id=0,
@@ -93,7 +103,7 @@ def _make_fake_msg(callback_query: CallbackQuery, text: str = "") -> Message:
 
 
 @router.message(CommandStart())
-async def cmd_start(message: Message):
+async def cmd_start(message: Message, state: FSMContext):
     user = await get_or_create_user(
         message.from_user.id,
         message.from_user.username,
@@ -101,12 +111,114 @@ async def cmd_start(message: Message):
     )
 
     is_admin = message.from_user.id in settings.admin_ids
+
+    if not user.birth_date:
+        await state.set_state(Onboarding.birth_date)
+        text = (
+            f"\U0001f44b Привет, {user.first_name}!\n\n"
+            "Я \u00abТароКод Судьбы\u00bb \u2014 твой мистический помощник.\n\n"
+            "Для точного нумерологического анализа мне нужно узнать о тебе.\n"
+            "Начнём с даты рождения.\n\n"
+            "\U0001f4c5 Отправь дату рождения в формате: ДД.ММ.ГГГГ\n"
+            "Пример: 15.03.1990"
+        )
+        await message.answer(text)
+        return
+
     text = (
         f"\U0001f44b Привет, {user.first_name}!\n\n"
         "Я \u00abТароКод Судьбы\u00bb \u2014 твой мистический помощник.\n"
         "Выбери раздел кнопкой внизу:"
     )
     await message.answer(text, reply_markup=get_main_keyboard(is_admin))
+
+
+@router.message(Onboarding.birth_date)
+async def onboarding_birth_date(message: Message, state: FSMContext):
+    text = message.text.strip()
+    try:
+        day, month, year = text.split(".")
+        day, month, year = int(day), int(month), int(year)
+        if not (1 <= day <= 31 and 1 <= month <= 12 and 1900 <= year <= 2030):
+            raise ValueError
+    except (ValueError, IndexError):
+        await message.answer("\u274c Неверный формат. Используй ДД.ММ.ГГГГ\nПример: 15.03.1990")
+        return
+
+    await state.update_data(birth_date=text)
+    await state.set_state(Onboarding.birth_time)
+    await message.answer(
+        f"\u2705 Дата рождения: {text}\n\n"
+        "\U0001f552 Теперь отправь время рождения (ЧЧ:ММ)\n"
+        "Пример: 14:30\n\n"
+        "Если не знаешь время, отправь \u00ab-\u00bb"
+    )
+
+
+@router.message(Onboarding.birth_time)
+async def onboarding_birth_time(message: Message, state: FSMContext):
+    text = message.text.strip()
+
+    if text == "-":
+        birth_time = None
+    else:
+        try:
+            parts = text.split(":")
+            h, m = int(parts[0]), int(parts[1])
+            if not (0 <= h <= 23 and 0 <= m <= 59):
+                raise ValueError
+            birth_time = text
+        except (ValueError, IndexError):
+            await message.answer(
+                "\u274c Неверный формат. Используй ЧЧ:ММ\n"
+                "Пример: 14:30\n\n"
+                "Если не знаешь время, отправь \u00ab-\u00bb"
+            )
+            return
+
+    await state.update_data(birth_time=birth_time)
+    await state.set_state(Onboarding.birth_place)
+    time_display = birth_time or "Неизвестно"
+    await message.answer(
+        f"\u2705 Время рождения: {time_display}\n\n"
+        "\U0001f4cd Теперь отправь место рождения (город)\n"
+        "Пример: Москва\n\n"
+        "Если не знаешь, отправь \u00ab-\u00bb"
+    )
+
+
+@router.message(Onboarding.birth_place)
+async def onboarding_birth_place(message: Message, state: FSMContext):
+    text = message.text.strip()
+    birth_place = text if text != "-" else None
+
+    data = await state.get_data()
+    birth_date = data["birth_date"]
+    birth_time = data.get("birth_time")
+
+    async with async_session() as session:
+        result = await session.execute(
+            select(User).where(User.telegram_id == message.from_user.id)
+        )
+        user = result.scalar_one_or_none()
+        if user:
+            user.birth_date = birth_date
+            user.birth_time = birth_time
+            user.birth_place = birth_place
+            await session.commit()
+
+    await state.clear()
+
+    place_display = birth_place or "Неизвестно"
+    is_admin = message.from_user.id in settings.admin_ids
+
+    await message.answer(
+        f"\u2705 Место рождения: {place_display}\n\n"
+        "\U0001f386 Отлично! Все данные собраны.\n"
+        "Теперь я могу делать точные нумерологические расчёты.\n\n"
+        "Выбери раздел кнопкой внизу:",
+        reply_markup=get_main_keyboard(is_admin),
+    )
 
 
 @router.message(F.text == "\U0001f0cf Таро")
@@ -346,6 +458,27 @@ async def callback_action_setbirth(callback_query: CallbackQuery):
     )
 
 
+@router.callback_query(F.data == "action:settime")
+async def callback_action_settime(callback_query: CallbackQuery):
+    await callback_query.answer()
+    await callback_query.message.answer(
+        "Отправь время рождения в формате:\n"
+        "/settime ЧЧ:ММ\n\n"
+        "Пример: /settime 14:30\n\n"
+        "Если не знаешь время, отправь /settime -"
+    )
+
+
+@router.callback_query(F.data == "action:setplace")
+async def callback_action_setplace(callback_query: CallbackQuery):
+    await callback_query.answer()
+    await callback_query.message.answer(
+        "Отправь место рождения (город):\n"
+        "/setplace Москва\n\n"
+        "Если не знаешь, отправь /setplace -"
+    )
+
+
 @router.callback_query(F.data == "action:premium")
 async def callback_action_premium(callback_query: CallbackQuery):
     await callback_query.answer()
@@ -423,6 +556,74 @@ async def cmd_setbirth(message: Message):
             await message.answer("Сначала нажми /start")
 
 
+@router.message(Command("settime"))
+async def cmd_settime(message: Message):
+    parts = message.text.split(maxsplit=1)
+    if len(parts) < 2:
+        await message.answer(
+            "Используй: /settime ЧЧ:ММ\n"
+            "Пример: /settime 14:30\n\n"
+            "Если не знаешь время, отправь /settime -"
+        )
+        return
+
+    time_str = parts[1].strip()
+
+    if time_str == "-":
+        time_str = None
+    else:
+        try:
+            h, m = time_str.split(":")
+            h, m = int(h), int(m)
+            if not (0 <= h <= 23 and 0 <= m <= 59):
+                raise ValueError
+        except (ValueError, IndexError):
+            await message.answer("Неверный формат. Используй ЧЧ:ММ или /settime -")
+            return
+
+    async with async_session() as session:
+        result = await session.execute(
+            select(User).where(User.telegram_id == message.from_user.id)
+        )
+        user = result.scalar_one_or_none()
+        if user:
+            user.birth_time = time_str
+            await session.commit()
+            display = time_str or "Неизвестно"
+            await message.answer(f"\U0001f552 Время рождения установлено: {display}")
+        else:
+            await message.answer("Сначала нажми /start")
+
+
+@router.message(Command("setplace"))
+async def cmd_setplace(message: Message):
+    parts = message.text.split(maxsplit=1)
+    if len(parts) < 2:
+        await message.answer(
+            "Используй: /setplace Город\n"
+            "Пример: /setplace Москва\n\n"
+            "Если не знаешь, отправь /setplace -"
+        )
+        return
+
+    place_str = parts[1].strip()
+    if place_str == "-":
+        place_str = None
+
+    async with async_session() as session:
+        result = await session.execute(
+            select(User).where(User.telegram_id == message.from_user.id)
+        )
+        user = result.scalar_one_or_none()
+        if user:
+            user.birth_place = place_str
+            await session.commit()
+            display = place_str or "Неизвестно"
+            await message.answer(f"\U0001f4cd Место рождения установлено: {display}")
+        else:
+            await message.answer("Сначала нажми /start")
+
+
 async def cmd_profile(message: Message):
     user = await get_user(message.from_user.id)
     if not user:
@@ -436,12 +637,14 @@ async def cmd_profile(message: Message):
 
     text = (
         f"\U0001f464 Твой профиль\n\n"
-        f" Имя: {user.first_name or 'Не указано'}\n"
-        f" Username: @{user.username or 'Не указан'}\n"
-        f" Знак зодиака: {zodiac_display}\n"
-        f" Дата рождения: {user.birth_date or 'Не указана'}\n"
-        f" Премиум: {'Да' if user.is_premium else 'Нет'}\n"
-        f" Запросов сегодня: {user.daily_requests}"
+        f" \U0001f464 Имя: {user.first_name or 'Не указано'}\n"
+        f" @{user.username or 'Не указан'}\n"
+        f" \u2698\ufe0f Знак зодиака: {zodiac_display}\n"
+        f" \U0001f4c5 Дата рождения: {user.birth_date or 'Не указана'}\n"
+        f" \U0001f552 Время рождения: {user.birth_time or 'Неизвестно'}\n"
+        f" \U0001f4cd Место рождения: {user.birth_place or 'Неизвестно'}\n"
+        f" \U0001f48e Премиум: {'Да' if user.is_premium else 'Нет'}\n"
+        f" \U0001f4c8 Запросов сегодня: {user.daily_requests}"
     )
     await message.answer(text)
 
