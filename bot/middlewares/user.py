@@ -1,4 +1,5 @@
 from typing import Callable, Dict, Any, Awaitable
+import logging
 from aiogram import BaseMiddleware
 from aiogram.types import Message, TelegramObject
 from sqlalchemy import select
@@ -8,6 +9,8 @@ from bot.database import async_session
 from bot.models import User
 from bot.config import settings
 from bot.services.payment_service import is_premium
+
+logger = logging.getLogger(__name__)
 
 
 class UserMiddleware(BaseMiddleware):
@@ -62,7 +65,9 @@ class RateLimitMiddleware(BaseMiddleware):
                 user.daily_requests = 0
                 return await handler(event, data)
 
+            logger.debug(f"Checking admin: user_id={event.from_user.id}, admin_ids={settings.admin_ids}")
             if event.from_user.id in settings.admin_ids:
+                logger.debug(f"Admin bypass for user {event.from_user.id}")
                 return await handler(event, data)
 
             today = date.today().isoformat()
