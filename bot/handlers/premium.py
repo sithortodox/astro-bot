@@ -19,7 +19,7 @@ router = Router()
 async def cmd_premium(message: Message):
     user = await get_user(message.from_user.id)
     if not user:
-        await message.answer("Please /start the bot first.")
+        await message.answer("\u274c Сначала нажми /start")
         return
 
     premium_status = await is_premium(message.from_user.id)
@@ -28,13 +28,13 @@ async def cmd_premium(message: Message):
         try:
             until = datetime.fromisoformat(user.premium_until)
             days_left = (until - datetime.now()).days
-            status_text = f" Premium Active\nExpires: {until.strftime('%d.%m.%Y')}\nDays left: {days_left}"
+            status_text = f"\U0001f48e Премиум активен\nДействует до: {until.strftime('%d.%m.%Y')}\nОсталось дней: {days_left}"
         except ValueError:
-            status_text = " Premium Active"
+            status_text = "\U0001f48e Премиум активен"
     elif premium_status:
-        status_text = " Premium Active (Lifetime)"
+        status_text = "\U0001f48e Премиум активен (пожизненно)"
     else:
-        status_text = " Free Plan\nUpgrade to Premium for unlimited access!"
+        status_text = "\U0001f4b3 Бесплатный план\nОбновись до Премиум для безлимитного доступа!"
 
     products = get_all_products()
 
@@ -49,21 +49,21 @@ async def cmd_premium(message: Message):
             ])
 
     keyboard.append([
-        InlineKeyboardButton(text="\U0001f4b3 My Payments", callback_data="my_payments")
+        InlineKeyboardButton(text="\U0001f4b3 Мои платежи", callback_data="my_payments")
     ])
 
     markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
 
     text = (
-        f"Premium Subscription\n\n"
+        f"\U0001f48e Премиум-подписка\n\n"
         f"{status_text}\n\n"
-        f"Premium Benefits:\n"
-        f"  Unlimited tarot readings\n"
-        f"  Detailed interpretations\n"
-        f"  Monthly forecasts\n"
-        f"  Priority AI adaptation\n"
-        f"  No daily limits\n\n"
-        f"Choose a plan:"
+        f"\U0001f31f Преимущества:\n"
+        f"  \u2728 Безлимитные расклады Таро\n"
+        f"  \U0001f4d6 Подробные трактовки\n"
+        f"  \U0001f4c5 Ежемесячные прогнозы\n"
+        f"  \u2b50 Приоритетная AI-адаптация\n"
+        f"  \u26a1 Без дневных лимитов\n\n"
+        f"Выбери план:"
     )
 
     await message.answer(text, reply_markup=markup)
@@ -75,19 +75,19 @@ async def callback_buy(callback_query: CallbackQuery):
     product = PRODUCTS.get(product_key)
 
     if not product:
-        await callback_query.answer("Product not found.")
+        await callback_query.answer("\u274c Товар не найден")
         return
 
     await callback_query.answer()
 
     await callback_query.message.answer(
-        f" Purchase: {product['name']}\n"
-        f"Price: {product['price_stars']} Telegram Stars\n\n"
+        f"\U0001f4b3 Покупка: {product['name']}\n"
+        f"Цена: {product['price_stars']} Telegram Stars\n\n"
         f"{product['description']}\n\n"
-        f"Click the button below to pay:",
+        f"Нажми кнопку ниже для оплаты:",
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(
-                text=f"Pay {product['price_stars']} Stars",
+                text=f"Оплатить {product['price_stars']} Stars",
                 pay=True,
             )]
         ]),
@@ -125,15 +125,15 @@ async def process_successful_payment(message: Message):
 
         if success:
             await message.answer(
-                f" Payment Successful!\n\n"
-                f"Product: {PRODUCTS[product_key]['name']}\n"
-                f"Amount: {payment.total_amount} Stars\n\n"
-                f"Thank you! Your premium has been activated."
+                f"\u2705 Оплата прошла успешно!\n\n"
+                f"Товар: {PRODUCTS[product_key]['name']}\n"
+                f"Сумма: {payment.total_amount} Stars\n\n"
+                f"Спасибо! Твой премиум активирован."
             )
         else:
-            await message.answer("Payment received but activation failed. Contact support.")
+            await message.answer("\u274c Платёж получен, но активация не удалась. Свяжитесь с поддержкой.")
     else:
-        await message.answer("Payment received. Thank you!")
+        await message.answer("\u2705 Платёж получен. Спасибо!")
 
 
 @router.callback_query(lambda c: c.data == "my_payments")
@@ -141,11 +141,11 @@ async def callback_my_payments(callback_query: CallbackQuery):
     payments = await get_user_payments(callback_query.from_user.id)
 
     if not payments:
-        await callback_query.message.answer("No payment history.")
+        await callback_query.message.answer("\U0001f4cb История платежей пуста")
         await callback_query.answer()
         return
 
-    lines = [" Payment History:\n"]
+    lines = ["\U0001f4cb История платежей:\n"]
     for p in payments:
         lines.append(
             f"  {p['date']} - {p['product']} - {p['amount']} {p['currency']} ({p['status']})"

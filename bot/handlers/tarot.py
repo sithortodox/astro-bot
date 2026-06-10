@@ -56,17 +56,17 @@ def format_card_full(card: dict, is_reversed: bool = False) -> str:
         "",
         meaning,
         "",
-        f"\u2764\ufe0f Love: {card.get('love', 'N/A')}",
-        f"\u2605 Career: {card.get('career', 'N/A')}",
-        f"\u2728 Finance: {card.get('finance', 'N/A')}",
+        f"\u2764\ufe0f Любовь: {card.get('love', 'N/A')}",
+        f"\u2605 Карьера: {card.get('career', 'N/A')}",
+        f"\u2728 Финансы: {card.get('finance', 'N/A')}",
         "",
-        f"\U0001f3af Keywords: {keywords}",
+        f"\U0001f3af Ключевые слова: {keywords}",
     ]
     return "\n".join(lines)
 
 
 def format_card_with_position(card: dict, is_reversed: bool, position: str) -> str:
-    emoji_map = {"Past": "\u23f0", "Present": "\u2714\ufe0f", "Future": "\U0001f52e"}
+    emoji_map = {"Прошлое": "\u23f0", "Настоящее": "\u2714\ufe0f", "Будущее": "\U0001f52e"}
     emoji = emoji_map.get(position, "\u25b6")
     return f"{emoji} {position}\n{format_card_short(card, is_reversed)}"
 
@@ -84,7 +84,7 @@ async def cmd_tarot(message: Message):
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(
-            text="\U0001f50d Detailed",
+            text="\U0001f50d Подробнее",
             callback_data=f"tarot_detail:{card['id']}:{1 if is_reversed else 0}"
         )]
     ])
@@ -118,10 +118,10 @@ async def cmd_tarot3(message: Message):
     )
 
     drawn = draw_cards(3)
-    positions = ["Past", "Present", "Future"]
+    positions = ["Прошлое", "Настоящее", "Будущее"]
     parts = []
     for i, (card, is_rev) in enumerate(drawn):
-        pos = positions[i] if i < 3 else f"Card {i+1}"
+        pos = positions[i] if i < 3 else f"Карта {i+1}"
         parts.append(format_card_with_position(card, is_rev, pos))
     response = "\n\n---\n\n".join(parts)
     response = await adapt_text(response, user, context_type="tarot")
@@ -139,7 +139,7 @@ async def callback_tarot_detail(callback_query: CallbackQuery):
     card = next((c for c in cards if c["id"] == card_id), None)
 
     if not card:
-        await callback_query.answer("Card not found.")
+        await callback_query.answer("\u274c Карта не найдена")
         return
 
     response = format_card_full(card, is_reversed)

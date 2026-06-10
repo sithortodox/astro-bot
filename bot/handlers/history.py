@@ -16,7 +16,7 @@ async def cmd_history(message: Message):
         )
         user = result.scalar_one_or_none()
         if not user:
-            await message.answer("Please /start the bot first.")
+            await message.answer("\u274c Сначала нажми /start")
             return
 
         result = await session.execute(
@@ -28,10 +28,10 @@ async def cmd_history(message: Message):
         history = result.scalars().all()
 
     if not history:
-        await message.answer("No history yet. Try /tarot or /horoscope!")
+        await message.answer("\U0001f4cb Пока нет истории. Попробуй /tarot или /horoscope!")
         return
 
-    lines = [" Request History (last 10):\n"]
+    lines = ["\U0001f4dc История запросов (последние 10):\n"]
     for i, h in enumerate(history, 1):
         cmd = h.command.upper()
         time = h.created_at.strftime("%d.%m %H:%M") if h.created_at else "?"

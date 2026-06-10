@@ -19,29 +19,29 @@ router = Router()
 async def cmd_numerology(message: Message):
     user = await get_user(message.from_user.id)
     if not user:
-        await message.answer("Please /start the bot first.")
+        await message.answer("\u274c Сначала нажми /start")
         return
 
     if not user.birth_date:
         await message.answer(
-            " Please set your birth date first.\n"
-            "Usage: /setbirth DD.MM.YYYY"
+            "\U0001f4c5 Сначала установи дату рождения.\n"
+            "Используй: /setbirth ДД.ММ.ГГГГ"
         )
         return
 
     life_path = calculate_life_path(user.birth_date)
-    name = user.first_name or "User"
+    name = user.first_name or "Пользователь"
     destiny = calculate_destiny_number(name)
     personality = calculate_personality_number(name)
 
     response = (
-        f" \U0001f52e Numerology for {name}\n\n"
-        f" \u2728 Life Path: {life_path}\n"
-        f" {get_life_path_meaning(life_path)}\n\n"
-        f" \U0001f31f Destiny: {destiny}\n"
-        f" {get_destiny_meaning(destiny)}\n\n"
-        f" \U0001f451 Personality: {personality}\n"
-        f" {get_personality_meaning(personality)}"
+        f"\U0001f52e Нумерология для {name}\n\n"
+        f"\u2728 Число жизненного пути: {life_path}\n"
+        f"{get_life_path_meaning(life_path)}\n\n"
+        f"\U0001f31f Число судьбы: {destiny}\n"
+        f"{get_destiny_meaning(destiny)}\n\n"
+        f"\U0001f451 Число личности: {personality}\n"
+        f"{get_personality_meaning(personality)}"
     )
     response = await adapt_text(response, user, context_type="numerology")
     await message.answer(response)
@@ -56,7 +56,7 @@ async def cmd_numerology(message: Message):
 async def cmd_setbirth(message: Message):
     parts = message.text.split(maxsplit=1)
     if len(parts) < 2:
-        await message.answer("Usage: /setbirth DD.MM.YYYY")
+        await message.answer("Используй: /setbirth ДД.ММ.ГГГГ")
         return
 
     date_str = parts[1].strip()
@@ -66,7 +66,7 @@ async def cmd_setbirth(message: Message):
         if not (1 <= day <= 31 and 1 <= month <= 12 and 1900 <= year <= 2030):
             raise ValueError
     except (ValueError, IndexError):
-        await message.answer("Invalid date format. Use DD.MM.YYYY")
+        await message.answer("\u274c Неверный формат даты. Используй ДД.ММ.ГГГГ")
         return
 
     user = await get_or_create_user(
@@ -83,49 +83,49 @@ async def cmd_setbirth(message: Message):
             if db_user:
                 db_user.birth_date = date_str
                 await session.commit()
-                await message.answer(f"Birth date set to: {date_str}")
+                await message.answer(f"\u2705 Дата рождения установлена: {date_str}")
 
 
 def get_life_path_meaning(number: int) -> str:
     meanings = {
-        1: "\U0001f451 Leader. You are independent, ambitious, and a natural born leader.",
-        2: "\U0001f91d Diplomat. You are cooperative, sensitive, and bring harmony.",
-        3: "\U0001f3ad Creative. You are expressive, social, and have a gift for communication.",
-        4: "\U0001f3e0 Builder. You are practical, stable, and hardworking.",
-        5: "\U0001f30d Adventurer. You are versatile, curious, and love freedom.",
-        6: "\u2764\ufe0f Nurturer. You are responsible, caring, and the heart of the family.",
-        7: "\U0001f52d Seeker. You are analytical, spiritual, and seek deeper truth.",
-        8: "\U0001f4b0 Executive. You are ambitious, successful, and have business acumen.",
-        9: "\U0001f30d Humanitarian. You are compassionate, idealistic, and serve others.",
+        1: "\U0001f451 Лидер. Ты независимый, амбициозный и прирождённый лидер.",
+        2: "\U0001f91d Дипломат. Ты сотрудничаешь, чувствуешь других и приносишь гармонию.",
+        3: "\U0001f3ad Творец. Ты выразительный, общительный и обладаешь даром общения.",
+        4: "\U0001f3e0 Строитель. Ты практичен, стабилен и трудолюбив.",
+        5: "\U0001f30d Путешественник. Ты разносторонний, любознательный и ценишь свободу.",
+        6: "\u2764\ufe0f Опекун. Ты ответственный, заботливый и сердце семьи.",
+        7: "\U0001f52d Искатель. Ты аналитичен, духовен и ищешь более глубокую истину.",
+        8: "\U0001f4b0 Менеджер. Ты амбициозен, успешен и обладаешь деловой хваткой.",
+        9: "\U0001f30d Гуманист. Ты сострадательный, идеалистичный и помогаешь другим.",
     }
-    return meanings.get(number, "\U0001f31f Unique vibration of your life path.")
+    return meanings.get(number, "\U0001f31f Уникальная вибрация твоего жизненного пути.")
 
 
 def get_destiny_meaning(number: int) -> str:
     meanings = {
-        1: "Your destiny is to lead and inspire others through your vision.",
-        2: "Your destiny is to create harmony and build meaningful partnerships.",
-        3: "Your destiny is to express creativity and bring joy to others.",
-        4: "Your destiny is to build lasting foundations and create stability.",
-        5: "Your destiny is to embrace change and explore new horizons.",
-        6: "Your destiny is to nurture and create beautiful environments.",
-        7: "Your destiny is to seek wisdom and share deep insights.",
-        8: "Your destiny is to achieve success and material abundance.",
-        9: "Your destiny is to serve humanity and make a global impact.",
+        1: "Твоя судьба — вести и вдохновлять других своей видением.",
+        2: "Твоя судьба — создавать гармонию и выстраивать значимые партнёрства.",
+        3: "Твоя судьба — выражать творчество и дарить радость другим.",
+        4: "Твоя судьба — строить прочные основы и создавать стабильность.",
+        5: "Твоя судьба — принимать изменения и исследовать новые горизонты.",
+        6: "Твоя судьба — заботиться и создавать прекрасную среду.",
+        7: "Твоя судьба — искать мудрость и делиться глубокими знаниями.",
+        8: "Твоя судьба — добиться успеха и материального изобилия.",
+        9: "Твоя судьба — служить человечеству и оказывать глобальное воздействие.",
     }
-    return meanings.get(number, "Your destiny is uniquely your own.")
+    return meanings.get(number, "Твоя судьба уникальна и принадлежит только тебе.")
 
 
 def get_personality_meaning(number: int) -> str:
     meanings = {
-        1: "Others see you as confident, independent, and charismatic.",
-        2: "Others see you as gentle, cooperative, and diplomatic.",
-        3: "Others see you as creative, expressive, and social.",
-        4: "Others see you as reliable, practical, and hardworking.",
-        5: "Others see you as adventurous, energetic, and versatile.",
-        6: "Others see you as warm, caring, and responsible.",
-        7: "Others see you as thoughtful, analytical, and mysterious.",
-        8: "Others see you as ambitious, powerful, and successful.",
-        9: "Others see you as compassionate, generous, and wise.",
+        1: "Другие видят тебя уверенным, независимым и харизматичным.",
+        2: "Другие видят тебя мягким, сотрудничающим и дипломатичным.",
+        3: "Другие видят тебя творческим, выразительным и общительным.",
+        4: "Другие видят тебя надёжным, практичным и трудолюбивым.",
+        5: "Другие видят тебя предприимчивым, энергичным и разносторонним.",
+        6: "Другие видят тебя тёплым, заботливым и ответственным.",
+        7: "Другие видят тебя вдумчивым, аналитичным и загадочным.",
+        8: "Другие видят тебя амбициозным, влиятельным и успешным.",
+        9: "Другие видят тебя сострадательным, щедрым и мудрым.",
     }
-    return meanings.get(number, "Others see you as unique and intriguing.")
+    return meanings.get(number, "Другие видят тебя уникальным и интересным.")

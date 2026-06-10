@@ -21,19 +21,19 @@ async def cmd_lunar(message: Message):
     recommendation = get_lunar_recommendation(phase_name, "general")
 
     response = (
-        f" {phase_emoji} Lunar Phase: {phase_name}\n"
-        f" Illumination: {illumination:.0f}%\n\n"
-        f" \U0001f4a1 Recommendation:\n{recommendation}"
+        f"{phase_emoji} Лунная фаза: {phase_name}\n"
+        f"\U0001f4a1 Освещённость: {illumination:.0f}%\n\n"
+        f"\U0001f4a1 Рекомендация:\n{recommendation}"
     )
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="\U0001f4c5 Calendar", callback_data="lunar_calendar"),
-            InlineKeyboardButton(text="\U0001f52e Summary", callback_data="lunar_summary"),
+            InlineKeyboardButton(text="\U0001f4c5 Календарь", callback_data="lunar_calendar"),
+            InlineKeyboardButton(text="\U0001f52e Сводка", callback_data="lunar_summary"),
         ],
         [
-            InlineKeyboardButton(text="\u2764\ufe0f Love", callback_data="lunar_cat:love"),
-            InlineKeyboardButton(text="\u2605 Career", callback_data="lunar_cat:career"),
+            InlineKeyboardButton(text="\u2764\ufe0f Любовь", callback_data="lunar_cat:love"),
+            InlineKeyboardButton(text="\u2605 Карьера", callback_data="lunar_cat:career"),
         ],
     ])
 
@@ -52,7 +52,7 @@ async def cmd_lunar(message: Message):
 async def callback_lunar_calendar(callback_query):
     calendar = get_lunar_calendar(7)
 
-    lines = [" \U0001f4c5 Lunar Calendar (7 days):\n"]
+    lines = ["\U0001f4c5 Лунный календарь (7 дней):\n"]
     for day in calendar:
         lines.append(
             f"{day['date_display']}: {day['emoji']} {day['phase']} "
@@ -77,13 +77,13 @@ async def callback_lunar_category(callback_query):
     recommendation = get_lunar_recommendation(phase_name, category)
 
     cat_labels = {
-        "love": "\u2764\ufe0f Love",
-        "career": "\u2605 Career",
-        "finance": "\U0001f4b0 Finance",
-        "health": "\U0001f3a5 Health",
+        "love": "\u2764\ufe0f Любовь",
+        "career": "\u2605 Карьера",
+        "finance": "\U0001f4b0 Финансы",
+        "health": "\U0001f3a5 Здоровье",
     }
     label = cat_labels.get(category, category.title())
 
-    response = f" {label} Recommendation\n\n{recommendation}"
+    response = f"{label} — Рекомендация\n\n{recommendation}"
     await callback_query.message.answer(response)
     await callback_query.answer()

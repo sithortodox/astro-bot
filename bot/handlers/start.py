@@ -55,18 +55,18 @@ async def cmd_start(message: Message):
     )
 
     text = (
-        f" Welcome, {message.from_user.first_name}!\n\n"
-        " I can help you with:\n\n"
-        " /tarot \u2014 Card of the day\n"
-        " /tarot1 \u2014 One card reading (detailed)\n"
-        " /tarot3 \u2014 Three card reading\n\n"
-        " /numerology \u2014 Life path number\n"
-        " /horoscope \u2014 Daily horoscope\n"
-        " /lunar \u2014 Lunar phase\n\n"
-        " /setzodiac \u2014 Set your zodiac sign\n"
-        " /setbirth DD.MM.YYYY \u2014 Set birth date\n"
-        " /profile \u2014 Your profile\n"
-        " /history \u2014 Request history"
+        f"\U0001f44b Привет, {message.from_user.first_name}!\n\n"
+        "Я могу помочь тебе с:\n\n"
+        "\U0001f0cf /tarot \u2014 Карта дня\n"
+        "\U0001f0cf /tarot1 \u2014 Расклад на одну карту\n"
+        "\U0001f0cf /tarot3 \u2014 Расклад на три карты\n\n"
+        "\U0001f52e /numerology \u2014 Нумерология\n"
+        "\u2b50 /horoscope \u2014 Гороскоп на сегодня\n"
+        "\U0001f319 /lunar \u2014 Лунный календарь\n\n"
+        "\u2698\ufe0f /setzodiac \u2014 Установить знак зодиака\n"
+        "\U0001f4c5 /setbirth ДД.ММ.ГГГГ \u2014 Установить дату рождения\n"
+        "\U0001f464 /profile \u2014 Твой профиль\n"
+        "\U0001f4dc /history \u2014 История запросов"
     )
     await message.answer(text)
 
@@ -85,7 +85,7 @@ async def cmd_setzodiac(message: Message):
         keyboard.append(row)
 
     markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
-    await message.answer("Choose your zodiac sign:", reply_markup=markup)
+    await message.answer("Выбери свой знак зодиака:", reply_markup=markup)
 
 
 @router.callback_query(F.data.startswith("zodiac:"))
@@ -102,9 +102,9 @@ async def callback_zodiac(callback_query: CallbackQuery):
                 db_user.zodiac_sign = sign
                 await session.commit()
         emoji = ZODIAC_EMOJI.get(sign, "")
-        await callback_query.message.answer(f"{emoji} Zodiac sign set to: {sign}")
+        await callback_query.message.answer(f"{emoji} Знак зодиака установлен: {sign}")
     else:
-        await callback_query.message.answer("Please /start the bot first.")
+        await callback_query.message.answer("Сначала нажми /start")
     await callback_query.answer()
 
 
@@ -113,8 +113,8 @@ async def cmd_setbirth(message: Message):
     parts = message.text.split(maxsplit=1)
     if len(parts) < 2:
         await message.answer(
-            "Usage: /setbirth DD.MM.YYYY\n"
-            "Example: /setbirth 15.03.1990"
+            "Используй: /setbirth ДД.ММ.ГГГГ\n"
+            "Пример: /setbirth 15.03.1990"
         )
         return
 
@@ -125,7 +125,7 @@ async def cmd_setbirth(message: Message):
         if not (1 <= day <= 31 and 1 <= month <= 12 and 1900 <= year <= 2030):
             raise ValueError
     except (ValueError, IndexError):
-        await message.answer("Invalid date format. Use DD.MM.YYYY")
+        await message.answer("Неверный формат даты. Используй ДД.ММ.ГГГГ")
         return
 
     async with async_session() as session:
@@ -136,31 +136,31 @@ async def cmd_setbirth(message: Message):
         if user:
             user.birth_date = date_str
             await session.commit()
-            await message.answer(f"Birth date set to: {date_str}")
+            await message.answer(f"\U0001f4c5 Дата рождения установлена: {date_str}")
         else:
-            await message.answer("Please /start the bot first.")
+            await message.answer("Сначала нажми /start")
 
 
 @router.message(Command("profile"))
 async def cmd_profile(message: Message):
     user = await get_user(message.from_user.id)
     if not user:
-        await message.answer("Please /start the bot first.")
+        await message.answer("Сначала нажми /start")
         return
 
-    zodiac_display = "Not set"
+    zodiac_display = "Не установлен"
     if user.zodiac_sign:
         emoji = ZODIAC_EMOJI.get(user.zodiac_sign, "")
         zodiac_display = f"{emoji} {user.zodiac_sign}"
 
     text = (
-        f" Your Profile\n\n"
-        f" Name: {user.first_name or 'Not set'}\n"
-        f" Username: @{user.username or 'Not set'}\n"
-        f" Zodiac: {zodiac_display}\n"
-        f" Birth date: {user.birth_date or 'Not set'}\n"
-        f" Premium: {'Yes' if user.is_premium else 'No'}\n"
-        f" Requests today: {user.daily_requests}"
+        f"\U0001f464 Твой профиль\n\n"
+        f" \U0001f464 Имя: {user.first_name or 'Не указано'}\n"
+        f" \U0001f464 Username: @{user.username or 'Не указан'}\n"
+        f" \u2b50 Знак зодиака: {zodiac_display}\n"
+        f" \U0001f4c5 Дата рождения: {user.birth_date or 'Не указана'}\n"
+        f" \U0001f48e Премиум: {'Да' if user.is_premium else 'Нет'}\n"
+        f" \U0001f4c8 Запросов сегодня: {user.daily_requests}"
     )
     await message.answer(text)
 
@@ -168,21 +168,21 @@ async def cmd_profile(message: Message):
 @router.message(Command("help"))
 async def cmd_help(message: Message):
     text = (
-        " Available Commands:\n\n"
-        " Tarot:\n"
-        "   /tarot \u2014 Card of the day\n"
-        "   /tarot1 \u2014 One card reading\n"
-        "   /tarot3 \u2014 Three card reading\n\n"
-        " Numerology:\n"
-        "   /numerology \u2014 Life path number\n\n"
-        " Horoscope:\n"
-        "   /horoscope \u2014 Daily horoscope\n\n"
-        " Lunar:\n"
-        "   /lunar \u2014 Lunar phase\n\n"
-        " Settings:\n"
-        "   /setzodiac \u2014 Set zodiac sign\n"
-        "   /setbirth DD.MM.YYYY \u2014 Set birth date\n"
-        "   /profile \u2014 View profile\n"
-        "   /history \u2014 Request history"
+        "\U0001f4d6 Доступные команды:\n\n"
+        "\U0001f0cf Таро:\n"
+        "   /tarot \u2014 Карта дня\n"
+        "   /tarot1 \u2014 Расклад на одну карту\n"
+        "   /tarot3 \u2014 Расклад на три карты\n\n"
+        "\U0001f52e Нумерология:\n"
+        "   /numerology \u2014 Число жизненного пути\n\n"
+        "\u2b50 Гороскоп:\n"
+        "   /horoscope \u2014 Гороскоп на сегодня\n\n"
+        "\U0001f319 Луна:\n"
+        "   /lunar \u2014 Фаза луны\n\n"
+        "\u2699\ufe0f Настройки:\n"
+        "   /setzodiac \u2014 Установить знак зодиака\n"
+        "   /setbirth ДД.ММ.ГГГГ \u2014 Установить дату рождения\n"
+        "   /profile \u2014 Профиль\n"
+        "   /history \u2014 История запросов"
     )
     await message.answer(text)

@@ -29,17 +29,17 @@ ZODIAC_EMOJI = {
 async def cmd_horoscope(message: Message):
     user = await get_user(message.from_user.id)
     if not user:
-        await message.answer("Please /start the bot first.")
+        await message.answer("\u274c Сначала нажми /start")
         return
 
     if not user.zodiac_sign:
-        await message.answer("Please set your zodiac sign first: /setzodiac")
+        await message.answer("\u2699\ufe0f Сначала установи знак зодиака: /setzodiac")
         return
 
     emoji = ZODIAC_EMOJI.get(user.zodiac_sign, "")
     horoscope = get_daily_horoscope(user.zodiac_sign)
     response = (
-        f" {emoji} Daily Horoscope for {user.zodiac_sign}\n\n"
+        f"{emoji} Гороскоп на сегодня: {user.zodiac_sign}\n\n"
         f"{horoscope}"
     )
     response = await adapt_text(response, user, context_type="horoscope")
