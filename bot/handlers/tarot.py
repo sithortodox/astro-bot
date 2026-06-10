@@ -162,12 +162,16 @@ async def callback_tarot_detail(callback_query: CallbackQuery):
 
     response = format_card_full(card, is_reversed)
 
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:tarot")]
+    ])
+
     img_buf = get_card_image(card_id, is_reversed)
     if img_buf:
         photo = BufferedInputFile(img_buf.read(), filename=f"{card_id}.png")
-        await callback_query.message.answer_photo(photo=photo, caption=response)
+        await callback_query.message.answer_photo(photo=photo, caption=response, reply_markup=keyboard)
     else:
-        await callback_query.message.answer(response)
+        await callback_query.message.answer(response, reply_markup=keyboard)
 
     await callback_query.answer()
 

@@ -15,6 +15,17 @@ from bot.config import settings
 
 router = Router()
 
+
+async def safe_edit(callback_query: CallbackQuery, text: str, reply_markup=None):
+    try:
+        await callback_query.message.edit_text(text, reply_markup=reply_markup)
+    except Exception:
+        try:
+            await callback_query.message.delete()
+        except Exception:
+            pass
+        await callback_query.message.answer(text, reply_markup=reply_markup)
+
 ZODIAC_SIGNS = [
     "Овен", "Телец", "Близнецы", "Рак", "Лев", "Дева",
     "Весы", "Скорпион", "Стрелец", "Козерог", "Водолей", "Рыбы",
@@ -224,49 +235,49 @@ async def cmd_menu(message: Message):
 async def callback_menu_main(callback_query: CallbackQuery):
     is_admin = callback_query.from_user.id in settings.admin_ids
     text = "\U0001f44f Выбери раздел:"
-    await callback_query.message.edit_text(text, reply_markup=get_main_keyboard(is_admin))
+    await safe_edit(callback_query, text, reply_markup=get_main_keyboard(is_admin))
     await callback_query.answer()
 
 
 @router.callback_query(F.data == "menu:tarot")
 async def callback_menu_tarot(callback_query: CallbackQuery):
     text = "\U0001f0cf Выбери расклад:"
-    await callback_query.message.edit_text(text, reply_markup=get_tarot_keyboard())
+    await safe_edit(callback_query, text, reply_markup=get_tarot_keyboard())
     await callback_query.answer()
 
 
 @router.callback_query(F.data == "menu:numerology")
 async def callback_menu_numerology(callback_query: CallbackQuery):
     text = "\U0001f52e Нумерологический анализ:"
-    await callback_query.message.edit_text(text, reply_markup=get_numerology_keyboard())
+    await safe_edit(callback_query, text, reply_markup=get_numerology_keyboard())
     await callback_query.answer()
 
 
 @router.callback_query(F.data == "menu:horoscope")
 async def callback_menu_horoscope(callback_query: CallbackQuery):
     text = "\u2b50 Выбери гороскоп:"
-    await callback_query.message.edit_text(text, reply_markup=get_horoscope_keyboard())
+    await safe_edit(callback_query, text, reply_markup=get_horoscope_keyboard())
     await callback_query.answer()
 
 
 @router.callback_query(F.data == "menu:lunar")
 async def callback_menu_lunar(callback_query: CallbackQuery):
     text = "\U0001f319 Лунный раздел:"
-    await callback_query.message.edit_text(text, reply_markup=get_lunar_keyboard())
+    await safe_edit(callback_query, text, reply_markup=get_lunar_keyboard())
     await callback_query.answer()
 
 
 @router.callback_query(F.data == "menu:premium")
 async def callback_menu_premium(callback_query: CallbackQuery):
     text = "\U0001f48e Премиум-подписка:"
-    await callback_query.message.edit_text(text, reply_markup=get_premium_keyboard())
+    await safe_edit(callback_query, text, reply_markup=get_premium_keyboard())
     await callback_query.answer()
 
 
 @router.callback_query(F.data == "menu:settings")
 async def callback_menu_settings(callback_query: CallbackQuery):
     text = "\u2699\ufe0f Настройки:"
-    await callback_query.message.edit_text(text, reply_markup=get_settings_keyboard())
+    await safe_edit(callback_query, text, reply_markup=get_settings_keyboard())
     await callback_query.answer()
 
 
@@ -294,7 +305,7 @@ async def callback_menu_profile(callback_query: CallbackQuery):
         f"\U0001f48e Премиум: {'Да' if user.is_premium else 'Нет'}\n"
         f"\U0001f4c8 Запросов сегодня: {user.daily_requests}"
     )
-    await callback_query.message.edit_text(text, reply_markup=get_profile_keyboard())
+    await safe_edit(callback_query, text, reply_markup=get_profile_keyboard())
     await callback_query.answer()
 
 
@@ -304,7 +315,7 @@ async def callback_menu_admin(callback_query: CallbackQuery):
         await callback_query.answer("\u274c Нет доступа")
         return
     text = "\U0001f6e1\ufe0f Админ-панель:"
-    await callback_query.message.edit_text(text, reply_markup=get_admin_keyboard())
+    await safe_edit(callback_query, text, reply_markup=get_admin_keyboard())
     await callback_query.answer()
 
 
@@ -388,36 +399,6 @@ async def callback_action_tarot(callback_query: CallbackQuery):
             else:
                 await callback_query.message.answer(text, reply_markup=keyboard)
         await save_history(user.id, "tarot3", "3 cards")
-
-
-@router.callback_query(F.data.startswith("action:tarot_detail:"))
-async def callback_tarot_detail(callback_query: CallbackQuery):
-    parts = callback_query.data.split(":")
-    card_id = parts[2]
-    is_reversed = parts[3] == "1"
-
-    from bot.handlers.tarot import load_tarot_cards, format_card_full
-    from bot.services.card_images import get_card_image
-    from aiogram.types import BufferedInputFile
-
-    cards = load_tarot_cards()
-    card = next((c for c in cards if c["id"] == card_id), None)
-
-    if not card:
-        await callback_query.answer("\u274c Карта не найдена")
-        return
-
-    response = format_card_full(card, is_reversed)
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:tarot")]
-    ])
-    img_buf = get_card_image(card_id, is_reversed)
-    if img_buf:
-        photo = BufferedInputFile(img_buf.read(), filename=f"{card_id}.png")
-        await callback_query.message.answer_photo(photo=photo, caption=response, reply_markup=keyboard)
-    else:
-        await callback_query.message.answer(response, reply_markup=keyboard)
-    await callback_query.answer()
 
 
 @router.callback_query(F.data.startswith("action:numerology"))
