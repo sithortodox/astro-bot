@@ -466,15 +466,50 @@ async def callback_menu_settings(callback_query: CallbackQuery):
 @router.callback_query(F.data.startswith("action:tarot"))
 async def callback_action_tarot(callback_query: CallbackQuery):
     await callback_query.answer()
-    from bot.handlers.tarot import cmd_tarot, cmd_tarot1, cmd_tarot3
+    from bot.handlers.tarot import (
+        draw_card, draw_cards, format_card_short, format_card_full,
+        format_card_with_position, save_history,
+    )
+    from bot.services.ai_service import adapt_text
+
     action = callback_query.data.split(":")[1]
-    fake_msg = _make_fake_msg(callback_query, f"/{action}")
+    user = await get_or_create_user(
+        callback_query.from_user.id,
+        callback_query.from_user.username,
+        callback_query.from_user.first_name,
+    )
+
     if action == "tarot":
-        await cmd_tarot(fake_msg)
+        card, is_reversed = draw_card()
+        response = format_card_short(card, is_reversed)
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(
+                text="\U0001f50d Подробнее",
+                callback_data=f"tarot_detail:{card['id']}:{1 if is_reversed else 0}"
+            )]
+        ])
+        response = await adapt_text(response, user, context_type="tarot")
+        await callback_query.message.answer(response, reply_markup=keyboard)
+        await save_history(user.id, "tarot", response)
+
     elif action == "tarot1":
-        await cmd_tarot1(fake_msg)
+        card, is_reversed = draw_card()
+        response = format_card_full(card, is_reversed)
+        response = await adapt_text(response, user, context_type="tarot")
+        await callback_query.message.answer(response)
+        await save_history(user.id, "tarot1", response)
+
     elif action == "tarot3":
-        await cmd_tarot3(fake_msg)
+        drawn = draw_cards(3)
+        positions = ["Прошлое", "Настоящее", "Будущее"]
+        parts = []
+        for i, (card, is_rev) in enumerate(drawn):
+            pos = positions[i] if i < 3 else f"Карта {i+1}"
+            parts.append(format_card_with_position(card, is_rev, pos))
+        response = "\n\n---\n\n".join(parts)
+        response = await adapt_text(response, user, context_type="tarot")
+        await callback_query.message.answer(response)
+        await save_history(user.id, "tarot3", response)
 
 
 @router.callback_query(F.data == "action:setzodiac")
@@ -658,9 +693,59 @@ async def callback_bp_skip(callback_query: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == "action:premium")
 async def callback_action_premium(callback_query: CallbackQuery):
     await callback_query.answer()
-    from bot.handlers.premium import cmd_premium
-    fake_msg = _make_fake_msg(callback_query, "/premium")
-    await cmd_premium(fake_msg)
+    from bot.services.payment_service import is_premium, get_all_products
+    from datetime import datetime
+
+    user = await get_user(callback_query.from_user.id)
+    if not user:
+        await callback_query.message.answer("\u274c Сначала нажми /start")
+        return
+
+    premium_status = await is_premium(callback_query.from_user.id)
+
+    if premium_status and user.premium_until:
+        try:
+            until = datetime.fromisoformat(user.premium_until)
+            days_left = (until - datetime.now()).days
+            status_text = f"\U0001f48e Премиум активен\nДействует до: {until.strftime('%d.%m.%Y')}\nОсталось дней: {days_left}"
+        except ValueError:
+            status_text = "\U0001f48e Премиум активен"
+    elif premium_status:
+        status_text = "\U0001f48e Премиум активен (пожизненно)"
+    else:
+        status_text = "\U0001f4b3 Бесплатный план\nОбновись до Премиум для безлимитного доступа!"
+
+    products = get_all_products()
+
+    keyboard = []
+    for key, product in products.items():
+        if product.get("duration_days", 0) > 0:
+            keyboard.append([
+                InlineKeyboardButton(
+                    text=f"{product['name']} - {product['price_stars']} Stars",
+                    callback_data=f"buy:{key}"
+                )
+            ])
+
+    keyboard.append([
+        InlineKeyboardButton(text="\U0001f4b3 Мои платежи", callback_data="my_payments")
+    ])
+
+    markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+    text = (
+        f"\U0001f48e Премиум-подписка\n\n"
+        f"{status_text}\n\n"
+        f"\U0001f31f Преимущества:\n"
+        f"  \u2728 Безлимитные расклады Таро\n"
+        f"  \U0001f4d6 Подробные трактовки\n"
+        f"  \U0001f4c5 Ежемесячные прогнозы\n"
+        f"  \u2b50 Приоритетная AI-адаптация\n"
+        f"  \u26a1 Без дневных лимитов\n\n"
+        f"Выбери план:"
+    )
+
+    await callback_query.message.answer(text, reply_markup=markup)
 
 
 @router.callback_query(F.data.startswith("zodiac:"))
