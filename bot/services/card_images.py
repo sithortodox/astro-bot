@@ -1,9 +1,12 @@
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 import json
+import logging
 from pathlib import Path
 
-KB_DIR = Path(__file__).resolve().parent.parent / "knowledge_base"
+logger = logging.getLogger(__name__)
+
+KB_DIR = Path(__file__).resolve().parent.parent.parent / "knowledge_base"
 
 SUIT_COLORS = {
     "wands": (220, 80, 60),
@@ -105,9 +108,15 @@ _all_cards = None
 
 def get_card_image(card_id: str, is_reversed: bool = False) -> BytesIO | None:
     global _all_cards
-    if _all_cards is None:
-        _all_cards = load_cards()
-    card = _all_cards.get(card_id)
-    if not card:
+    try:
+        if _all_cards is None:
+            _all_cards = load_cards()
+            logger.info(f"Loaded {len(_all_cards)} cards from {KB_DIR}")
+        card = _all_cards.get(card_id)
+        if not card:
+            logger.warning(f"Card not found: {card_id}")
+            return None
+        return generate_card_image(card, is_reversed)
+    except Exception as e:
+        logger.error(f"Error generating card image: {e}")
         return None
-    return generate_card_image(card, is_reversed)

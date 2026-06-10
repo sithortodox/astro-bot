@@ -50,7 +50,6 @@ def format_card_short(card: dict, is_reversed: bool = False) -> str:
 def format_card_full(card: dict, is_reversed: bool = False) -> str:
     prefix = "\u2b07\ufe0f \u041f\u0435\u0440\u0435\u0432\u0451\u0440\u043d\u0443\u0442\u0430\u044f " if is_reversed else ""
     meaning = card.get("reversed_meaning" if is_reversed else "upright_meaning", "")
-    keywords = ", ".join(card.get("keywords", [])[:6])
 
     lines = [
         f"{prefix}{card.get('name_ru', card.get('name', '?'))}",
@@ -60,8 +59,6 @@ def format_card_full(card: dict, is_reversed: bool = False) -> str:
         f"\u2764\ufe0f Любовь: {card.get('love', 'N/A')}",
         f"\u2605 Карьера: {card.get('career', 'N/A')}",
         f"\u2728 Финансы: {card.get('finance', 'N/A')}",
-        "",
-        f"\U0001f3af Ключевые слова: {keywords}",
     ]
     return "\n".join(lines)
 
