@@ -20,6 +20,44 @@ ZODIAC_EMOJI = {
 }
 
 
+def get_main_menu() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text="\U0001f0cf Таро", callback_data="menu:tarot"),
+            InlineKeyboardButton(text="\U0001f52e Нумерология", callback_data="menu:numerology"),
+        ],
+        [
+            InlineKeyboardButton(text="\u2b50 Гороскоп", callback_data="menu:horoscope"),
+            InlineKeyboardButton(text="\U0001f319 Луна", callback_data="menu:lunar"),
+        ],
+        [
+            InlineKeyboardButton(text="\U0001f464 Профиль", callback_data="menu:profile"),
+            InlineKeyboardButton(text="\U0001f4dc История", callback_data="menu:history"),
+        ],
+        [
+            InlineKeyboardButton(text="\u2699\ufe0f Настройки", callback_data="menu:settings"),
+        ],
+    ])
+
+
+def get_tarot_menu() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="\U0001f0cf Карта дня", callback_data="action:tarot")],
+        [InlineKeyboardButton(text="\U0001f0cf Расклад на одну карту", callback_data="action:tarot1")],
+        [InlineKeyboardButton(text="\U0001f0cf Расклад на три карты", callback_data="action:tarot3")],
+        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:main")],
+    ])
+
+
+def get_settings_menu() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="\u2698\ufe0f Знак зодиака", callback_data="action:setzodiac")],
+        [InlineKeyboardButton(text="\U0001f4c5 Дата рождения", callback_data="action:setbirth")],
+        [InlineKeyboardButton(text="\U0001f48e Премиум", callback_data="action:premium")],
+        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:main")],
+    ])
+
+
 async def get_user(telegram_id: int) -> User | None:
     async with async_session() as session:
         result = await session.execute(
@@ -48,27 +86,161 @@ async def get_or_create_user(telegram_id: int, username: str | None = None, firs
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
-    await get_or_create_user(
+    user = await get_or_create_user(
         message.from_user.id,
         message.from_user.username,
         message.from_user.first_name,
     )
 
     text = (
-        f"\U0001f44b Привет, {message.from_user.first_name}!\n\n"
-        "Я могу помочь тебе с:\n\n"
-        "\U0001f0cf /tarot \u2014 Карта дня\n"
-        "\U0001f0cf /tarot1 \u2014 Расклад на одну карту\n"
-        "\U0001f0cf /tarot3 \u2014 Расклад на три карты\n\n"
-        "\U0001f52e /numerology \u2014 Нумерология\n"
-        "\u2b50 /horoscope \u2014 Гороскоп на сегодня\n"
-        "\U0001f319 /lunar \u2014 Лунный календарь\n\n"
-        "\u2698\ufe0f /setzodiac \u2014 Установить знак зодиака\n"
-        "\U0001f4c5 /setbirth ДД.ММ.ГГГГ \u2014 Установить дату рождения\n"
-        "\U0001f464 /profile \u2014 Твой профиль\n"
-        "\U0001f4dc /history \u2014 История запросов"
+        f"\U0001f44b Привет, {user.first_name}!\n\n"
+        "Я \u00abТароКод Судьбы\u00bb \u2014 твой мистический помощник.\n"
+        "Выбери, чем я могу тебе помочь:"
     )
-    await message.answer(text)
+    await message.answer(text, reply_markup=get_main_menu())
+
+
+@router.callback_query(F.data == "menu:main")
+async def callback_menu_main(callback_query: CallbackQuery):
+    text = (
+        "\U0001f44b Чем могу помочь?\n\n"
+        "Выбери раздел:"
+    )
+    await callback_query.message.edit_text(text, reply_markup=get_main_menu())
+    await callback_query.answer()
+
+
+@router.callback_query(F.data == "menu:tarot")
+async def callback_menu_tarot(callback_query: CallbackQuery):
+    text = "\U0001f0cf Выбери расклад:"
+    await callback_query.message.edit_text(text, reply_markup=get_tarot_menu())
+    await callback_query.answer()
+
+
+@router.callback_query(F.data == "menu:numerology")
+async def callback_menu_numerology(callback_query: CallbackQuery):
+    await callback_query.answer()
+    from aiogram.types import Message as Msg
+    fake_msg = Msg(
+        message_id=0,
+        date=0,
+        chat=callback_query.message.chat,
+        from_user=callback_query.from_user,
+        text="/numerology",
+    )
+    from bot.handlers.numerology import cmd_numerology
+    await cmd_numerology(fake_msg)
+
+
+@router.callback_query(F.data == "menu:horoscope")
+async def callback_menu_horoscope(callback_query: CallbackQuery):
+    await callback_query.answer()
+    from bot.handlers.horoscope import cmd_horoscope
+    fake_msg = type('obj', (object,), {
+        'message_id': 0, 'date': 0, 'chat': callback_query.message.chat,
+        'from_user': callback_query.from_user, 'text': '/horoscope',
+    })()
+    await cmd_horoscope(fake_msg)
+
+
+@router.callback_query(F.data == "menu:lunar")
+async def callback_menu_lunar(callback_query: CallbackQuery):
+    await callback_query.answer()
+    from bot.handlers.lunar import cmd_lunar
+    fake_msg = type('obj', (object,), {
+        'message_id': 0, 'date': 0, 'chat': callback_query.message.chat,
+        'from_user': callback_query.from_user, 'text': '/lunar',
+    })()
+    await cmd_lunar(fake_msg)
+
+
+@router.callback_query(F.data == "menu:profile")
+async def callback_menu_profile(callback_query: CallbackQuery):
+    await callback_query.answer()
+    from bot.handlers.start import cmd_profile
+    fake_msg = type('obj', (object,), {
+        'message_id': 0, 'date': 0, 'chat': callback_query.message.chat,
+        'from_user': callback_query.from_user, 'text': '/profile',
+    })()
+    await cmd_profile(fake_msg)
+
+
+@router.callback_query(F.data == "menu:history")
+async def callback_menu_history(callback_query: CallbackQuery):
+    await callback_query.answer()
+    from bot.handlers.history import cmd_history
+    fake_msg = type('obj', (object,), {
+        'message_id': 0, 'date': 0, 'chat': callback_query.message.chat,
+        'from_user': callback_query.from_user, 'text': '/history',
+    })()
+    await cmd_history(fake_msg)
+
+
+@router.callback_query(F.data == "menu:settings")
+async def callback_menu_settings(callback_query: CallbackQuery):
+    text = "\u2699\ufe0f Настройки:"
+    await callback_query.message.edit_text(text, reply_markup=get_settings_menu())
+    await callback_query.answer()
+
+
+@router.callback_query(F.data == "action:tarot")
+async def callback_action_tarot(callback_query: CallbackQuery):
+    await callback_query.answer()
+    from bot.handlers.tarot import cmd_tarot
+    fake_msg = type('obj', (object,), {
+        'message_id': 0, 'date': 0, 'chat': callback_query.message.chat,
+        'from_user': callback_query.from_user, 'text': '/tarot',
+    })()
+    await cmd_tarot(fake_msg)
+
+
+@router.callback_query(F.data == "action:tarot1")
+async def callback_action_tarot1(callback_query: CallbackQuery):
+    await callback_query.answer()
+    from bot.handlers.tarot import cmd_tarot1
+    fake_msg = type('obj', (object,), {
+        'message_id': 0, 'date': 0, 'chat': callback_query.message.chat,
+        'from_user': callback_query.from_user, 'text': '/tarot1',
+    })()
+    await cmd_tarot1(fake_msg)
+
+
+@router.callback_query(F.data == "action:tarot3")
+async def callback_action_tarot3(callback_query: CallbackQuery):
+    await callback_query.answer()
+    from bot.handlers.tarot import cmd_tarot3
+    fake_msg = type('obj', (object,), {
+        'message_id': 0, 'date': 0, 'chat': callback_query.message.chat,
+        'from_user': callback_query.from_user, 'text': '/tarot3',
+    })()
+    await cmd_tarot3(fake_msg)
+
+
+@router.callback_query(F.data == "action:setzodiac")
+async def callback_action_setzodiac(callback_query: CallbackQuery):
+    await callback_query.answer()
+    await cmd_setzodiac_callback(callback_query)
+
+
+@router.callback_query(F.data == "action:setbirth")
+async def callback_action_setbirth(callback_query: CallbackQuery):
+    await callback_query.answer()
+    await callback_query.message.answer(
+        "Отправь дату рождения в формате:\n"
+        "/setbirth ДД.ММ.ГГГГ\n\n"
+        "Пример: /setbirth 15.03.1990"
+    )
+
+
+@router.callback_query(F.data == "action:premium")
+async def callback_action_premium(callback_query: CallbackQuery):
+    await callback_query.answer()
+    from bot.handlers.premium import cmd_premium
+    fake_msg = type('obj', (object,), {
+        'message_id': 0, 'date': 0, 'chat': callback_query.message.chat,
+        'from_user': callback_query.from_user, 'text': '/premium',
+    })()
+    await cmd_premium(fake_msg)
 
 
 @router.message(Command("setzodiac"))
@@ -86,6 +258,22 @@ async def cmd_setzodiac(message: Message):
 
     markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
     await message.answer("Выбери свой знак зодиака:", reply_markup=markup)
+
+
+async def cmd_setzodiac_callback(callback_query: CallbackQuery):
+    keyboard = []
+    for i in range(0, len(ZODIAC_SIGNS), 3):
+        row = []
+        for sign in ZODIAC_SIGNS[i:i + 3]:
+            emoji = ZODIAC_EMOJI.get(sign, "")
+            row.append(InlineKeyboardButton(
+                text=f"{emoji} {sign}",
+                callback_data=f"zodiac:{sign}"
+            ))
+        keyboard.append(row)
+
+    markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
+    await callback_query.message.answer("Выбери свой знак зодиака:", reply_markup=markup)
 
 
 @router.callback_query(F.data.startswith("zodiac:"))
