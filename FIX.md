@@ -1,127 +1,109 @@
-# FIX.md — Анализ кода astro-bot (ревизия 3)
+# FIX.md — Анализ кода astro-bot (ревизия 4)
 
 > Репозиторий: https://github.com/sithortodox/astro-bot  
 > Дата анализа: 2026-06-10  
-> Актуальный HEAD: `80e615e` (CI #20 — passed ✅)
-> Всего коммитов: 20
+> HEAD локально: `83cfea0` — в Actions не виден (CI не запускался на `2a88fd6`, `80e615e`, `83cfea0`)  
+> Последний CI run: **#17** на `0a16f1b` ✅
 
 ---
 
-## Что было исправлено — закрытые пункты ✅
+## Почему CI не запускался на последних 3 коммитах
 
-По коммитам `f3b1575`, `2a88fd6`, `80e615e`:
+Все три коммита (`2a88fd6`, `80e615e`, `83cfea0`) судя по названиям меняли только `FIX.md`, `requirements.lock`, `Dockerfile`, `bot/state.py`, `bot/handlers/admin.py`, `bot/services/lunar_service.py`. CI #17 был последним — это означает что либо:
+
+1. `ci.yml` содержит `paths-ignore: ['**.md']` и коммиты `2a88fd6`/`83cfea0` затрагивали только `.md` файлы, поэтому CI не триггерился — **это нормально**
+2. Или коммиты `80e615e` и `2a88fd6` с Python-файлами тоже не запустили CI — тогда это **ошибка в конфигурации**
+
+Нужно проверить `.github/workflows/ci.yml` на наличие `paths-ignore`.
+
+---
+
+## Что закрыто из FIX v3 ✅
+
+По диффу `0a16f1b` и информации о коммитах `2a88fd6`, `80e615e`, `83cfea0`:
 
 | Пункт | Статус | Коммит |
 |-------|--------|--------|
-| `admin.py`: `return` → `await message.answer()` | ✅ Исправлено | `2a88fd6` |
-| `lunar_service.py`: унификация `X \| None` | ✅ Исправлено | `2a88fd6` |
-| `bot/state.py`: вынесен `bot_instance` из `bot.main` | ✅ Исправлено | `2a88fd6` |
-| `admin.py`: импорт из `bot.state` вместо `bot.main` | ✅ Исправлено | `2a88fd6` |
-| `Dockerfile`: использует `requirements.lock` | ✅ Исправлено | `80e615e` |
-| `requirements.lock`: сгенерирован через pip-compile | ✅ Исправлено | `80e615e` |
-| `requirements-dev.txt`: добавлен `ephem` для CI-тестов | ✅ Исправлено | `80e615e` |
-| Замена Ollama на GigaChat API | ✅ Выполнено | `f3b1575` |
-| `docker-compose.yml`: удалён сервис Ollama | ✅ Выполнено | `f3b1575` |
-| Промпты переведены на русский | ✅ Выполнено | `f3b1575` |
+| `admin.py`: `return` → `await message.answer()` | ⚠️ Частично (см. п.1 ниже) | `0a16f1b` |
+| `lunar_service.py`: унификация type hints | ⚠️ Частично (см. п.2 ниже) | `0a16f1b` |
+| `bot/state.py`: вынесен `bot_instance` | ✅ (коммит `2a88fd6`) | `2a88fd6` |
+| `Dockerfile`: использует `requirements.lock` | ✅ (коммит `80e615e`) | `80e615e` |
+| `requirements.lock`: сгенерирован | ✅ (коммит `80e615e`) | `80e615e` |
+| SSL-сертификат Сбера + убран `verify=False` | ✅ (коммит `83cfea0`) | `83cfea0` |
+| GigaChat OAuth2: получение Bearer-токена | ✅ (коммит `83cfea0`) | `83cfea0` |
+| Unit-тесты в `tests/` | ✅ (коммит `83cfea0`) | `83cfea0` |
 
 ---
 
-## Что осталось — открытые пункты 🔴
+## Открытые пункты 🔴
 
-### 1. `verify=False` в httpx — отключена проверка SSL-сертификата
+### 1. `admin.py` — `return "Bot not initialized"` всё ещё в коде
 
-**Файл:** `bot/services/ai_service.py`, строки 84, 114
+**Файл:** `bot/handlers/admin.py`, строки 113–114
 
-**Проблема:** В обоих местах где создаётся `httpx.AsyncClient` добавлен параметр `verify=False`:
+**Проблема:** Из диффа `0a16f1b` видно точно:
+
 ```python
-async with httpx.AsyncClient(timeout=30.0, verify=False) as client:
+from bot.main import bot_instance
++    if not bot_instance:
++        return "Bot not initialized"
 ```
 
-Это отключает проверку TLS-сертификата при запросах к `gigachat.devices.sberbank.ru`. Проблема двойная:
+Коммит `2a88fd6` вынес `bot_instance` в `bot/state.py` — это правильно. Но `return "Bot not initialized"` осталось. Хендлер aiogram не может возвращать строку — возвращаемое значение игнорируется, пользователь не получит никакого ответа.
 
-- **Безопасность:** запрос с `GIGACHAT_API_KEY` (Bearer-токен) отправляется без верификации сервера. При MITM-атаке ключ будет скомпрометирован.
-- **Причина появления:** GigaChat использует российский корневой сертификат (Минцифры/Сбер), который не входит в стандартный CA-bundle. `verify=False` — это быстрый обходной путь, но не правильное решение.
-
-**Правильное решение:** скачать CA-сертификат Сбербанка и передать его явно:
+**Исправление:**
 ```python
-# В Dockerfile или init-скрипте скачать сертификат:
-# https://gu-st.ru/content/lending/russian_trusted_root_ca_pem.crt
+from bot.state import bot_instance  # уже исправлено в 2a88fd6
 
-async with httpx.AsyncClient(
-    timeout=30.0,
-    verify="/app/certs/russian_trusted_root_ca.pem"
-) as client:
-```
-
-Либо добавить сертификат в системный CA-store контейнера:
-```dockerfile
-# В Dockerfile (финальный образ):
-RUN apt-get update && apt-get install -y ca-certificates curl && \
-    curl -o /usr/local/share/ca-certificates/russian_ca.crt \
-    https://gu-st.ru/content/lending/russian_trusted_root_ca_pem.crt && \
-    update-ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
+if not bot_instance:
+    await message.answer("⚠️ Бот не инициализирован")
+    return
 ```
 
 ---
 
-### 2. `GIGACHAT_API_KEY` передаётся как Bearer-токен напрямую — вероятно неверно
+### 2. `lunar_service.py` — `Optional` вместо `X | None` (не унифицировано)
 
-**Файл:** `bot/services/ai_service.py`, строки 70–72
+**Файл:** `bot/services/lunar_service.py`
 
-**Проблема:**
+**Проблема:** Из диффа `0a16f1b` видно, что исправление пошло в обратную сторону — добавлен `from typing import Optional` и все сигнатуры переведены на `Optional[date]`. При этом в остальных файлах проекта (`start.py`, `middlewares/user.py`, `payment_service.py`) используется синтаксис `X | None`. Несогласованность осталась, просто теперь `lunar_service.py` отличается от остальных.
+
+**Исправление:** Удалить `from typing import Optional`, вернуть современный синтаксис:
 ```python
-headers = {
-    "Authorization": f"Bearer {settings.gigachat_api_key}",
-    ...
-}
-```
+# Удалить строку:
+from typing import Optional
 
-GigaChat API использует OAuth2: `GIGACHAT_API_KEY` — это **Client Credentials** (Base64 от `client_id:secret`), а не Bearer-токен. Для получения Bearer-токена нужен предварительный шаг:
+# Заменить:
+def get_lunar_phase(target_date: Optional[date] = None) -> ...
+# На:
+def get_lunar_phase(target_date: date | None = None) -> ...
 
-```
-POST https://ngw.devices.sberbank.ru:9443/api/v2/oauth
-Authorization: Basic <base64(client_id:client_secret)>
-scope=GIGACHAT_API_PERS
-→ {"access_token": "...", "expires_at": ...}
-```
-
-И уже полученный `access_token` используется как Bearer.
-
-**Проблема в коде:** при каждом запросе используется сырой API-ключ как Bearer. Если Сбербанк строго следует своей документации — все запросы будут возвращать 401.
-
-**Действие:** реализовать получение и кэширование токена:
-
-```python
-_token_cache: dict = {"token": None, "expires_at": 0}
-
-async def _get_access_token() -> str:
-    import time
-    if _token_cache["token"] and time.time() < _token_cache["expires_at"] - 60:
-        return _token_cache["token"]
-    
-    async with httpx.AsyncClient(timeout=10.0, verify=...) as client:
-        response = await client.post(
-            "https://ngw.devices.sberbank.ru:9443/api/v2/oauth",
-            headers={
-                "Authorization": f"Basic {settings.gigachat_api_key}",
-                "RqUID": str(uuid.uuid4()),
-            },
-            data={"scope": "GIGACHAT_API_PERS"},
-        )
-        data = response.json()
-        _token_cache["token"] = data["access_token"]
-        _token_cache["expires_at"] = data["expires_at"] / 1000
-        return _token_cache["token"]
+# Аналогично для get_moon_sign, get_next_full_moon, get_next_new_moon
 ```
 
 ---
 
-### 3. `TZ.md` по-прежнему в репозитории
+### 3. `requirements.lock` — сгенерирован под Python 3.14
+
+**Файл:** `requirements.lock`, строка 2
+
+**Проблема:** По коммиту `80e615e` lock-файл добавлен, но сгенерирован локально под Python 3.14 (судя по хедеру `# This file is autogenerated by pip-compile with Python 3.14`). Dockerfile использует `python:3.12-slim`. Несовпадение версий может привести к установке пакетов с неверными маркерами окружения.
+
+**Исправление:** Перегенерировать в Python 3.12-окружении:
+```bash
+docker run --rm -v $(pwd):/app python:3.12-slim \
+  bash -c "pip install pip-tools && cd /app && pip-compile requirements.txt -o requirements.lock"
+# или:
+uv pip compile requirements.txt --python-version 3.12 -o requirements.lock
+```
+
+---
+
+### 4. `TZ.md` по-прежнему в дереве файлов репозитория
 
 **Файл:** `TZ.md`
 
-**Проблема:** Присутствует в дереве файлов на GitHub несмотря на то что в `.gitignore` добавлена строка `TZ.md` в коммите `6b2c5a2`. Правило `.gitignore` не удаляет уже отслеживаемые файлы.
+**Проблема:** Видно в дереве файлов на главной странице репо. `.gitignore` содержит `TZ.md`, но это не удаляет уже отслеживаемый файл из истории.
 
 **Действие:**
 ```bash
@@ -132,76 +114,95 @@ git push
 
 ---
 
-### 4. `requirements.lock` сгенерирован под Python 3.14, используется на Python 3.12
-
-**Файл:** `requirements.lock`, строка 2
-
-**Проблема:**
-```
-# This file is autogenerated by pip-compile with Python 3.14
-```
-
-Dockerfile использует `FROM python:3.12-slim`. Lock-файл, сгенерированный под Python 3.14, может содержать версии пакетов несовместимые с 3.12, либо маркеры окружения (`python_requires`, `sys_platform`) будут вычислены неверно.
-
-**Действие:** перегенерировать lock-файл в Python 3.12-окружении:
-```bash
-docker run --rm -v $(pwd):/app python:3.12-slim \
-  bash -c "pip install pip-tools && cd /app && pip-compile requirements.txt -o requirements.lock"
-```
-
-Или через `uv` с явным указанием версии:
-```bash
-uv pip compile requirements.txt --python-version 3.12 -o requirements.lock
-```
-
----
-
-### 5. CI — `test`-джоба по-прежнему без реальных тестов
+### 5. CI — `actions/checkout@v4` и `actions/setup-python@v5` устарели
 
 **Файл:** `.github/workflows/ci.yml`
 
-**Проблема:** `pytest tests/ -v` запускается в CI, но папка `tests/` либо пустая, либо содержит только `__init__.py`. CI проходит с `no tests ran` — это ложноположительный результат.
+**Проблема:** CI #17 показал 2 warning:
 
-**Действие:** добавить хотя бы минимальные unit-тесты на чистые функции без БД:
+> *Node.js 20 actions are deprecated. Actions will be forced to run with Node.js 24 by default starting June 16th, 2026.*
 
-```python
-# tests/test_numerology.py
-from bot.services.numerology_service import calculate_life_path
+С **16 июня 2026** (через 6 дней) CI начнёт принудительно использовать Node.js 24, и текущие версии экшенов могут сломаться.
 
-def test_life_path_basic():
-    assert calculate_life_path("01.01.1990") == 3
-
-def test_life_path_master_number():
-    assert calculate_life_path("29.11.1975") == 11
+**Исправление:**
+```yaml
+- uses: actions/checkout@v4
+  env:
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+- uses: actions/setup-python@v5
+  env:
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 ```
 
-```python
-# tests/test_lunar.py
-from bot.services.lunar_service import get_lunar_phase
-from datetime import date
+Или переменная окружения на уровне workflow:
+```yaml
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+```
 
-def test_lunar_phase_returns_tuple():
-    result = get_lunar_phase(date(2024, 1, 1))
-    assert isinstance(result, tuple)
-    assert len(result) == 3
+Либо дождаться обновлённых версий экшенов с поддержкой Node.js 24 и обновить теги.
+
+---
+
+### 6. CI — проверить `paths-ignore` в `ci.yml`
+
+**Файл:** `.github/workflows/ci.yml`
+
+**Проблема:** CI не запускался на коммите `80e615e` (изменены `Dockerfile` и `requirements.lock` — это не `.md` файлы). Это подозрительно. Либо в `ci.yml` есть `paths-ignore`, который исключает эти файлы, либо что-то пошло не так.
+
+**Действие:** Проверить содержимое `ci.yml`:
+```bash
+cat .github/workflows/ci.yml
+```
+
+Если `paths-ignore` слишком широкий — скорректировать. Рекомендуемый минимальный `paths-ignore`:
+```yaml
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+      - 'TZ.md'
 ```
 
 ---
 
-### 6. `admin_api` — не проверена привязка порта к `127.0.0.1`
+### 7. `admin_api` — не проверена привязка порта к `127.0.0.1`
 
 **Файл:** `docker-compose.yml`
 
-**Проблема:** В коммите `6b2c5a2` admin_api добавлен с профилем `profiles: ["admin"]`, что частично решает проблему. Но если профиль запущен — нужно убедиться что порт привязан к `127.0.0.1`:
+**Проблема:** Этот пункт остаётся открытым с FIX v2 — не было возможности прочитать актуальный `docker-compose.yml` из-за CDN-кэша. Нужно убедиться что порт `8000` привязан к `127.0.0.1`, а не к `0.0.0.0`.
 
-```yaml
-ports:
-  - "127.0.0.1:8000:8000"  # правильно
-  # не:
-  - "8000:8000"             # открывает на всех интерфейсах
+**Действие:** Проверить:
+```bash
+grep -A5 "admin_api" docker-compose.yml | grep ports
 ```
 
-**Действие:** проверить текущий `docker-compose.yml` и при необходимости добавить `127.0.0.1:`.
+Ожидаемый результат: `"127.0.0.1:8000:8000"`. Если `"8000:8000"` — исправить.
+
+---
+
+### 8. `README.md` — упоминает Ollama, не обновлён после GigaChat
+
+**Файл:** `README.md`
+
+**Проблема:** В README в разделе Features написано:
+> *AI Adaptation: Personalized text via local LLM (Ollama + gemma3:4b)*
+
+И в Tech Stack:
+> *Ollama + gemma3:4b (AI text adaptation)*
+
+После коммита `f3b1575` (замена Ollama на GigaChat) README не обновлялся.
+
+**Действие:** Обновить README:
+```markdown
+# Features
+- **AI Adaptation**: Personalized text via GigaChat API (Sber)
+
+# Tech Stack
+- GigaChat API (AI text adaptation)
+```
 
 ---
 
@@ -209,21 +210,24 @@ ports:
 
 | # | Файл | Задача | Приоритет |
 |---|------|--------|-----------|
-| 1 | `bot/services/ai_service.py` | Убрать `verify=False`, добавить CA-сертификат | 🔴 Высокий |
-| 2 | `bot/services/ai_service.py` | Реализовать OAuth2 для GigaChat (получение Bearer) | 🔴 Высокий |
-| 3 | `TZ.md` | `git rm TZ.md` — удалить из отслеживания | 🟡 Средний |
-| 4 | `requirements.lock` | Перегенерировать под Python 3.12 | 🟡 Средний |
-| 5 | `tests/` + `ci.yml` | Добавить реальные unit-тесты | 🟡 Средний |
-| 6 | `docker-compose.yml` | Проверить `127.0.0.1` для admin_api | 🟡 Средний |
+| 1 | `bot/handlers/admin.py` | `return` → `await message.answer()` | 🔴 Высокий |
+| 2 | `bot/services/lunar_service.py` | `Optional[date]` → `date \| None` | 🟢 Низкий |
+| 3 | `requirements.lock` | Перегенерировать под Python 3.12 | 🟡 Средний |
+| 4 | `TZ.md` | `git rm TZ.md` | 🟡 Средний |
+| 5 | `.github/workflows/ci.yml` | Обновить для Node.js 24 (дедлайн 16.06) | 🔴 Высокий |
+| 6 | `.github/workflows/ci.yml` | Проверить `paths-ignore` | 🟡 Средний |
+| 7 | `docker-compose.yml` | Проверить `127.0.0.1` для admin_api | 🟡 Средний |
+| 8 | `README.md` | Обновить упоминания Ollama → GigaChat | 🟢 Низкий |
 
 ---
 
 ## Итог по ревизиям
 
-| Ревизия | Пунктов найдено | Закрыто | Осталось |
-|---------|----------------|---------|---------|
+| Ревизия | Найдено | Закрыто | Осталось |
+|---------|---------|---------|---------|
 | FIX v1 | 22 | — | 22 |
 | FIX v2 | 7 | 22 | 7 |
 | FIX v3 | 6 | 7 | 6 |
+| FIX v4 | 8 | ~5 | 8 |
 
-Ключевая новая находка: переход на GigaChat API (`f3b1575`) внёс два серьёзных технических долга — отключённую SSL-верификацию и неправильную схему аутентификации. Оба пункта нужно закрыть до деплоя в продакшен, иначе либо AI-адаптация не будет работать (401), либо будет работать небезопасно (MITM).
+**Срочно:** пункт 5 (Node.js 24 в CI) — дедлайн 16 июня 2026, до него 6 дней. После этой даты CI может начать падать.

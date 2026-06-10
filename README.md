@@ -8,7 +8,7 @@ Telegram-бот с астрологическими услугами: раскл
 - **Numerology**: Life path, destiny, and personality numbers
 - **Horoscopes**: Daily zodiac horoscopes
 - **Lunar Services**: Moon phases, calendar, recommendations
-- **AI Adaptation**: Personalized text via local LLM (Ollama + gemma3:4b)
+- **AI Adaptation**: Personalized text via GigaChat API (Sber)
 - **Premium System**: Telegram Stars payments, subscriptions
 - **Admin Panel**: User management, statistics, broadcast
 
@@ -19,7 +19,7 @@ Telegram-бот с астрологическими услугами: раскл
 - FastAPI (Admin API)
 - PostgreSQL (database)
 - Redis (caching)
-- Ollama + gemma3:4b (AI text adaptation)
+- GigaChat API (AI text adaptation)
 - ephem (lunar calculations)
 - Docker + Docker Compose
 
