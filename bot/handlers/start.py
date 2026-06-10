@@ -471,6 +471,8 @@ async def callback_action_tarot(callback_query: CallbackQuery):
         format_card_with_position, save_history,
     )
     from bot.services.ai_service import adapt_text
+    from bot.services.card_images import get_card_image
+    from aiogram.types import BufferedInputFile
 
     action = callback_query.data.split(":")[1]
     user = await get_or_create_user(
@@ -489,27 +491,40 @@ async def callback_action_tarot(callback_query: CallbackQuery):
             )]
         ])
         response = await adapt_text(response, user, context_type="tarot")
-        await callback_query.message.answer(response, reply_markup=keyboard)
+        img_buf = get_card_image(card["id"], is_reversed)
+        if img_buf:
+            photo = BufferedInputFile(img_buf.read(), filename=f"{card['id']}.png")
+            await callback_query.message.answer_photo(photo=photo, caption=response, reply_markup=keyboard)
+        else:
+            await callback_query.message.answer(response, reply_markup=keyboard)
         await save_history(user.id, "tarot", response)
 
     elif action == "tarot1":
         card, is_reversed = draw_card()
         response = format_card_full(card, is_reversed)
         response = await adapt_text(response, user, context_type="tarot")
-        await callback_query.message.answer(response)
+        img_buf = get_card_image(card["id"], is_reversed)
+        if img_buf:
+            photo = BufferedInputFile(img_buf.read(), filename=f"{card['id']}.png")
+            await callback_query.message.answer_photo(photo=photo, caption=response)
+        else:
+            await callback_query.message.answer(response)
         await save_history(user.id, "tarot1", response)
 
     elif action == "tarot3":
         drawn = draw_cards(3)
         positions = ["Прошлое", "Настоящее", "Будущее"]
-        parts = []
         for i, (card, is_rev) in enumerate(drawn):
             pos = positions[i] if i < 3 else f"Карта {i+1}"
-            parts.append(format_card_with_position(card, is_rev, pos))
-        response = "\n\n---\n\n".join(parts)
-        response = await adapt_text(response, user, context_type="tarot")
-        await callback_query.message.answer(response)
-        await save_history(user.id, "tarot3", response)
+            text = format_card_with_position(card, is_rev, pos)
+            text = await adapt_text(text, user, context_type="tarot")
+            img_buf = get_card_image(card["id"], is_rev)
+            if img_buf:
+                photo = BufferedInputFile(img_buf.read(), filename=f"{card['id']}.png")
+                await callback_query.message.answer_photo(photo=photo, caption=text)
+            else:
+                await callback_query.message.answer(text)
+        await save_history(user.id, "tarot3", "3 cards")
 
 
 @router.callback_query(F.data == "action:setzodiac")
