@@ -9,6 +9,7 @@ from sqlalchemy import select
 
 from bot.database import async_session
 from bot.models import User
+from bot.config import settings
 
 router = Router()
 
@@ -24,16 +25,16 @@ ZODIAC_EMOJI = {
 }
 
 
-def get_main_keyboard() -> ReplyKeyboardMarkup:
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text="\U0001f0cf Таро"), KeyboardButton(text="\U0001f52e Нумерология")],
-            [KeyboardButton(text="\u2b50 Гороскоп"), KeyboardButton(text="\U0001f319 Луна")],
-            [KeyboardButton(text="\U0001f464 Профиль"), KeyboardButton(text="\U0001f4dc История")],
-            [KeyboardButton(text="\u2699\ufe0f Настройки")],
-        ],
-        resize_keyboard=True,
-    )
+def get_main_keyboard(is_admin: bool = False) -> ReplyKeyboardMarkup:
+    keyboard = [
+        [KeyboardButton(text="\U0001f0cf Таро"), KeyboardButton(text="\U0001f52e Нумерология")],
+        [KeyboardButton(text="\u2b50 Гороскоп"), KeyboardButton(text="\U0001f319 Луна")],
+        [KeyboardButton(text="\U0001f464 Профиль"), KeyboardButton(text="\U0001f4dc История")],
+        [KeyboardButton(text="\u2699\ufe0f Настройки")],
+    ]
+    if is_admin:
+        keyboard.append([KeyboardButton(text="\U0001f6e1\ufe0f Админ")])
+    return ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)
 
 
 def get_tarot_keyboard() -> InlineKeyboardMarkup:
@@ -98,12 +99,13 @@ async def cmd_start(message: Message):
         message.from_user.first_name,
     )
 
+    is_admin = message.from_user.id in settings.admin_ids
     text = (
         f"\U0001f44b Привет, {user.first_name}!\n\n"
         "Я \u00abТароКод Судьбы\u00bb \u2014 твой мистический помощник.\n"
         "Выбери раздел кнопкой внизу:"
     )
-    await message.answer(text, reply_markup=get_main_keyboard())
+    await message.answer(text, reply_markup=get_main_keyboard(is_admin))
 
 
 @router.message(F.text == "\U0001f0cf Таро")
@@ -152,6 +154,85 @@ async def msg_history(message: Message):
 async def msg_settings(message: Message):
     text = "\u2699\ufe0f Настройки:"
     await message.answer(text, reply_markup=get_settings_keyboard())
+
+
+def get_admin_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="\U0001f4ca Статистика", callback_data="admin:stats")],
+        [InlineKeyboardButton(text="\U0001f465 Пользователи", callback_data="admin:users")],
+        [InlineKeyboardButton(text="\U0001f4e2 Рассылка", callback_data="admin:broadcast")],
+        [InlineKeyboardButton(text="\U0001f6ab Бан", callback_data="admin:ban")],
+        [InlineKeyboardButton(text="\U0001f48e Выдать премиум", callback_data="admin:setpremium")],
+        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:main")],
+    ])
+
+
+@router.message(F.text == "\U0001f6e1\ufe0f Админ")
+@router.message(Command("admin"))
+async def msg_admin(message: Message):
+    if message.from_user.id not in settings.admin_ids:
+        await message.answer("\u274c У тебя нет доступа")
+        return
+    text = "\U0001f6e1\ufe0f Админ-панель:"
+    await message.answer(text, reply_markup=get_admin_keyboard())
+
+
+@router.callback_query(F.data == "admin:stats")
+async def callback_admin_stats(callback_query: CallbackQuery):
+    if callback_query.from_user.id not in settings.admin_ids:
+        await callback_query.answer("\u274c Нет доступа")
+        return
+    from bot.handlers.admin import cmd_stats
+    fake_msg = _make_fake_msg(callback_query, "/stats")
+    await cmd_stats(fake_msg)
+    await callback_query.answer()
+
+
+@router.callback_query(F.data == "admin:users")
+async def callback_admin_users(callback_query: CallbackQuery):
+    if callback_query.from_user.id not in settings.admin_ids:
+        await callback_query.answer("\u274c Нет доступа")
+        return
+    from bot.handlers.admin import cmd_users
+    fake_msg = _make_fake_msg(callback_query, "/users")
+    await cmd_users(fake_msg)
+    await callback_query.answer()
+
+
+@router.callback_query(F.data == "admin:broadcast")
+async def callback_admin_broadcast(callback_query: CallbackQuery):
+    if callback_query.from_user.id not in settings.admin_ids:
+        await callback_query.answer("\u274c Нет доступа")
+        return
+    await callback_query.message.answer(
+        "Отправь сообщение для рассылки в формате:\n"
+        "/broadcast Текст сообщения"
+    )
+    await callback_query.answer()
+
+
+@router.callback_query(F.data == "admin:ban")
+async def callback_admin_ban(callback_query: CallbackQuery):
+    if callback_query.from_user.id not in settings.admin_ids:
+        await callback_query.answer("\u274c Нет доступа")
+        return
+    await callback_query.message.answer(
+        "Отправь команду:\n"
+        "/ban USER_ID"
+    )
+    await callback_query.answer()
+
+
+@router.callback_query(F.data == "admin:setpremium")
+async def callback_admin_setpremium(callback_query: CallbackQuery):
+    if callback_query.from_user.id not in settings.admin_ids:
+        await callback_query.answer("\u274c Нет доступа")
+        return
+    await callback_query.message.answer(
+        "Отправь команду:\n"
+        "/setpremium USER_ID"
+    )
+    await callback_query.answer()
 
 
 @router.callback_query(F.data == "menu:main")
