@@ -527,7 +527,6 @@ async def callback_action_horoscope(callback_query: CallbackQuery):
 async def callback_action_lunar(callback_query: CallbackQuery):
     await callback_query.answer()
     from bot.handlers.lunar import get_lunar_info
-    from bot.services.ai_service import adapt_text
 
     user = await get_user(callback_query.from_user.id)
     if not user:
@@ -536,7 +535,6 @@ async def callback_action_lunar(callback_query: CallbackQuery):
 
     period = callback_query.data.split(":")[2]
     response = get_lunar_info(period)
-    response = await adapt_text(response, user, context_type="lunar")
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:lunar")]
