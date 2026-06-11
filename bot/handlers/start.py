@@ -298,6 +298,85 @@ def get_admin_keyboard() -> ReplyKeyboardMarkup:
     ], resize_keyboard=True)
 
 
+@router.message(F.text == "\U0001f4ca Статистика")
+async def handler_admin_stats(message: Message):
+    if message.from_user.id not in settings.admin_ids:
+        return
+    async with async_session() as session:
+        total_users = await session.scalar(select(func.count(User.id)))
+        premium_users = await session.scalar(
+            select(func.count(User.id)).where(User.is_premium)
+        )
+        today = date.today().isoformat()
+        active_today = await session.scalar(
+            select(func.count(User.id)).where(User.last_request_date == today)
+        )
+        total_requests = await session.scalar(select(func.sum(User.total_requests)))
+        total_payments = await session.scalar(select(func.count(Payment.id)))
+    text = (
+        f"\U0001f4ca Статистика\n\n"
+        f"\U0001f465 Всего пользователей: {total_users}\n"
+        f"\U0001f48e Премиум: {premium_users}\n"
+        f"\U0001f525 Активны сегодня: {active_today}\n"
+        f"\U0001f4c8 Всего запросов: {total_requests or 0}\n"
+        f"\U0001f4b3 Всего платежей: {total_payments or 0}"
+    )
+    await message.answer(text, reply_markup=get_admin_keyboard())
+
+
+@router.message(F.text == "\U0001f465 Пользователи")
+async def handler_admin_users(message: Message):
+    if message.from_user.id not in settings.admin_ids:
+        return
+    async with async_session() as session:
+        result = await session.execute(
+            select(User).order_by(User.created_at.desc()).limit(20)
+        )
+        users = result.scalars().all()
+    if not users:
+        await message.answer("\U0001f4cb Пользователей пока нет", reply_markup=get_admin_keyboard())
+        return
+    lines = ["\U0001f465 Последние пользователи:\n"]
+    for u in users:
+        premium = "\U0001f48e" if u.is_premium else ""
+        lines.append(
+            f"  {u.telegram_id} | @{u.username or '?'} | "
+            f"{u.first_name or '?'} | {u.zodiac_sign or '?'} {premium}"
+        )
+    await message.answer("\n".join(lines), reply_markup=get_admin_keyboard())
+
+
+@router.message(F.text == "\U0001f4e2 Рассылка")
+async def handler_admin_broadcast(message: Message):
+    if message.from_user.id not in settings.admin_ids:
+        return
+    await message.answer(
+        "Отправь сообщение для рассылки в формате:\n"
+        "/broadcast Текст сообщения",
+        reply_markup=get_admin_keyboard()
+    )
+
+
+@router.message(F.text == "\U0001f6ab Бан")
+async def handler_admin_ban(message: Message):
+    if message.from_user.id not in settings.admin_ids:
+        return
+    await message.answer(
+        "Отправь команду:\n/ban USER_ID",
+        reply_markup=get_admin_keyboard()
+    )
+
+
+@router.message(F.text == "\U0001f48e Выдать премиум")
+async def handler_admin_setpremium(message: Message):
+    if message.from_user.id not in settings.admin_ids:
+        return
+    await message.answer(
+        "Отправь команду:\n/setpremium USER_ID",
+        reply_markup=get_admin_keyboard()
+    )
+
+
 @router.message(F.text == "\U0001f0cf Карта дня")
 async def handler_tarot_day(message: Message):
     from bot.handlers.tarot import draw_card, format_card_short, save_history
@@ -822,104 +901,6 @@ async def callback_zodiac(callback_query: CallbackQuery):
     else:
         await callback_query.message.answer("Сначала нажми /start")
     await callback_query.answer()
-
-
-@router.callback_query(F.data.startswith("admin:"))
-async def callback_admin(callback_query: CallbackQuery):
-    if callback_query.from_user.id not in settings.admin_ids:
-        await callback_query.answer("\u274c Нет доступа")
-        return
-
-    action = callback_query.data.split(":")[1]
-
-    if action == "stats":
-        await _admin_stats(callback_query)
-    elif action == "users":
-        await _admin_users(callback_query)
-    elif action == "broadcast":
-        await _admin_broadcast(callback_query)
-    elif action == "ban":
-        await _admin_ban(callback_query)
-    elif action == "setpremium":
-        await _admin_setpremium(callback_query)
-
-    await callback_query.answer()
-
-
-async def _admin_stats(callback_query: CallbackQuery):
-    async with async_session() as session:
-        total_users = await session.scalar(select(func.count(User.id)))
-        premium_users = await session.scalar(
-            select(func.count(User.id)).where(User.is_premium)
-        )
-        today = date.today().isoformat()
-        active_today = await session.scalar(
-            select(func.count(User.id)).where(User.last_request_date == today)
-        )
-        total_requests = await session.scalar(select(func.sum(User.total_requests)))
-        total_payments = await session.scalar(select(func.count(Payment.id)))
-    text = (
-        f"\U0001f4ca Статистика\n\n"
-        f"\U0001f465 Всего пользователей: {total_users}\n"
-        f"\U0001f48e Премиум: {premium_users}\n"
-        f"\U0001f525 Активны сегодня: {active_today}\n"
-        f"\U0001f4c8 Всего запросов: {total_requests or 0}\n"
-        f"\U0001f4b3 Всего платежей: {total_payments or 0}"
-    )
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:admin")]
-    ])
-    await callback_query.message.answer(text, reply_markup=keyboard)
-
-
-async def _admin_users(callback_query: CallbackQuery):
-    async with async_session() as session:
-        result = await session.execute(
-            select(User).order_by(User.created_at.desc()).limit(20)
-        )
-        users = result.scalars().all()
-    if not users:
-        await callback_query.message.answer("\U0001f4cb Пользователей пока нет")
-        return
-    lines = ["\U0001f465 Последние пользователи:\n"]
-    for u in users:
-        premium = "\U0001f48e" if u.is_premium else ""
-        lines.append(
-            f"  {u.telegram_id} | @{u.username or '?'} | "
-            f"{u.first_name or '?'} | {u.zodiac_sign or '?'} {premium}"
-        )
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:admin")]
-    ])
-    await callback_query.message.answer("\n".join(lines), reply_markup=keyboard)
-
-
-async def _admin_broadcast(callback_query: CallbackQuery):
-    await callback_query.message.answer(
-        "Отправь сообщение для рассылки в формате:\n"
-        "/broadcast Текст сообщения",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:admin")]
-        ])
-    )
-
-
-async def _admin_ban(callback_query: CallbackQuery):
-    await callback_query.message.answer(
-        "Отправь команду:\n/ban USER_ID",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:admin")]
-        ])
-    )
-
-
-async def _admin_setpremium(callback_query: CallbackQuery):
-    await callback_query.message.answer(
-        "Отправь команду:\n/setpremium USER_ID",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:admin")]
-        ])
-    )
 
 
 @router.message(Command("setbirth"))
