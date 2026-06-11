@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram.types import (
     Message, CallbackQuery,
     InlineKeyboardMarkup, InlineKeyboardButton,
-    InputMediaPhoto,
+    ReplyKeyboardMarkup, KeyboardButton,
 )
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
@@ -16,17 +16,6 @@ from bot.config import settings
 
 router = Router()
 
-
-async def safe_edit(callback_query: CallbackQuery, text: str, reply_markup=None):
-    try:
-        await callback_query.message.edit_text(text, reply_markup=reply_markup)
-    except Exception:
-        try:
-            await callback_query.message.delete()
-        except Exception:
-            pass
-        await callback_query.message.answer(text, reply_markup=reply_markup)
-
 ZODIAC_SIGNS = [
     "Овен", "Телец", "Близнецы", "Рак", "Лев", "Дева",
     "Весы", "Скорпион", "Стрелец", "Козерог", "Водолей", "Рыбы",
@@ -39,82 +28,78 @@ ZODIAC_EMOJI = {
 }
 
 
-def get_main_keyboard(is_admin: bool = False) -> InlineKeyboardMarkup:
+def get_main_keyboard(is_admin: bool = False) -> ReplyKeyboardMarkup:
     keyboard = [
-        [InlineKeyboardButton(text="\U0001f0cf Таро", callback_data="menu:tarot"),
-         InlineKeyboardButton(text="\U0001f52e Нумерология", callback_data="menu:numerology")],
-        [InlineKeyboardButton(text="\u2b50 Гороскоп", callback_data="menu:horoscope"),
-         InlineKeyboardButton(text="\U0001f319 Луна", callback_data="menu:lunar")],
-        [InlineKeyboardButton(text="\U0001f48e Премиум", callback_data="menu:premium")],
-        [InlineKeyboardButton(text="\U0001f464 Профиль", callback_data="menu:profile"),
-         InlineKeyboardButton(text="\u2699\ufe0f Настройки", callback_data="menu:settings")],
+        [KeyboardButton(text="\U0001f0cf Таро"), KeyboardButton(text="\U0001f52e Нумерология")],
+        [KeyboardButton(text="\u2b50 Гороскоп"), KeyboardButton(text="\U0001f319 Луна")],
+        [KeyboardButton(text="\U0001f48e Премиум")],
+        [KeyboardButton(text="\U0001f464 Профиль"), KeyboardButton(text="\u2699\ufe0f Настройки")],
     ]
     if is_admin:
-        keyboard.append([InlineKeyboardButton(text="\U0001f6e1\ufe0f Админ", callback_data="menu:admin")])
-    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+        keyboard.append([KeyboardButton(text="\U0001f6e1\ufe0f Админ")])
+    return ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)
 
 
-def get_tarot_keyboard() -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="\U0001f0cf Карта дня", callback_data="action:tarot")],
-        [InlineKeyboardButton(text="\U0001f0cf Расклад на одну карту", callback_data="action:tarot1")],
-        [InlineKeyboardButton(text="\U0001f0cf Расклад на три карты", callback_data="action:tarot3")],
-        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:main")],
-    ])
+def get_tarot_keyboard() -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(keyboard=[
+        [KeyboardButton(text="\U0001f0cf Карта дня")],
+        [KeyboardButton(text="\U0001f0cf Расклад на одну карту")],
+        [KeyboardButton(text="\U0001f0cf Расклад на три карты")],
+        [KeyboardButton(text="\u2b05\ufe0f Назад")],
+    ], resize_keyboard=True)
 
 
-def get_numerology_keyboard() -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="\U0001f52e Мой нумерологический анализ", callback_data="action:numerology")],
-        [InlineKeyboardButton(text="\u2728 Число жизненного пути", callback_data="action:life_path")],
-        [InlineKeyboardButton(text="\U0001f31f Число судьбы", callback_data="action:destiny")],
-        [InlineKeyboardButton(text="\U0001f451 Число личности", callback_data="action:personality")],
-        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:main")],
-    ])
+def get_numerology_keyboard() -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(keyboard=[
+        [KeyboardButton(text="\U0001f52e Мой анализ")],
+        [KeyboardButton(text="\u2728 Число пути")],
+        [KeyboardButton(text="\U0001f31f Число судьбы")],
+        [KeyboardButton(text="\U0001f451 Число личности")],
+        [KeyboardButton(text="\u2b05\ufe0f Назад")],
+    ], resize_keyboard=True)
 
 
-def get_horoscope_keyboard() -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="\u2b50 Сегодня", callback_data="action:horoscope:daily")],
-        [InlineKeyboardButton(text="\U0001f52e Неделя", callback_data="action:horoscope:weekly")],
-        [InlineKeyboardButton(text="\U0001f4c5 Месяц", callback_data="action:horoscope:monthly")],
-        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:main")],
-    ])
+def get_horoscope_keyboard() -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(keyboard=[
+        [KeyboardButton(text="\u2b50 Сегодня"), KeyboardButton(text="\U0001f52e Неделя")],
+        [KeyboardButton(text="\U0001f4c5 Месяц")],
+        [KeyboardButton(text="\u2b05\ufe0f Назад")],
+    ], resize_keyboard=True)
 
 
-def get_lunar_keyboard() -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="\U0001f319 Луна сегодня", callback_data="action:lunar:today")],
-        [InlineKeyboardButton(text="\U0001f319 Лунный календарь", callback_data="action:lunar:calendar")],
-        [InlineKeyboardButton(text="\U0001f33e Лунные рекомендации", callback_data="action:lunar:tips")],
-        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:main")],
-    ])
+def get_lunar_keyboard() -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(keyboard=[
+        [KeyboardButton(text="\U0001f319 Луна сегодня")],
+        [KeyboardButton(text="\U0001f319 Лунный календарь")],
+        [KeyboardButton(text="\U0001f33e Лунные рекомендации")],
+        [KeyboardButton(text="\u2b05\ufe0f Назад")],
+    ], resize_keyboard=True)
 
 
-def get_premium_keyboard() -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="\U0001f48e Купить Премиум", callback_data="action:premium")],
-        [InlineKeyboardButton(text="\U0001f4b3 Мои платежи", callback_data="my_payments")],
-        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:main")],
-    ])
+def get_premium_keyboard() -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(keyboard=[
+        [KeyboardButton(text="\U0001f48e Купить Премиум")],
+        [KeyboardButton(text="\U0001f4b3 Мои платежи")],
+        [KeyboardButton(text="\u2b05\ufe0f Назад")],
+    ], resize_keyboard=True)
 
 
-def get_settings_keyboard() -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="\u2698\ufe0f Знак зодиака", callback_data="action:setzodiac")],
-        [InlineKeyboardButton(text="\U0001f4c5 Дата рождения", callback_data="action:setbirth")],
-        [InlineKeyboardButton(text="\U0001f552 Время рождения", callback_data="action:settime")],
-        [InlineKeyboardButton(text="\U0001f4cd Место рождения", callback_data="action:setplace")],
-        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:main")],
-    ])
+def get_settings_keyboard() -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(keyboard=[
+        [KeyboardButton(text="\u2698\ufe0f Знак зодиака")],
+        [KeyboardButton(text="\U0001f4c5 Дата рождения")],
+        [KeyboardButton(text="\U0001f552 Время рождения")],
+        [KeyboardButton(text="\U0001f4cd Место рождения")],
+        [KeyboardButton(text="\u2b05\ufe0f Назад")],
+    ], resize_keyboard=True)
 
 
-def get_profile_keyboard() -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="\U0001f4dc История", callback_data="action:history")],
-        [InlineKeyboardButton(text="\u2699\ufe0f Настройки", callback_data="menu:settings")],
-        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:main")],
-    ])
+def get_profile_keyboard() -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(keyboard=[
+        [KeyboardButton(text="\U0001f4dc История")],
+        [KeyboardButton(text="\u2699\ufe0f Настройки")],
+        [KeyboardButton(text="\u2b05\ufe0f Назад")],
+    ], resize_keyboard=True)
 
 
 def get_year_keyboard() -> InlineKeyboardMarkup:
@@ -232,231 +217,218 @@ async def cmd_menu(message: Message):
     await message.answer("\U0001f44f Выбери раздел:", reply_markup=get_main_keyboard(is_admin))
 
 
-@router.callback_query(F.data == "menu:main")
-async def callback_menu_main(callback_query: CallbackQuery):
-    is_admin = callback_query.from_user.id in settings.admin_ids
-    text = "\U0001f44f Выбери раздел:"
-    await safe_edit(callback_query, text, reply_markup=get_main_keyboard(is_admin))
-    await callback_query.answer()
+@router.message(F.text == "\u2b05\ufe0f Назад")
+async def handler_back(message: Message):
+    user = await get_user(message.from_user.id)
+    is_admin = message.from_user.id in settings.admin_ids if user else False
+    await message.answer("\U0001f44f Выбери раздел:", reply_markup=get_main_keyboard(is_admin))
 
 
-@router.callback_query(F.data == "menu:tarot")
-async def callback_menu_tarot(callback_query: CallbackQuery):
-    text = "\U0001f0cf Выбери расклад:"
-    await safe_edit(callback_query, text, reply_markup=get_tarot_keyboard())
-    await callback_query.answer()
+@router.message(F.text == "\U0001f0cf Таро")
+async def handler_tarot_menu(message: Message):
+    await message.answer("\U0001f0cf Выбери расклад:", reply_markup=get_tarot_keyboard())
 
 
-@router.callback_query(F.data == "menu:numerology")
-async def callback_menu_numerology(callback_query: CallbackQuery):
-    text = "\U0001f52e Нумерологический анализ:"
-    await safe_edit(callback_query, text, reply_markup=get_numerology_keyboard())
-    await callback_query.answer()
+@router.message(F.text == "\U0001f52e Нумерология")
+async def handler_numerology_menu(message: Message):
+    await message.answer("\U0001f52e Нумерологический анализ:", reply_markup=get_numerology_keyboard())
 
 
-@router.callback_query(F.data == "menu:horoscope")
-async def callback_menu_horoscope(callback_query: CallbackQuery):
-    text = "\u2b50 Выбери гороскоп:"
-    await safe_edit(callback_query, text, reply_markup=get_horoscope_keyboard())
-    await callback_query.answer()
+@router.message(F.text == "\u2b50 Гороскоп")
+async def handler_horoscope_menu(message: Message):
+    await message.answer("\u2b50 Выбери гороскоп:", reply_markup=get_horoscope_keyboard())
 
 
-@router.callback_query(F.data == "menu:lunar")
-async def callback_menu_lunar(callback_query: CallbackQuery):
-    text = "\U0001f319 Лунный раздел:"
-    await safe_edit(callback_query, text, reply_markup=get_lunar_keyboard())
-    await callback_query.answer()
+@router.message(F.text == "\U0001f319 Луна")
+async def handler_lunar_menu(message: Message):
+    await message.answer("\U0001f319 Лунный раздел:", reply_markup=get_lunar_keyboard())
 
 
-@router.callback_query(F.data == "menu:premium")
-async def callback_menu_premium(callback_query: CallbackQuery):
-    text = "\U0001f48e Премиум-подписка:"
-    await safe_edit(callback_query, text, reply_markup=get_premium_keyboard())
-    await callback_query.answer()
+@router.message(F.text == "\U0001f48e Премиум")
+async def handler_premium_menu(message: Message):
+    await message.answer("\U0001f48e Премиум-подписка:", reply_markup=get_premium_keyboard())
 
 
-@router.callback_query(F.data == "menu:settings")
-async def callback_menu_settings(callback_query: CallbackQuery):
-    text = "\u2699\ufe0f Настройки:"
-    await safe_edit(callback_query, text, reply_markup=get_settings_keyboard())
-    await callback_query.answer()
+@router.message(F.text == "\u2699\ufe0f Настройки")
+async def handler_settings_menu(message: Message):
+    await message.answer("\u2699\ufe0f Настройки:", reply_markup=get_settings_keyboard())
 
 
-@router.callback_query(F.data == "menu:profile")
-async def callback_menu_profile(callback_query: CallbackQuery):
-    user = await get_user(callback_query.from_user.id)
+@router.message(F.text == "\U0001f464 Профиль")
+async def handler_profile_menu(message: Message):
+    user = await get_user(message.from_user.id)
     if not user:
-        await callback_query.message.answer("\u274c Сначала нажми /start")
-        await callback_query.answer()
+        await message.answer("\u274c Сначала нажми /start")
         return
 
-    zodiac_display = "Не установлен"
+    lines = [
+        f"\U0001f464 Профиль: {user.first_name}",
+        "",
+    ]
+    if user.birth_date:
+        lines.append(f"\U0001f4c5 Дата рождения: {user.birth_date}")
+    if user.birth_time:
+        lines.append(f"\U0001f552 Время рождения: {user.birth_time}")
+    if user.birth_place:
+        lines.append(f"\U0001f4cd Место рождения: {user.birth_place}")
     if user.zodiac_sign:
         emoji = ZODIAC_EMOJI.get(user.zodiac_sign, "")
-        zodiac_display = f"{emoji} {user.zodiac_sign}"
+        lines.append(f"\u2b50 Знак зодиака: {emoji} {user.zodiac_sign}")
 
-    text = (
-        f"\U0001f464 Твой профиль\n\n"
-        f"\U0001f464 Имя: {user.first_name or 'Не указано'}\n"
-        f"@{user.username or 'Не указан'}\n"
-        f"\u2698\ufe0f Знак зодиака: {zodiac_display}\n"
-        f"\U0001f4c5 Дата рождения: {user.birth_date or 'Не указана'}\n"
-        f"\U0001f552 Время рождения: {user.birth_time or 'Неизвестно'}\n"
-        f"\U0001f4cd Место рождения: {user.birth_place or 'Неизвестно'}\n"
-        f"\U0001f48e Премиум: {'Да' if user.is_premium else 'Нет'}\n"
-        f"\U0001f4c8 Запросов сегодня: {user.daily_requests}"
-    )
-    await safe_edit(callback_query, text, reply_markup=get_profile_keyboard())
-    await callback_query.answer()
+    text = "\n".join(lines)
+    await message.answer(text, reply_markup=get_profile_keyboard())
 
 
-@router.callback_query(F.data == "menu:admin")
-async def callback_menu_admin(callback_query: CallbackQuery):
-    if callback_query.from_user.id not in settings.admin_ids:
-        await callback_query.answer("\u274c Нет доступа")
+@router.message(F.text == "\U0001f6e1\ufe0f Админ")
+async def handler_admin_menu(message: Message):
+    if message.from_user.id not in settings.admin_ids:
+        await message.answer("\u274c Нет доступа")
         return
-    text = "\U0001f6e1\ufe0f Админ-панель:"
-    await safe_edit(callback_query, text, reply_markup=get_admin_keyboard())
-    await callback_query.answer()
+    await message.answer("\U0001f6e1\ufe0f Админ-панель:", reply_markup=get_admin_keyboard())
 
 
-def get_admin_keyboard() -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="\U0001f4ca Статистика", callback_data="admin:stats")],
-        [InlineKeyboardButton(text="\U0001f465 Пользователи", callback_data="admin:users")],
-        [InlineKeyboardButton(text="\U0001f4e2 Рассылка", callback_data="admin:broadcast")],
-        [InlineKeyboardButton(text="\U0001f6ab Бан", callback_data="admin:ban")],
-        [InlineKeyboardButton(text="\U0001f48e Выдать премиум", callback_data="admin:setpremium")],
-        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:main")],
-    ])
+def get_admin_keyboard() -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(keyboard=[
+        [KeyboardButton(text="\U0001f4ca Статистика")],
+        [KeyboardButton(text="\U0001f465 Пользователи")],
+        [KeyboardButton(text="\U0001f4e2 Рассылка")],
+        [KeyboardButton(text="\U0001f6ab Бан")],
+        [KeyboardButton(text="\U0001f48e Выдать премиум")],
+        [KeyboardButton(text="\u2b05\ufe0f Назад")],
+    ], resize_keyboard=True)
 
 
-@router.callback_query(F.data.startswith("action:tarot"))
-async def callback_action_tarot(callback_query: CallbackQuery):
-    await callback_query.answer()
-    from bot.handlers.tarot import (
-        draw_card, draw_cards, format_card_short, format_card_full,
-        save_history,
-    )
+@router.message(F.text == "\U0001f0cf Карта дня")
+async def handler_tarot_day(message: Message):
+    from bot.handlers.tarot import draw_card, format_card_short, save_history
     from bot.services.ai_service import adapt_text
     from bot.services.card_images import get_card_image
     from aiogram.types import BufferedInputFile
 
-    action = callback_query.data.split(":")[1]
     user = await get_or_create_user(
-        callback_query.from_user.id,
-        callback_query.from_user.username,
-        callback_query.from_user.first_name,
+        message.from_user.id,
+        message.from_user.username,
+        message.from_user.first_name,
     )
 
-    if action == "tarot":
-        card, is_reversed = draw_card()
-        response = format_card_short(card, is_reversed)
-        keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(
-                text="\U0001f50d Подробнее",
-                callback_data=f"tarot_detail:{card['id']}:{1 if is_reversed else 0}"
-            )],
-            [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:tarot")]
-        ])
-        response = await adapt_text(response, user, context_type="tarot")
-        img_buf = get_card_image(card["id"], is_reversed)
+    card, is_reversed = draw_card()
+    response = format_card_short(card, is_reversed)
+    response = await adapt_text(response, user, context_type="tarot")
+
+    img_buf = get_card_image(card["id"], is_reversed)
+    if img_buf:
+        photo = BufferedInputFile(img_buf.read(), filename=f"{card['id']}.png")
+        await message.answer_photo(photo=photo, caption=response, reply_markup=get_tarot_keyboard())
+    else:
+        await message.answer(response, reply_markup=get_tarot_keyboard())
+
+    await save_history(user.id, "tarot", response)
+
+
+@router.message(F.text == "\U0001f0cf Расклад на одну карту")
+async def handler_tarot1(message: Message):
+    from bot.handlers.tarot import draw_card, format_card_full, save_history
+    from bot.services.ai_service import adapt_text
+    from bot.services.card_images import get_card_image
+    from aiogram.types import BufferedInputFile
+
+    user = await get_or_create_user(
+        message.from_user.id,
+        message.from_user.username,
+        message.from_user.first_name,
+    )
+
+    card, is_reversed = draw_card()
+    response = format_card_full(card, is_reversed)
+    response = await adapt_text(response, user, context_type="tarot")
+
+    img_buf = get_card_image(card["id"], is_reversed)
+    if img_buf:
+        photo = BufferedInputFile(img_buf.read(), filename=f"{card['id']}.png")
+        await message.answer_photo(photo=photo, caption=response, reply_markup=get_tarot_keyboard())
+    else:
+        await message.answer(response, reply_markup=get_tarot_keyboard())
+
+    await save_history(user.id, "tarot1", response)
+
+
+@router.message(F.text == "\U0001f0cf Расклад на три карты")
+async def handler_tarot3(message: Message):
+    from bot.state import bot_instance
+    from bot.handlers.tarot import draw_cards, format_card_interpretation, save_history
+    from bot.services.ai_service import adapt_text
+    from bot.services.card_images import get_card_image
+    from aiogram.types import BufferedInputFile, InputMediaPhoto
+
+    if not bot_instance:
+        await message.answer("\u274c Ошибка")
+        return
+
+    user = await get_or_create_user(
+        message.from_user.id,
+        message.from_user.username,
+        message.from_user.first_name,
+    )
+
+    drawn = draw_cards(3)
+    media = []
+    card_names = []
+    interpretations = []
+
+    for card, is_rev in drawn:
+        name = card.get('name_ru', card.get('name', '?'))
+        prefix = "\u2b07\ufe0f " if is_rev else ""
+        card_names.append(f"{prefix}{name}")
+
+        interp = format_card_interpretation(card, is_rev)
+        interp = await adapt_text(interp, user, context_type="tarot")
+        interpretations.append(interp)
+
+        img_buf = get_card_image(card["id"], is_rev)
         if img_buf:
-            photo = BufferedInputFile(img_buf.read(), filename=f"{card['id']}.png")
-            await callback_query.message.answer_photo(photo=photo, caption=response, reply_markup=keyboard)
+            img_buf.seek(0)
+            media.append(InputMediaPhoto(
+                media=BufferedInputFile(img_buf.read(), filename=f"{card['id']}.png"),
+            ))
+
+    header = "\U0001f0cf Тебе выпали: " + " | ".join(card_names)
+
+    if media and len(media) == 3:
+        media[-1] = InputMediaPhoto(
+            media=media[-1].media,
+            caption=header,
+        )
+        await bot_instance.send_media_group(chat_id=message.chat.id, media=media)
+        interp_text = "\n\n".join(interpretations)
+        if len(interp_text) > 4000:
+            for part in interpretations:
+                await message.answer(part)
         else:
-            await callback_query.message.answer(response, reply_markup=keyboard)
-        await save_history(user.id, "tarot", response)
+            await message.answer(interp_text, reply_markup=get_tarot_keyboard())
+    else:
+        full_text = header + "\n\n" + "\n\n".join(interpretations)
+        await message.answer(full_text, reply_markup=get_tarot_keyboard())
 
-    elif action == "tarot1":
-        card, is_reversed = draw_card()
-        response = format_card_full(card, is_reversed)
-        response = await adapt_text(response, user, context_type="tarot")
-        keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:tarot")]
-        ])
-        img_buf = get_card_image(card["id"], is_reversed)
-        if img_buf:
-            photo = BufferedInputFile(img_buf.read(), filename=f"{card['id']}.png")
-            await callback_query.message.answer_photo(photo=photo, caption=response, reply_markup=keyboard)
-        else:
-            await callback_query.message.answer(response, reply_markup=keyboard)
-        await save_history(user.id, "tarot1", response)
-
-    elif action == "tarot3":
-        from bot.state import bot_instance
-
-        if not bot_instance:
-            await callback_query.answer("\u274c Ошибка")
-            return
-
-        from bot.handlers.tarot import format_card_interpretation
-
-        drawn = draw_cards(3)
-        media = []
-        card_names = []
-        interpretations = []
-
-        for i, (card, is_rev) in enumerate(drawn):
-            name = card.get('name_ru', card.get('name', '?'))
-            prefix = "\u2b07\ufe0f " if is_rev else ""
-            card_names.append(f"{prefix}{name}")
-
-            interp = format_card_interpretation(card, is_rev)
-            interp = await adapt_text(interp, user, context_type="tarot")
-            interpretations.append(interp)
-
-            img_buf = get_card_image(card["id"], is_rev)
-            if img_buf:
-                img_buf.seek(0)
-                media.append(InputMediaPhoto(
-                    media=BufferedInputFile(img_buf.read(), filename=f"{card['id']}.png"),
-                ))
-
-        header = "\U0001f0cf Тебе выпали: " + " | ".join(card_names)
-        keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:tarot")]
-        ])
-
-        if media and len(media) == 3:
-            media[-1] = InputMediaPhoto(
-                media=media[-1].media,
-                caption=header,
-            )
-            await bot_instance.send_media_group(chat_id=callback_query.message.chat.id, media=media)
-            interp_text = "\n\n".join(interpretations)
-            if len(interp_text) > 4000:
-                for part in interpretations:
-                    await callback_query.message.answer(part)
-            else:
-                await callback_query.message.answer(interp_text, reply_markup=keyboard)
-        else:
-            full_text = header + "\n\n" + "\n\n".join(interpretations)
-            await callback_query.message.answer(full_text, reply_markup=keyboard)
-
-        await save_history(user.id, "tarot3", "3 cards")
+    await save_history(user.id, "tarot3", "3 cards")
 
 
-@router.callback_query(F.data.startswith("action:numerology"))
-async def callback_action_numerology(callback_query: CallbackQuery):
-    await callback_query.answer()
+@router.message(F.text == "\U0001f52e Мой анализ")
+async def handler_numerology(message: Message):
     from bot.services.numerology_service import (
         calculate_life_path, calculate_birth_day_number,
         calculate_soul_number, calculate_personality_from_place,
         calculate_destiny_number, calculate_personality_number,
     )
 
-    user = await get_user(callback_query.from_user.id)
+    user = await get_user(message.from_user.id)
     if not user:
-        await callback_query.message.answer("\u274c Сначала нажми /start")
+        await message.answer("\u274c Сначала нажми /start")
         return
 
     if not user.birth_date:
-        await callback_query.message.answer(
+        await message.answer(
             "\U0001f4c5 Сначала установи дату рождения в Настройках.",
-            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                [InlineKeyboardButton(text="\u2699\ufe0f Настройки", callback_data="menu:settings")]
-            ])
+            reply_markup=get_settings_keyboard()
         )
         return
 
@@ -489,74 +461,119 @@ async def callback_action_numerology(callback_query: CallbackQuery):
         f"{get_personality_meaning(personality)}"
     )
 
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:numerology")]
-    ])
-    await callback_query.message.answer(response, reply_markup=keyboard)
+    await message.answer(response, reply_markup=get_numerology_keyboard())
 
 
-@router.callback_query(F.data.startswith("action:horoscope:"))
-async def callback_action_horoscope(callback_query: CallbackQuery):
-    await callback_query.answer()
+@router.message(F.text == "\u2b50 Сегодня")
+async def handler_horoscope_daily(message: Message):
     from bot.handlers.horoscope import generate_horoscope
 
-    user = await get_user(callback_query.from_user.id)
+    user = await get_user(message.from_user.id)
     if not user:
-        await callback_query.message.answer("\u274c Сначала нажми /start")
+        await message.answer("\u274c Сначала нажми /start")
         return
 
     if not user.zodiac_sign:
-        await callback_query.message.answer(
+        await message.answer(
             "\u2698\ufe0f Сначала установи знак зодиака в Настройках.",
-            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                [InlineKeyboardButton(text="\u2699\ufe0f Настройки", callback_data="menu:settings")]
-            ])
+            reply_markup=get_settings_keyboard()
         )
         return
 
-    period = callback_query.data.split(":")[2]
-    response = await generate_horoscope(user.zodiac_sign, period, user)
-
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:horoscope")]
-    ])
-    await callback_query.message.answer(response, reply_markup=keyboard)
+    response = await generate_horoscope(user.zodiac_sign, "daily", user)
+    await message.answer(response, reply_markup=get_horoscope_keyboard())
 
 
-@router.callback_query(F.data.startswith("action:lunar:"))
-async def callback_action_lunar(callback_query: CallbackQuery):
-    await callback_query.answer()
-    from bot.handlers.lunar import get_lunar_info
+@router.message(F.text == "\U0001f52e Неделя")
+async def handler_horoscope_weekly(message: Message):
+    from bot.handlers.horoscope import generate_horoscope
 
-    user = await get_user(callback_query.from_user.id)
+    user = await get_user(message.from_user.id)
     if not user:
-        await callback_query.message.answer("\u274c Сначала нажми /start")
+        await message.answer("\u274c Сначала нажми /start")
         return
 
-    period = callback_query.data.split(":")[2]
-    response = get_lunar_info(period)
+    if not user.zodiac_sign:
+        await message.answer(
+            "\u2698\ufe0f Сначала установи знак зодиака в Настройках.",
+            reply_markup=get_settings_keyboard()
+        )
+        return
 
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:lunar")]
-    ])
-    await callback_query.message.answer(response, reply_markup=keyboard)
+    response = await generate_horoscope(user.zodiac_sign, "weekly", user)
+    await message.answer(response, reply_markup=get_horoscope_keyboard())
 
 
-@router.callback_query(F.data == "action:history")
-async def callback_action_history(callback_query: CallbackQuery):
-    await callback_query.answer()
+@router.message(F.text == "\U0001f4c5 Месяц")
+async def handler_horoscope_monthly(message: Message):
+    from bot.handlers.horoscope import generate_horoscope
+
+    user = await get_user(message.from_user.id)
+    if not user:
+        await message.answer("\u274c Сначала нажми /start")
+        return
+
+    if not user.zodiac_sign:
+        await message.answer(
+            "\u2698\ufe0f Сначала установи знак зодиака в Настройках.",
+            reply_markup=get_settings_keyboard()
+        )
+        return
+
+    response = await generate_horoscope(user.zodiac_sign, "monthly", user)
+    await message.answer(response, reply_markup=get_horoscope_keyboard())
+
+
+@router.message(F.text == "\U0001f319 Луна сегодня")
+async def handler_lunar_today(message: Message):
+    from bot.handlers.lunar import get_lunar_info
+
+    user = await get_user(message.from_user.id)
+    if not user:
+        await message.answer("\u274c Сначала нажми /start")
+        return
+
+    response = get_lunar_info("today")
+    await message.answer(response, reply_markup=get_lunar_keyboard())
+
+
+@router.message(F.text == "\U0001f319 Лунный календарь")
+async def handler_lunar_calendar(message: Message):
+    from bot.handlers.lunar import get_lunar_info
+
+    user = await get_user(message.from_user.id)
+    if not user:
+        await message.answer("\u274c Сначала нажми /start")
+        return
+
+    response = get_lunar_info("calendar")
+    await message.answer(response, reply_markup=get_lunar_keyboard())
+
+
+@router.message(F.text == "\U0001f33e Лунные рекомендации")
+async def handler_lunar_tips(message: Message):
+    from bot.handlers.lunar import get_lunar_info
+
+    user = await get_user(message.from_user.id)
+    if not user:
+        await message.answer("\u274c Сначала нажми /start")
+        return
+
+    response = get_lunar_info("tips")
+    await message.answer(response, reply_markup=get_lunar_keyboard())
+
+
+@router.message(F.text == "\U0001f4dc История")
+async def handler_history(message: Message):
     from bot.handlers.history import get_history_text
 
-    user = await get_user(callback_query.from_user.id)
+    user = await get_user(message.from_user.id)
     if not user:
-        await callback_query.message.answer("\u274c Сначала нажми /start")
+        await message.answer("\u274c Сначала нажми /start")
         return
 
     text = await get_history_text(user.id)
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="\u2b05\ufe0f Назад", callback_data="menu:profile")]
-    ])
-    await callback_query.message.answer(text, reply_markup=keyboard)
+    await message.answer(text, reply_markup=get_profile_keyboard())
 
 
 @router.callback_query(F.data == "action:setzodiac")
