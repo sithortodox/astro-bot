@@ -11,6 +11,8 @@ PHASE_NAMES = {
     "waxing_gibbous": "Растущая луна",
     "full": "Полнолуние",
     "waning_gibbous": "Убывающая луна",
+    "third_quarter": "Последняя четверть",
+    "waning_crescent": "Убывающий серп",
 }
 
 PHASE_EMOJI = {
@@ -20,6 +22,8 @@ PHASE_EMOJI = {
     "waxing_gibbous": "\U0001f314",
     "full": "\U0001f315",
     "waning_gibbous": "\U0001f316",
+    "third_quarter": "\U0001f317",
+    "waning_crescent": "\U0001f318",
 }
 
 
@@ -36,14 +40,18 @@ def get_lunar_phase(target_date: date | None = None) -> tuple[str, str, float]:
 
     illumination = moon.phase
 
+    prev_moon = ephem.Moon()
+    prev_moon.compute(datetime.combine(target_date - timedelta(days=1), datetime.min.time()))
+    is_waxing = moon.phase >= prev_moon.phase
+
     if illumination < 1:
         phase_key = "new"
     elif illumination < 25:
-        phase_key = "waxing_crescent"
+        phase_key = "waxing_crescent" if is_waxing else "waning_crescent"
     elif illumination < 50:
-        phase_key = "first_quarter"
+        phase_key = "first_quarter" if is_waxing else "third_quarter"
     elif illumination < 75:
-        phase_key = "waxing_gibbous"
+        phase_key = "waxing_gibbous" if is_waxing else "waning_gibbous"
     elif illumination < 99:
         phase_key = "full"
     else:
