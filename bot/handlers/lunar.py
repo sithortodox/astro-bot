@@ -6,12 +6,15 @@ from bot.services.lunar_service import (
     get_lunar_phase,
     get_lunar_recommendation,
     get_lunar_calendar,
+    get_next_full_moon,
+    get_next_new_moon,
 )
 
 router = Router()
 
 
 def get_lunar_info(period: str) -> str:
+    from datetime import date
     phase_name, phase_emoji, illumination = get_lunar_phase()
 
     if period == "today":
@@ -33,8 +36,20 @@ def get_lunar_info(period: str) -> str:
             return "\n".join(lines)
         return str(calendar_data)
     elif period == "tips":
+        next_full = get_next_full_moon()
+        next_new = get_next_new_moon()
+        today = date.today()
+        days_to_full = (next_full - today).days
+        days_to_new = (next_new - today).days
+
         recommendation = get_lunar_recommendation(phase_name, "general")
-        return f"{phase_emoji} Лунные рекомендации:\n\n{recommendation}"
+        return (
+            f"{phase_emoji} Лунные рекомендации\n\n"
+            f"Текущая фаза: {phase_name}\n"
+            f"Следующее полнолуние: {next_full.strftime('%d.%m.%Y')} (через {days_to_full} дн.)\n"
+            f"Следующее новолуние: {next_new.strftime('%d.%m.%Y')} (через {days_to_new} дн.)\n\n"
+            f"{recommendation}"
+        )
     else:
         return f"{phase_emoji} Луна: {phase_name}"
 
