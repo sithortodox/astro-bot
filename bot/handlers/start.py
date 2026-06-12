@@ -266,7 +266,7 @@ async def handler_profile_menu(message: Message):
         "",
     ]
     if user.birth_date:
-        lines.append(f"\U0001f4c5 Дата рождения: {user.birth_date}")
+        lines.append(f"\U0001f4c5 Дата рождения: {user.birth_date.strftime('%d.%m.%Y')}")
     if user.birth_time:
         lines.append(f"\U0001f552 Время рождения: {user.birth_time}")
     if user.birth_place:
@@ -307,9 +307,8 @@ async def handler_admin_stats(message: Message):
         premium_users = await session.scalar(
             select(func.count(User.id)).where(User.is_premium)
         )
-        today = date.today().isoformat()
         active_today = await session.scalar(
-            select(func.count(User.id)).where(User.last_request_date == today)
+            select(func.count(User.id)).where(User.last_request_date == date.today())
         )
         total_requests = await session.scalar(select(func.sum(User.total_requests)))
         total_payments = await session.scalar(select(func.count(Payment.id)))
@@ -705,9 +704,11 @@ async def callback_bd_month(callback_query: CallbackQuery):
 
 @router.callback_query(F.data.startswith("bd:d:"))
 async def callback_bd_day(callback_query: CallbackQuery):
+    from datetime import date as _date
     parts = callback_query.data.split(":")
     year, month, day = int(parts[2]), int(parts[3]), int(parts[4])
-    date_str = f"{day:02d}.{month:02d}.{year}"
+    birth_date = _date(year, month, day)
+    date_str = birth_date.strftime("%d.%m.%Y")
 
     async with async_session() as session:
         result = await session.execute(
@@ -715,7 +716,7 @@ async def callback_bd_day(callback_query: CallbackQuery):
         )
         user = result.scalar_one_or_none()
         if user:
-            user.birth_date = date_str
+            user.birth_date = birth_date
             await session.commit()
 
     await callback_query.answer()

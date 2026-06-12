@@ -1,22 +1,27 @@
+from datetime import date as _date
+
+
 def reduce_to_single(n: int) -> int:
     while n > 9 and n != 11 and n != 22:
         n = sum(int(d) for d in str(n))
     return n
 
 
-def calculate_life_path(birth_date: str) -> int:
+def _extract_date_parts(birth_date: _date | str) -> tuple[int, int, int]:
+    if isinstance(birth_date, _date):
+        return birth_date.day, birth_date.month, birth_date.year
     parts = birth_date.split(".")
-    day = int(parts[0])
-    month = int(parts[1])
-    year = int(parts[2])
+    return int(parts[0]), int(parts[1]), int(parts[2])
 
+
+def calculate_life_path(birth_date: _date | str) -> int:
+    day, month, year = _extract_date_parts(birth_date)
     total = sum(int(d) for d in f"{day:02d}{month:02d}{year}")
     return reduce_to_single(total)
 
 
-def calculate_birth_day_number(birth_date: str) -> int:
-    parts = birth_date.split(".")
-    day = int(parts[0])
+def calculate_birth_day_number(birth_date: _date | str) -> int:
+    day, _, _ = _extract_date_parts(birth_date)
     return reduce_to_single(day)
 
 

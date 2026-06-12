@@ -91,7 +91,11 @@ def build_context(user=None, extra: str = "") -> str:
         if user.zodiac_sign:
             parts.append(f"Знак зодиака: {user.zodiac_sign}")
         if user.birth_date:
-            parts.append(f"Дата рождения: {user.birth_date}")
+            from datetime import date as _date
+            if isinstance(user.birth_date, _date):
+                parts.append(f"Дата рождения: {user.birth_date.strftime('%d.%m.%Y')}")
+            else:
+                parts.append(f"Дата рождения: {user.birth_date}")
     if extra:
         parts.append(extra)
     return "Информация о пользователе: " + ", ".join(parts) if parts else ""

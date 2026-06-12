@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 from sqlalchemy import select
 
@@ -51,15 +51,11 @@ async def is_premium(user_id: int) -> bool:
             return False
 
         if user.premium_until:
-            try:
-                until = datetime.fromisoformat(user.premium_until)
-                if datetime.now() > until:
-                    user.is_premium = False
-                    user.premium_until = None
-                    await session.commit()
-                    return False
-            except ValueError:
-                pass
+            if datetime.now(timezone.utc) > user.premium_until.replace(tzinfo=timezone.utc):
+                user.is_premium = False
+                user.premium_until = None
+                await session.commit()
+                return False
 
         return True
 
@@ -79,20 +75,14 @@ async def activate_premium(user_id: int, product: str, payment_id: str, provider
 
         duration = int(product_data.get("duration_days", 0))
         if duration > 0:
-            if user.premium_until:
-                try:
-                    current_until = datetime.fromisoformat(user.premium_until)
-                    if current_until > datetime.now():
-                        new_until = current_until + timedelta(days=duration)
-                    else:
-                        new_until = datetime.now() + timedelta(days=duration)
-                except ValueError:
-                    new_until = datetime.now() + timedelta(days=duration)
+            now = datetime.now(timezone.utc)
+            if user.premium_until and user.premium_until > now:
+                new_until = user.premium_until + timedelta(days=duration)
             else:
-                new_until = datetime.now() + timedelta(days=duration)
+                new_until = now + timedelta(days=duration)
 
             user.is_premium = True
-            user.premium_until = new_until.isoformat()
+            user.premium_until = new_until
             user.subscription_type = product
         else:
             user.is_premium = True

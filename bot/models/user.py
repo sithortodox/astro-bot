@@ -1,5 +1,5 @@
-from datetime import datetime
-from sqlalchemy import BigInteger, String, DateTime, Text, ForeignKey, Integer, Boolean, func
+from datetime import datetime, date
+from sqlalchemy import BigInteger, String, DateTime, Text, ForeignKey, Integer, Boolean, Date, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -15,18 +15,18 @@ class User(Base):
     username: Mapped[str | None] = mapped_column(String(255), nullable=True)
     first_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     zodiac_sign: Mapped[str | None] = mapped_column(String(50), nullable=True)
-    birth_date: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    birth_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     birth_time: Mapped[str | None] = mapped_column(String(5), nullable=True)
     birth_place: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     # Subscription
     is_premium: Mapped[bool] = mapped_column(Boolean, default=False)
-    premium_until: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    premium_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     subscription_type: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
     # Rate limiting
     daily_requests: Mapped[int] = mapped_column(Integer, default=0)
-    last_request_date: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    last_request_date: Mapped[date | None] = mapped_column(Date, nullable=True)
 
     # Admin
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)

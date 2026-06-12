@@ -70,7 +70,7 @@ class RateLimitMiddleware(BaseMiddleware):
                 logger.debug(f"Admin bypass for user {event.from_user.id}")
                 return await handler(event, data)
 
-            today = date.today().isoformat()
+            today = date.today()
 
             if user.last_request_date != today:
                 user.daily_requests = 0

@@ -1,7 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters import Command
-from datetime import datetime
+from datetime import datetime, timezone
 
 from bot.handlers.start import get_user
 from bot.services.payment_service import (
@@ -25,12 +25,9 @@ async def cmd_premium(message: Message):
     premium_status = await is_premium(message.from_user.id)
 
     if premium_status and user.premium_until:
-        try:
-            until = datetime.fromisoformat(user.premium_until)
-            days_left = (until - datetime.now()).days
-            status_text = f"\U0001f48e Премиум активен\nДействует до: {until.strftime('%d.%m.%Y')}\nОсталось дней: {days_left}"
-        except ValueError:
-            status_text = "\U0001f48e Премиум активен"
+        until = user.premium_until
+        days_left = (until - datetime.now(until.tzinfo or timezone.utc)).days
+        status_text = f"\U0001f48e Премиум активен\nДействует до: {until.strftime('%d.%m.%Y')}\nОсталось дней: {days_left}"
     elif premium_status:
         status_text = "\U0001f48e Премиум активен (пожизненно)"
     else:

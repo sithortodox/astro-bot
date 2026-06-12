@@ -32,7 +32,7 @@ async def cmd_stats(message: Message):
         premium_users = await session.scalar(
             select(func.count(User.id)).where(User.is_premium)
         )
-        today = date.today().isoformat()
+        today = date.today()
         active_today = await session.scalar(
             select(func.count(User.id)).where(User.last_request_date == today)
         )
