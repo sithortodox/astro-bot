@@ -2,6 +2,8 @@ import asyncio
 import logging
 import subprocess
 import sys
+import os
+from logging.handlers import RotatingFileHandler
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.storage.redis import RedisStorage
@@ -12,10 +14,28 @@ from bot.handlers import start, tarot, numerology, horoscope, lunar, history, pr
 from bot.middlewares.user import UserMiddleware, RateLimitMiddleware
 import bot.state as state
 
+os.makedirs("logs", exist_ok=True)
+
 logging.basicConfig(
     level=getattr(logging, settings.log_level.upper(), logging.INFO),
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[
+        RotatingFileHandler("logs/bot.log", maxBytes=5*1024*1024, backupCount=3),
+        logging.StreamHandler(),
+    ],
 )
+
+payment_handler = RotatingFileHandler("logs/payments.log", maxBytes=5*1024*1024, backupCount=3)
+payment_handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+payment_logger = logging.getLogger("payment")
+payment_logger.addHandler(payment_handler)
+payment_logger.setLevel(logging.INFO)
+
+error_handler = RotatingFileHandler("logs/errors.log", maxBytes=5*1024*1024, backupCount=3)
+error_handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+error_handler.setLevel(logging.ERROR)
+logging.getLogger().addHandler(error_handler)
+
 logger = logging.getLogger(__name__)
 
 

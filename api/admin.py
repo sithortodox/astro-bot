@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException, Depends, Header
 from sqlalchemy import select, func
 from datetime import date
-import hashlib
 import hmac
 
 from bot.config import settings
@@ -12,8 +11,9 @@ app = FastAPI(title="Astro Bot Admin API", version="1.0.0")
 
 
 def verify_admin_key(x_admin_key: str = Header(...)):
-    expected = hashlib.sha256(settings.bot_token.encode()).hexdigest()[:32]
-    if not hmac.compare_digest(x_admin_key, expected):
+    if not settings.admin_api_key:
+        raise HTTPException(status_code=500, detail="ADMIN_API_KEY not configured")
+    if not hmac.compare_digest(x_admin_key, settings.admin_api_key):
         raise HTTPException(status_code=401, detail="Invalid admin key")
     return True
 
