@@ -1,14 +1,16 @@
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 
-from bot.config import settings
 from bot.models import Base
 
 config = context.config
-sync_url = settings.database_url.replace("+asyncpg", "")
+
+database_url = os.environ.get("DATABASE_URL", "")
+sync_url = database_url.replace("+asyncpg", "+psycopg2")
 config.set_main_option("sqlalchemy.url", sync_url)
 
 if config.config_file_name is not None:
