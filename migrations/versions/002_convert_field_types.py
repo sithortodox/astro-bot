@@ -23,7 +23,7 @@ def upgrade() -> None:
     # birth_date: "DD.MM.YYYY" → DATE via temp column
     conn.execute(sa.text("""
         ALTER TABLE users ADD COLUMN birth_date_new DATE;
-        UPDATE users SET birth_date_new = TO_DATE(birth_date, 'DD.MM.YYYY') WHERE birth_date ~ '^\d{2}\.\d{2}\.\d{4}$';
+        UPDATE users SET birth_date_new = TO_DATE(birth_date, 'DD.MM.YYYY') WHERE birth_date ~ '^\\d{2}\\.\\d{2}\\.\\d{4}$';
         ALTER TABLE users DROP COLUMN birth_date;
         ALTER TABLE users RENAME COLUMN birth_date_new TO birth_date;
     """))
