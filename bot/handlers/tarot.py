@@ -39,20 +39,34 @@ def draw_cards(count: int) -> list[tuple[dict, bool]]:
     return [(card, random.random() < 0.3) for card in drawn]
 
 
+def _get_card_name(card: dict) -> str:
+    return card.get("name_ru", card.get("name", "?"))
+
+
+async def _adapt_card_text(full_text: str, user, name: str) -> str:
+    lines = full_text.split("\n")
+    if lines and lines[0].strip() == name:
+        return full_text
+    adapted = await adapt_text(full_text, user, context_type="tarot")
+    return adapted
+
+
 def format_card_short(card: dict, is_reversed: bool = False) -> str:
     prefix = "\u2b07\ufe0f " if is_reversed else ""
     meaning = card.get("reversed_meaning" if is_reversed else "upright_meaning", "")
     if len(meaning) > 180:
         meaning = meaning[:177] + "..."
-    return f"{prefix}{card.get('name_ru', card.get('name', '?'))}\n\n{meaning}"
+    name = _get_card_name(card)
+    return f"{prefix}{name}\n\n{meaning}"
 
 
 def format_card_full(card: dict, is_reversed: bool = False) -> str:
     prefix = "\u2b07\ufe0f \u041f\u0435\u0440\u0435\u0432\u0451\u0440\u043d\u0443\u0442\u0430\u044f " if is_reversed else ""
     meaning = card.get("reversed_meaning" if is_reversed else "upright_meaning", "")
+    name = _get_card_name(card)
 
     lines = [
-        f"{prefix}{card.get('name_ru', card.get('name', '?'))}",
+        f"{prefix}{name}",
         "",
         meaning,
         "",
@@ -67,13 +81,13 @@ def format_card_with_position(card: dict, is_reversed: bool, position: str) -> s
     emoji_map = {"Прошлое": "\u23f0", "Настоящее": "\u2714\ufe0f", "Будущее": "\U0001f52e"}
     emoji = emoji_map.get(position, "\u25b6")
     prefix = "\u2b07\ufe0f " if is_reversed else ""
-    name = card.get('name_ru', card.get('name', '?'))
+    name = _get_card_name(card)
     return f"{emoji} {position}\n{prefix}{name}"
 
 
 def format_card_interpretation(card: dict, is_reversed: bool) -> str:
     prefix = "\u2b07\ufe0f Перевёрнутая " if is_reversed else ""
-    name = card.get('name_ru', card.get('name', '?'))
+    name = _get_card_name(card)
     meaning = card.get("reversed_meaning" if is_reversed else "upright_meaning", "")
     lines = [
         f"{prefix}{name}",
@@ -105,8 +119,6 @@ async def cmd_tarot(message: Message):
         )]
     ])
 
-    response = await adapt_text(response, user, context_type="tarot")
-
     img_buf = get_card_image(card["id"], is_reversed)
     if img_buf:
         photo = BufferedInputFile(img_buf.read(), filename=f"{card['id']}.png")
@@ -127,7 +139,6 @@ async def cmd_tarot1(message: Message):
 
     card, is_reversed = draw_card()
     response = format_card_full(card, is_reversed)
-    response = await adapt_text(response, user, context_type="tarot")
 
     img_buf = get_card_image(card["id"], is_reversed)
     if img_buf:
@@ -153,7 +164,6 @@ async def cmd_tarot3(message: Message):
     for i, (card, is_rev) in enumerate(drawn):
         pos = positions[i] if i < 3 else f"Карта {i+1}"
         text = format_card_with_position(card, is_rev, pos)
-        text = await adapt_text(text, user, context_type="tarot")
 
         img_buf = get_card_image(card["id"], is_rev)
         if img_buf:
