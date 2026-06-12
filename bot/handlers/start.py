@@ -719,11 +719,18 @@ async def callback_bd_day(callback_query: CallbackQuery):
             await session.commit()
 
     await callback_query.answer()
+
+    hours = list(range(0, 24))
+    keyboard = []
+    for i in range(0, 24, 6):
+        row = [InlineKeyboardButton(text=f"{h:02d}", callback_data=f"bt:h:{h:02d}") for h in hours[i:i+6]]
+        keyboard.append(row)
+    keyboard.append([InlineKeyboardButton(text="\u274c Не знаю", callback_data="bt:skip:onboard")])
+    markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
     await callback_query.message.answer(
-        f"\u2705 Дата рождения установлена: {date_str}",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="\u2b05\ufe0f Настройки", callback_data="menu:settings")]
-        ])
+        f"\u2705 Дата рождения: {date_str}\n\n"
+        "\U0001f552 Теперь выбери время рождения:",
+        reply_markup=markup,
     )
 
 
@@ -775,7 +782,7 @@ async def callback_bt_hour(callback_query: CallbackQuery):
 
 
 @router.callback_query(F.data.startswith("bt:m:"))
-async def callback_bt_minute(callback_query: CallbackQuery):
+async def callback_bt_minute(callback_query: CallbackQuery, state: FSMContext):
     parts = callback_query.data.split(":")
     hour, minute = int(parts[2]), int(parts[3])
     time_str = f"{hour:02d}:{minute:02d}"
@@ -789,13 +796,25 @@ async def callback_bt_minute(callback_query: CallbackQuery):
             user.birth_time = time_str
             await session.commit()
 
+    current_state = await state.get_state()
     await callback_query.answer()
-    await callback_query.message.answer(
-        f"\u2705 Время рождения установлено: {time_str}",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="\u2b05\ufe0f Настройки", callback_data="menu:settings")]
-        ])
-    )
+
+    if current_state == Onboarding.birth_time or not current_state:
+        await state.set_state(Onboarding.birth_place)
+        await callback_query.message.answer(
+            f"\u2705 Время рождения: {time_str}\n\n"
+            "\U0001f4cd Теперь отправь город рождения:",
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text="\u274c Не знаю", callback_data="bp:skip:onboard")],
+            ]),
+        )
+    else:
+        await callback_query.message.answer(
+            f"\u2705 Время рождения установлено: {time_str}",
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text="\u2b05\ufe0f Настройки", callback_data="menu:settings")]
+            ])
+        )
 
 
 @router.callback_query(F.data == "bt:skip")
@@ -815,6 +834,28 @@ async def callback_bt_skip(callback_query: CallbackQuery):
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="\u2b05\ufe0f Настройки", callback_data="menu:settings")]
         ])
+    )
+
+
+@router.callback_query(F.data == "bt:skip:onboard")
+async def callback_bt_skip_onboard(callback_query: CallbackQuery, state: FSMContext):
+    async with async_session() as session:
+        result = await session.execute(
+            select(User).where(User.telegram_id == callback_query.from_user.id)
+        )
+        user = result.scalar_one_or_none()
+        if user:
+            user.birth_time = None
+            await session.commit()
+
+    await state.set_state(Onboarding.birth_place)
+    await callback_query.answer()
+    await callback_query.message.answer(
+        "\u2705 Время рождения пропущено\n\n"
+        "\U0001f4cd Теперь отправь город рождения:",
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="\u274c Не знаю", callback_data="bp:skip:onboard")],
+        ]),
     )
 
 
@@ -853,6 +894,26 @@ async def callback_bp_skip(callback_query: CallbackQuery, state: FSMContext):
     )
 
 
+@router.callback_query(F.data == "bp:skip:onboard")
+async def callback_bp_skip_onboard(callback_query: CallbackQuery, state: FSMContext):
+    await state.clear()
+    async with async_session() as session:
+        result = await session.execute(
+            select(User).where(User.telegram_id == callback_query.from_user.id)
+        )
+        user = result.scalar_one_or_none()
+        if user:
+            user.birth_place = None
+            await session.commit()
+
+    is_admin = callback_query.from_user.id in settings.admin_ids
+    await callback_query.answer()
+    await callback_query.message.answer(
+        "\u2705 Все данные собраны! Добро пожаловать \U0001f44f",
+        reply_markup=get_main_keyboard(is_admin),
+    )
+
+
 @router.message(SettingsPlace.waiting_place)
 async def handle_place_input(message: Message, state: FSMContext):
     place = message.text.strip()
@@ -868,14 +929,23 @@ async def handle_place_input(message: Message, state: FSMContext):
             user.birth_place = place
             await session.commit()
 
+    current_state = await state.get_state()
     await state.clear()
-    display = place or "Неизвестно"
-    await message.answer(
-        f"\U0001f4cd Место рождения установлено: {display}",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="\u2b05\ufe0f Настройки", callback_data="menu:settings")]
-        ])
-    )
+
+    if current_state == Onboarding.birth_place:
+        is_admin = message.from_user.id in settings.admin_ids
+        await message.answer(
+            "\u2705 Все данные собраны! Добро пожаловать \U0001f44f",
+            reply_markup=get_main_keyboard(is_admin),
+        )
+    else:
+        display = place or "Неизвестно"
+        await message.answer(
+            f"\U0001f4cd Место рождения установлено: {display}",
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text="\u2b05\ufe0f Настройки", callback_data="menu:settings")]
+            ])
+        )
 
 
 @router.callback_query(F.data.startswith("zodiac:"))
