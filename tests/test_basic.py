@@ -68,8 +68,9 @@ def test_lunar_service():
     from bot.services.lunar_service import get_lunar_phase, get_lunar_recommendation
 
     phase_name, emoji, illumination = get_lunar_phase()
-    assert phase_name in ["New Moon", "Waxing Crescent", "First Quarter",
-                          "Waxing Gibbous", "Full Moon", "Waning Gibbous"]
+    assert phase_name in ["Новолуние", "Растущий серп", "Первая четверть",
+                          "Растущая луна", "Полнолуние", "Убывающая луна",
+                          "Последняя четверть", "Убывающий серп"]
     assert 0 <= illumination <= 100
 
     rec = get_lunar_recommendation(phase_name)
