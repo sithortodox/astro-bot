@@ -2,13 +2,12 @@ from typing import Callable, Dict, Any, Awaitable
 import logging
 from aiogram import BaseMiddleware
 from aiogram.types import Message, TelegramObject
-from sqlalchemy import select
 from datetime import date
 
-from bot.database import async_session
 from bot.models import User
 from bot.config import settings
 from bot.services.payment_service import is_premium
+from bot.repositories import UserRepo
 
 logger = logging.getLogger(__name__)
 
@@ -22,24 +21,12 @@ class UserMiddleware(BaseMiddleware):
     ) -> Any:
         if isinstance(event, Message) and event.from_user:
             telegram_id = event.from_user.id
-
-            async with async_session() as session:
-                result = await session.execute(
-                    select(User).where(User.telegram_id == telegram_id)
-                )
-                user = result.scalar_one_or_none()
-
-                if not user:
-                    user = User(
-                        telegram_id=telegram_id,
-                        username=event.from_user.username,
-                        first_name=event.from_user.first_name,
-                    )
-                    session.add(user)
-                    await session.commit()
-                    await session.refresh(user)
-
-                data["db_user"] = user
+            user = await UserRepo.get_or_create(
+                telegram_id,
+                event.from_user.username,
+                event.from_user.first_name,
+            )
+            data["db_user"] = user
 
         return await handler(event, data)
 
@@ -88,15 +75,11 @@ class RateLimitMiddleware(BaseMiddleware):
             user.daily_requests += 1
             user.total_requests += 1
 
-            async with async_session() as session:
-                result = await session.execute(
-                    select(User).where(User.telegram_id == user.telegram_id)
-                )
-                db_user = result.scalar_one_or_none()
-                if db_user:
-                    db_user.daily_requests = user.daily_requests
-                    db_user.total_requests = user.total_requests
-                    db_user.last_request_date = user.last_request_date
-                    await session.commit()
+            await UserRepo.update(
+                user.telegram_id,
+                daily_requests=user.daily_requests,
+                total_requests=user.total_requests,
+                last_request_date=user.last_request_date,
+            )
 
         return await handler(event, data)
