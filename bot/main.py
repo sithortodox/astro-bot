@@ -2,7 +2,7 @@ import asyncio
 import logging
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
-from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.fsm.storage.redis import RedisStorage
 from aiohttp import web
 
 from bot.config import settings
@@ -32,7 +32,7 @@ async def main():
     )
     state.bot_instance = bot
 
-    storage = MemoryStorage()
+    storage = RedisStorage.from_url(settings.redis_url)
     dp = Dispatcher(storage=storage)
 
     dp.message.middleware(UserMiddleware())
