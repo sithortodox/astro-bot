@@ -7,12 +7,10 @@ from aiogram.types import (
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from sqlalchemy import select, func
-from datetime import date
 
-from bot.database import async_session
-from bot.models import User, Payment
+from bot.models import User
 from bot.config import settings
+from bot.repositories import UserRepo
 
 router = Router()
 
@@ -145,29 +143,11 @@ def get_day_keyboard(year: int, month: int) -> InlineKeyboardMarkup:
 
 
 async def get_user(telegram_id: int) -> User | None:
-    async with async_session() as session:
-        result = await session.execute(
-            select(User).where(User.telegram_id == telegram_id)
-        )
-        return result.scalar_one_or_none()
+    return await UserRepo.get_by_telegram_id(telegram_id)
 
 
 async def get_or_create_user(telegram_id: int, username: str | None = None, first_name: str | None = None) -> User:
-    async with async_session() as session:
-        result = await session.execute(
-            select(User).where(User.telegram_id == telegram_id)
-        )
-        user = result.scalar_one_or_none()
-        if not user:
-            user = User(
-                telegram_id=telegram_id,
-                username=username,
-                first_name=first_name,
-            )
-            session.add(user)
-            await session.commit()
-            await session.refresh(user)
-        return user
+    return await UserRepo.get_or_create(telegram_id, username, first_name)
 
 
 class Onboarding(StatesGroup):
@@ -302,16 +282,12 @@ def get_admin_keyboard() -> ReplyKeyboardMarkup:
 async def handler_admin_stats(message: Message):
     if message.from_user.id not in settings.admin_ids:
         return
-    async with async_session() as session:
-        total_users = await session.scalar(select(func.count(User.id)))
-        premium_users = await session.scalar(
-            select(func.count(User.id)).where(User.is_premium)
-        )
-        active_today = await session.scalar(
-            select(func.count(User.id)).where(User.last_request_date == date.today())
-        )
-        total_requests = await session.scalar(select(func.sum(User.total_requests)))
-        total_payments = await session.scalar(select(func.count(Payment.id)))
+    from bot.repositories import PaymentRepo
+    total_users = await UserRepo.count_total()
+    premium_users = await UserRepo.count_premium()
+    active_today = await UserRepo.count_active_today()
+    total_requests = await UserRepo.sum_total_requests()
+    total_payments = await PaymentRepo.count_total()
     text = (
         f"\U0001f4ca Статистика\n\n"
         f"\U0001f465 Всего пользователей: {total_users}\n"
@@ -327,11 +303,7 @@ async def handler_admin_stats(message: Message):
 async def handler_admin_users(message: Message):
     if message.from_user.id not in settings.admin_ids:
         return
-    async with async_session() as session:
-        result = await session.execute(
-            select(User).order_by(User.created_at.desc()).limit(20)
-        )
-        users = result.scalars().all()
+    users = await UserRepo.list_recent(20)
     if not users:
         await message.answer("\U0001f4cb Пользователей пока нет", reply_markup=get_admin_keyboard())
         return
@@ -713,14 +685,7 @@ async def callback_bd_day(callback_query: CallbackQuery):
     birth_date = _date(year, month, day)
     date_str = birth_date.strftime("%d.%m.%Y")
 
-    async with async_session() as session:
-        result = await session.execute(
-            select(User).where(User.telegram_id == callback_query.from_user.id)
-        )
-        user = result.scalar_one_or_none()
-        if user:
-            user.birth_date = birth_date
-            await session.commit()
+    await UserRepo.update(callback_query.from_user.id, birth_date=birth_date)
 
     await callback_query.answer()
 
@@ -791,14 +756,7 @@ async def callback_bt_minute(callback_query: CallbackQuery, state: FSMContext):
     hour, minute = int(parts[2]), int(parts[3])
     time_str = f"{hour:02d}:{minute:02d}"
 
-    async with async_session() as session:
-        result = await session.execute(
-            select(User).where(User.telegram_id == callback_query.from_user.id)
-        )
-        user = result.scalar_one_or_none()
-        if user:
-            user.birth_time = time_str
-            await session.commit()
+    await UserRepo.update(callback_query.from_user.id, birth_time=time_str)
 
     current_state = await state.get_state()
     await callback_query.answer()
@@ -823,14 +781,7 @@ async def callback_bt_minute(callback_query: CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data == "bt:skip")
 async def callback_bt_skip(callback_query: CallbackQuery):
-    async with async_session() as session:
-        result = await session.execute(
-            select(User).where(User.telegram_id == callback_query.from_user.id)
-        )
-        user = result.scalar_one_or_none()
-        if user:
-            user.birth_time = None
-            await session.commit()
+    await UserRepo.update(callback_query.from_user.id, birth_time=None)
 
     await callback_query.answer()
     await callback_query.message.answer(
@@ -843,14 +794,7 @@ async def callback_bt_skip(callback_query: CallbackQuery):
 
 @router.callback_query(F.data == "bt:skip:onboard")
 async def callback_bt_skip_onboard(callback_query: CallbackQuery, state: FSMContext):
-    async with async_session() as session:
-        result = await session.execute(
-            select(User).where(User.telegram_id == callback_query.from_user.id)
-        )
-        user = result.scalar_one_or_none()
-        if user:
-            user.birth_time = None
-            await session.commit()
+    await UserRepo.update(callback_query.from_user.id, birth_time=None)
 
     await state.set_state(Onboarding.birth_place)
     await callback_query.answer()
@@ -880,14 +824,7 @@ async def callback_action_setplace(callback_query: CallbackQuery, state: FSMCont
 @router.callback_query(F.data == "bp:skip")
 async def callback_bp_skip(callback_query: CallbackQuery, state: FSMContext):
     await state.clear()
-    async with async_session() as session:
-        result = await session.execute(
-            select(User).where(User.telegram_id == callback_query.from_user.id)
-        )
-        user = result.scalar_one_or_none()
-        if user:
-            user.birth_place = None
-            await session.commit()
+    await UserRepo.update(callback_query.from_user.id, birth_place=None)
 
     await callback_query.answer()
     await callback_query.message.answer(
@@ -901,14 +838,7 @@ async def callback_bp_skip(callback_query: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == "bp:skip:onboard")
 async def callback_bp_skip_onboard(callback_query: CallbackQuery, state: FSMContext):
     await state.clear()
-    async with async_session() as session:
-        result = await session.execute(
-            select(User).where(User.telegram_id == callback_query.from_user.id)
-        )
-        user = result.scalar_one_or_none()
-        if user:
-            user.birth_place = None
-            await session.commit()
+    await UserRepo.update(callback_query.from_user.id, birth_place=None)
 
     is_admin = callback_query.from_user.id in settings.admin_ids
     await callback_query.answer()
@@ -924,14 +854,7 @@ async def handle_place_input(message: Message, state: FSMContext):
     if place == "-":
         place = None
 
-    async with async_session() as session:
-        result = await session.execute(
-            select(User).where(User.telegram_id == message.from_user.id)
-        )
-        user = result.scalar_one_or_none()
-        if user:
-            user.birth_place = place
-            await session.commit()
+    await UserRepo.update(message.from_user.id, birth_place=place)
 
     current_state = await state.get_state()
     await state.clear()
@@ -957,14 +880,7 @@ async def callback_zodiac(callback_query: CallbackQuery):
     sign = callback_query.data.split(":", 1)[1]
     user = await get_or_create_user(callback_query.from_user.id)
     if user:
-        async with async_session() as session:
-            result = await session.execute(
-                select(User).where(User.telegram_id == callback_query.from_user.id)
-            )
-            db_user = result.scalar_one_or_none()
-            if db_user:
-                db_user.zodiac_sign = sign
-                await session.commit()
+        await UserRepo.update(callback_query.from_user.id, zodiac_sign=sign)
         emoji = ZODIAC_EMOJI.get(sign, "")
         await callback_query.message.answer(
             f"{emoji} Знак зодиака установлен: {sign}",
