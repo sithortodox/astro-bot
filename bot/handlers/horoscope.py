@@ -2,7 +2,7 @@ from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 
-from bot.services.horoscope_service import get_daily_horoscope
+from bot.services.horoscope_service import get_daily_horoscope, get_weekly_horoscope, get_monthly_horoscope
 
 router = Router()
 
@@ -18,12 +18,14 @@ async def generate_horoscope(zodiac_sign: str, period: str, user=None) -> str:
     from bot.services.ai_service import adapt_text
 
     if period == "weekly":
-        content = f"Знак зодиака: {zodiac_sign}. Составь гороскоп на неделю."
+        fallback = get_weekly_horoscope(zodiac_sign)
+        content = f"Знак зодиака: {zodiac_sign}. Гороскоп на неделю:\n{fallback}"
         text = await adapt_text(content, user, context_type="horoscope_weekly")
         return f"{emoji} Гороскоп на неделю: {zodiac_sign}\n\n{text}"
 
     if period == "monthly":
-        content = f"Знак зодиака: {zodiac_sign}. Составь гороскоп на месяц."
+        fallback = get_monthly_horoscope(zodiac_sign)
+        content = f"Знак зодиака: {zodiac_sign}. Гороскоп на месяц:\n{fallback}"
         text = await adapt_text(content, user, context_type="horoscope_monthly")
         return f"{emoji} Гороскоп на месяц: {zodiac_sign}\n\n{text}"
 

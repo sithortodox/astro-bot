@@ -4,66 +4,87 @@ from datetime import date
 
 HOROSCOPES = {
     "Овен": [
-        "Today is favorable for new beginnings. Trust your instincts.",
-        "A surprise awaits you in the afternoon. Stay open to possibilities.",
-        "Financial matters require attention. Avoid impulsive decisions.",
+        "Сегодня благоприятный день для новых начинаний. Доверяй своей интуиции.",
+        "Тебя ждёт сюрприз во второй половине дня. Будь открыт к возможностям.",
+        "Финансовые вопросы требуют внимания. Избегай импульсивных решений.",
     ],
     "Телец": [
-        "Stability is your strength today. Build on existing foundations.",
-        "A conversation with a close friend brings clarity.",
-        "Romance is in the air. Express your feelings openly.",
+        "Стабильность — твоя сила сегодня. Опирась на проверенные основы.",
+        "Разговор с близким другом принесёт ясность.",
+        "Романтика в воздухе. Выражай свои чувства открыто.",
     ],
     "Близнецы": [
-        "Communication is key. Express your ideas clearly.",
-        "A creative project gains momentum. Keep pushing forward.",
-        "Travel plans may shift. Be flexible and patient.",
+        "Общение — ключ к успеху. Выражай свои идеи ясно.",
+        "Творческий проект набирает обороты. Продолжай в том же духе.",
+        "Планы на поездку могут измениться. Будь гибким и терпеливым.",
     ],
     "Рак": [
-        "Home and family take priority. Nurture your closest bonds.",
-        "Financial growth is possible through careful planning.",
-        "Your intuition is strong today. Trust your inner voice.",
+        "Семья и дом на первом месте. Заботься о близких.",
+        "Финансовый рост возможен благодаря тщательному планированию.",
+        "Твоя интуиция сегодня особенно сильна. Доверяй внутреннему голосу.",
     ],
     "Лев": [
-        "Leadership opportunities arise. Step into the spotlight.",
-        "A creative idea deserves attention. Share it with others.",
-        "Health needs focus. Take time for self-care.",
+        "Возможности для лидерства. Выходи на первый план.",
+        "Творческая идея заслуживает внимания. Поделись ей с другими.",
+        "Здоровье требует внимания. Найди время для отдыха.",
     ],
     "Дева": [
-        "Details matter today. Your analytical skills are sharp.",
-        "A work project reaches completion. Celebrate your efforts.",
-        "Relationships benefit from honest communication.",
+        "Детали важны сегодня. Твои аналитические способности на высоте.",
+        "Рабочий проект подходит к завершению. Отмечай свои достижения.",
+        "Отношения выигрывают от честного общения.",
     ],
     "Весы": [
-        "Balance is essential. Weigh your options carefully.",
-        "A partnership offers new possibilities. Explore them.",
-        "Artistic pursuits bring joy. Induce your creative side.",
+        "Баланс — ключ к успеху. Тщательно взвешивай решения.",
+        "Партнёрство открывает новые возможности. Исследуй их.",
+        "Творческие занятия приносят радость. Развивай свою креативность.",
     ],
     "Скорпион": [
-        "Transformation is underway. Embrace the changes.",
-        "Deep conversations reveal hidden truths.",
-        "Financial opportunities emerge from unexpected sources.",
+        "Трансформация в процессе. Прими изменения.",
+        "Глубокие разговоры раскрывают скрытые истины.",
+        "Финансовые возможности появляются из неожиданных источников.",
     ],
     "Стрелец": [
-        "Adventure calls. Say yes to new experiences.",
-        "Learning and growth are highlighted today.",
-        "A philosophical insight guides your decisions.",
+        "Призывает приключение. Говори «да» новому опыту.",
+        "Обучение и рост сегодня на первый план.",
+        "Философское озарение направит твои решения.",
     ],
     "Козерог": [
-        "Discipline pays off. Stay focused on long-term goals.",
-        "A mentor offers valuable advice. Listen carefully.",
-        "Professional recognition is within reach.",
+        "Дисциплина приносит плоды. Оставайся сосредоточенным на долгосрочных целях.",
+        "Наставник даст ценный совет. Внимательно выслушай.",
+        "Профессиональное признание близко.",
     ],
     "Водолей": [
-        "Innovation drives you forward. Think outside the box.",
-        "Community involvement brings satisfaction.",
-        "A unique opportunity arises. Don't hesitate.",
+        "Инновации ведут тебя вперёд. Думай нестандартно.",
+        "Участие в общественной деятельности приносит удовлетворение.",
+        "Уникальная возможность. Не сомневайся.",
     ],
     "Рыбы": [
-        "Dreams and reality merge. Follow your intuition.",
-        "A creative project flows effortlessly.",
-        "Emotional healing is possible today. Be gentle with yourself.",
+        "Сны и реальность переплетаются. Следуй интуиции.",
+        "Творческий проектไหลет без усилий.",
+        "Эмоциональное исцеление возможно сегодня. Будь добр к себе.",
     ],
 }
+
+WEEKLY_TEMPLATES = [
+    "Эта неделя начнётся с энергии перемен. Будь готов к новым возможностям.",
+    "Середина недели принесёт ясность в важном деле. Не бойся принимать решения.",
+    "К концу недели ожидай приятных новостей. Твои усилия дадут плоды.",
+    "На этой неделе особое внимание удели здоровью. Отдых так же важен, как и работа.",
+    "Финансовая сфера требует осторожности. Планируй расходы заранее.",
+    "Отношения с близкими укрепятся через искренний разговор.",
+    "Творческий потенциал на этой неделе особенно высок. Используй его.",
+]
+
+MONTHLY_TEMPLATES = [
+    "Этот месяц будет наполнен возможностями для роста. Не упусти свой шанс.",
+    "В начале месяца сосредоточься на приоритетах. Остальное придёт само.",
+    "Середина месяца — время подвести промежуточные итоги.",
+    "К концу месяца ожидаются важные перемены. Будь готов к ним.",
+    "Финансовый горизонт благоприятен. Можно планировать крупные покупки.",
+    "Личные отношения выйдут на новый уровень. Будь открыт к диалогу.",
+    "Здоровье требует внимания. Запланируй профилактический осмотр.",
+    "Этот месяц идеален для обучения новому навыку.",
+]
 
 
 def get_daily_horoscope(zodiac_sign: str) -> str:
@@ -72,3 +93,25 @@ def get_daily_horoscope(zodiac_sign: str) -> str:
     horoscopes = HOROSCOPES.get(zodiac_sign, HOROSCOPES["Овен"])
     index = seed % len(horoscopes)
     return horoscopes[index]
+
+
+def get_weekly_horoscope(zodiac_sign: str) -> str:
+    today = date.today()
+    seed = int(hashlib.md5(f"weekly{zodiac_sign}{today.isocalendar()[1]}".encode()).hexdigest(), 16)
+    count = 3
+    selected = []
+    for i in range(count):
+        idx = (seed + i) % len(WEEKLY_TEMPLATES)
+        selected.append(WEEKLY_TEMPLATES[idx])
+    return "\n".join(selected)
+
+
+def get_monthly_horoscope(zodiac_sign: str) -> str:
+    today = date.today()
+    seed = int(hashlib.md5(f"monthly{zodiac_sign}{today.month}".encode()).hexdigest(), 16)
+    count = 4
+    selected = []
+    for i in range(count):
+        idx = (seed + i) % len(MONTHLY_TEMPLATES)
+        selected.append(MONTHLY_TEMPLATES[idx])
+    return "\n".join(selected)
