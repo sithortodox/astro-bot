@@ -16,4 +16,6 @@ RUN cat /usr/local/share/ca-certificates/russian_ca.crt >> /usr/local/lib/python
 COPY bot/ ./bot/
 COPY api/ ./api/
 COPY knowledge_base/ ./knowledge_base/
+COPY alembic.ini ./
+COPY migrations/ ./migrations/
 CMD ["python", "-m", "bot.main"]

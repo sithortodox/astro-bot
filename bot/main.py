@@ -1,13 +1,13 @@
 import asyncio
 import logging
+import subprocess
+import sys
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.storage.redis import RedisStorage
 from aiohttp import web
 
 from bot.config import settings
-from bot.models import Base
-from bot.database import engine
 from bot.handlers import start, tarot, numerology, horoscope, lunar, history, premium, admin
 from bot.middlewares.user import UserMiddleware, RateLimitMiddleware
 import bot.state as state
@@ -20,9 +20,8 @@ logger = logging.getLogger(__name__)
 
 
 async def on_startup():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    logger.info("Database tables created")
+    subprocess.run([sys.executable, "-m", "alembic", "-c", "/app/alembic.ini", "upgrade", "head"], check=False)
+    logger.info("Database migrations applied")
 
 
 async def main():
