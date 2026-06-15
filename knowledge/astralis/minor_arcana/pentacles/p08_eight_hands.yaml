@@ -1,0 +1,61 @@
+id: p08
+name_ru: Восемь Рук
+name_en: Eight Hands
+arcana: minor
+suit: pentacles
+rank: eight
+theme: Труд, Мастерство, Совершенствование
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 7
+  stability: 5
+  intuition: 2
+  transformation: 4
+  spirituality: 3
+  abundance: 6
+  conflict: 2
+  control: 3
+  risk: 2
+  creativity: 4
+  leadership: 3
+  harmony: 5
+  communication: 2
+  mystery: 1
+  discipline: 7
+  passion: 4
+  wisdom: 3
+  resilience: 6
+  influence: 3
+  destiny: 2
+light_meaning: Вы достигаете мастерства через упорный труд и сосредоточенность.
+shadow_meaning: Перевернутая карта указывает на перегрузку работой и потерю баланса.
+love: В отношениях требуется больше времени и усилий для достижения гармонии.
+career: Упорная работа приносит плоды, сосредоточьтесь на своих целях.
+money: Финансовые вопросы требуют дисциплины и планирования.
+health: Ваше здоровье нуждается в заботе и внимании к себе.
+spirituality: Сосредоточьте внимание на внутреннем развитии и самопознании.
+advice: Продолжайте усердно работать над своими целями, не забывайте отдыхать.
+warning: Избегайте переутомления и потери концентрации.
+symbols:
+- Восемь рук, держащих инструменты труда.
+- Земля с плодородной почвой и растительностью.
+- Рабочий инструмент символизирующий мастерство.
+visual_markers:
+  color: Темно-зелёный
+  element: Земля (Терра)
+  number: '8'
+jung:
+  persona: Профессиональная роль и общественное восприятие.
+  shadow: Склонность к перфекционизму и трудоголизму.
+  anima_animus: Необходимость баланса между внутренней гармонией и внешним успехом.
+  self: Целостная личность, находящая удовлетворение в труде и мастерстве.

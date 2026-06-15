@@ -1,0 +1,61 @@
+id: c02
+name_ru: Два Зеркала
+name_en: Two Mirrors
+arcana: minor
+suit: cups
+rank: two
+theme: Партнёрство, Взаимность, Связь
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 2
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 5
+  stability: 6
+  intuition: 8
+  transformation: 4
+  spirituality: 7
+  abundance: 3
+  conflict: 2
+  control: 4
+  risk: 3
+  creativity: 7
+  leadership: 2
+  harmony: 9
+  communication: 8
+  mystery: 5
+  discipline: 3
+  passion: 6
+  wisdom: 4
+  resilience: 5
+  influence: 6
+  destiny: 2
+light_meaning: Гармоничная связь с окружающими, поддержка взаимных чувств.
+shadow_meaning: Зависимость от других, отсутствие собственной идентичности.
+love: Показывает баланс в отношениях, поддерживает эмоциональную близость.
+career: Советует искать поддержку и сотрудничество в коллективной работе.
+money: Указывает на необходимость учитывать интересы партнёров при финансовых решениях.
+health: Подчёркивает важность совместного времяпрепровождения и поддержки близких.
+spirituality: Напоминает о важности совместных духовных практик и обмена энергиями.
+advice: Уделяйте внимание партнёрству и взаимности, это укрепит ваши отношения.
+warning: Избегайте односторонних действий, это может привести к утрате гармонии.
+symbols:
+- Пара зеркал, отражающих друг друга.
+- Сердце, символизирующее глубокую привязанность.
+- Листья плюща, обозначающие тесную взаимосвязь.
+visual_markers:
+  color: Бирюзовый
+  element: Вода
+  number: '2'
+jung:
+  persona: Открытая искренняя личность.
+  shadow: Страх утраты собственной индивидуальности.
+  anima_animus: Поиск равновесия между личным и общим пространством.
+  self: Слияние индивидуальных и общих интересов.

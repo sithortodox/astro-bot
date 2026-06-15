@@ -1,0 +1,62 @@
+id: '02'
+name_ru: Лунар
+name_en: The Moon Star
+arcana: major
+suit: none
+rank: none
+theme: Интуиция, Тайна, Внутренний мир
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 0
+  stability: 0
+  intuition: 8
+  transformation: 5
+  spirituality: 7
+  abundance: 2
+  conflict: 3
+  control: 4
+  risk: 6
+  creativity: 9
+  leadership: 1
+  harmony: 0
+  communication: 2
+  mystery: 10
+  discipline: 3
+  passion: 7
+  wisdom: 5
+  resilience: 4
+  influence: 2
+  destiny: 8
+light_meaning: Сила интуиции помогает раскрыть скрытые тайны внутреннего мира.
+shadow_meaning: Перевернутая карта указывает на замутнённость восприятия и неуверенность
+  в себе.
+love: Влюблённым подсказывает путь к взаимопониманию через доверие своей интуиции.
+career: Советует следовать внутренним ощущениям при принятии важных решений.
+money: Призывает доверять своей интуиции при финансовых решениях.
+health: Подчёркивает важность интуитивного понимания своих потребностей.
+spirituality: Напоминает о ценности медитации и размышлений для самопознания.
+advice: Следуйте своей интуиции и доверяйте своим чувствам.
+warning: Избегайте поспешных выводов и чрезмерной зависимости от чужого мнения.
+symbols:
+- Фигура женщины, символизирующая лунный свет и тайну.
+- Волны, олицетворяющие поток воды и эмоции.
+- Полумесяц, указывающий на связь с подсознанием.
+visual_markers:
+  color: Серебристый с оттенками синего
+  element: Вода
+  number: Нет числового эквивалента
+jung:
+  persona: Ваше осознанное Я.
+  shadow: Неосознанные страхи и сомнения.
+  anima_animus: Ваше интуитивное восприятие и эмоциональная глубина.
+  self: Гармония между сознательным и бессознательным.

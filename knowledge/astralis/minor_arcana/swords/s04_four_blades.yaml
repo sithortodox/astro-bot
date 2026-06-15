@@ -1,0 +1,61 @@
+id: s04
+name_ru: Четыре Клинков
+name_en: Four Blades
+arcana: minor
+suit: swords
+rank: four
+theme: Отдых, Восстановление, Пауза
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 3
+  stability: 7
+  intuition: 2
+  transformation: 5
+  spirituality: 1
+  abundance: 6
+  conflict: 8
+  control: 9
+  risk: 4
+  creativity: 2
+  leadership: 7
+  harmony: 5
+  communication: 8
+  mystery: 3
+  discipline: 6
+  passion: 4
+  wisdom: 2
+  resilience: 7
+  influence: 5
+  destiny: 3
+light_meaning: Время остановиться и восстановить силы перед новым вызовом.
+shadow_meaning: Избегайте чрезмерного откладывания дел, иначе напряжение возрастёт.
+love: Необходим отдых и восстановление для здоровых отношений.
+career: Успех требует паузы для перезагрузки и новых идей.
+money: Финансовый баланс улучшится с правильным подходом к ресурсам.
+health: Позвольте себе перерыв для восстановления физического и эмоционального состояния.
+spirituality: Медитация и тишина помогут глубже понять себя.
+advice: Найдите время для отдыха и восстановления сил.
+warning: Не перегружайтесь работой и обязанностями.
+symbols:
+- Четверка клинков, символизирующих остановку движения.
+- Звездное небо, указывающее на космическую перспективу.
+- Листья травы, обозначающие связь с природой и землёй.
+visual_markers:
+  color: Синий
+  element: Воздух
+  number: '4'
+jung:
+  persona: Спокойствие и уравновешенность.
+  shadow: Склонность избегать конфликтов и трудностей.
+  anima_animus: Внутренняя гармония и равновесие.
+  self: Целостность и внутренняя устойчивость.

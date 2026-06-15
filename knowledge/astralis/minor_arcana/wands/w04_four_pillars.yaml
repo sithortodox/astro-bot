@@ -1,0 +1,62 @@
+id: w04
+name_ru: Четыре Колонны
+name_en: Four Pillars
+arcana: minor
+suit: wands
+rank: four
+theme: Стабильность, Celebration, Дом
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 6
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 7
+  stability: 9
+  intuition: 2
+  transformation: 3
+  spirituality: 1
+  abundance: 8
+  conflict: 4
+  control: 5
+  risk: 6
+  creativity: 7
+  leadership: 3
+  harmony: 8
+  communication: 2
+  mystery: 1
+  discipline: 5
+  passion: 9
+  wisdom: 4
+  resilience: 7
+  influence: 6
+  destiny: 3
+light_meaning: Четырёхугольный фундамент успеха и стабильности.
+shadow_meaning: Упорство в своих убеждениях может привести к изоляции.
+love: В отношениях – прочный союз, уверенность в партнёре.
+career: На работе – надёжность и поддержка коллег.
+money: Финансовая стабильность благодаря здравому подходу.
+health: Физическое здоровье укрепляется за счёт порядка и дисциплины.
+spirituality: Спокойствие духа через гармонию с окружением.
+advice: Укрепляйте основы своей жизни, чтобы обрести уверенность.
+warning: Избегайте чрезмерного упрямства, которое может отдалить вас от близких.
+symbols:
+- Четыре колонны поддерживают небесный купол.
+- Огненные языки пламени символизируют силу воли.
+- Светлая сфера олицетворяет достижение цели.
+visual_markers:
+  color: Оранжевый и золотой
+  element: Огонь
+  number: '4'
+relations: null
+jung:
+  persona: Открытый и уверенный внешний вид.
+  shadow: Скрытая жёсткость характера.
+  anima_animus: Гармония внутреннего мира и внешней реальности.
+  self: Целостная личность, способная поддерживать баланс.

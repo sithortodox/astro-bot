@@ -1,0 +1,61 @@
+id: p09
+name_ru: Девять Сокровищ
+name_en: Nine Treasures
+arcana: minor
+suit: pentacles
+rank: nine
+theme: Изобилие, Самодостаточность, Роскошь
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 7
+  stability: 8
+  intuition: 4
+  transformation: 2
+  spirituality: 5
+  abundance: 9
+  conflict: 3
+  control: 6
+  risk: 1
+  creativity: 5
+  leadership: 4
+  harmony: 7
+  communication: 3
+  mystery: 2
+  discipline: 6
+  passion: 8
+  wisdom: 5
+  resilience: 7
+  influence: 4
+  destiny: 3
+light_meaning: Уверенность в изобилии ресурсов и самодостаточности.
+shadow_meaning: Зависимость от внешних источников вместо собственного ресурса.
+love: Гармония в отношениях благодаря взаимному уважению и поддержке.
+career: Устойчивый карьерный рост с возможностью реализации потенциала.
+money: Финансовая стабильность и возможность наслаждаться комфортом.
+health: Физическое благополучие и внутреннее равновесие.
+spirituality: Поиск внутренней гармонии через осознание ценности материального.
+advice: Цените то, что имеете, не гонитесь за иллюзорными целями.
+warning: Не забывайте о духовных ценностях при стремлении к материальному благосостоянию.
+symbols:
+- Золотые монеты
+- Пышная трапеза
+- Богато украшенный трон
+visual_markers:
+  color: Золотистый
+  element: Земля
+  number: '9'
+jung:
+  persona: Открытая демонстрация успеха и благополучия.
+  shadow: Скрытые страхи потерять достигнутую стабильность.
+  anima_animus: Желание найти баланс между внутренним миром и внешним успехом.
+  self: Осознанность своего места в мире и уверенность в будущем.

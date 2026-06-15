@@ -1,0 +1,62 @@
+id: c03
+name_ru: Три Чаши
+name_en: Three Chalices
+arcana: minor
+suit: cups
+rank: three
+theme: Дружба, Celebration, Радость
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 1
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 5
+  stability: 7
+  intuition: 9
+  transformation: 4
+  spirituality: 6
+  abundance: 8
+  conflict: 2
+  control: 3
+  risk: 1
+  creativity: 7
+  leadership: 2
+  harmony: 9
+  communication: 8
+  mystery: 5
+  discipline: 3
+  passion: 8
+  wisdom: 6
+  resilience: 7
+  influence: 5
+  destiny: 4
+light_meaning: Укрепление дружеских связей и празднование радостных моментов.
+shadow_meaning: Излишняя зависимость от чужого мнения и поверхностность в отношениях.
+love: Углубляет эмоциональную связь с партнером через совместные увлечения и общие
+  цели.
+career: Поддерживает командный дух и сотрудничество в рабочей среде.
+money: Способствует гармоничному распределению ресурсов и удовольствиям.
+health: Призывает к заботе о своем физическом и эмоциональном состоянии.
+spirituality: Напоминает об искренности чувств и важности человеческих контактов.
+advice: Цените время, проведенное с близкими, и делитесь радостью друг с другом.
+warning: Будьте осторожны с излишней зависимостью от одобрения окружающих.
+symbols:
+- Три чаши, наполненные фруктами и цветами, символизируют изобилие и радость.
+- Фон из звездного неба подчеркивает космическую природу эмоций.
+- Лунар, управляющая звезда Кубков, изображена над сценой.
+visual_markers:
+  color: Ярко-розовый и золотой
+  element: Вода (Кубки)
+  number: Три
+jung:
+  persona: Открытая дружелюбная личность
+  shadow: Скрытая потребность в признании и восхищении
+  anima_animus: Гармония эмоциональной близости
+  self: Сбалансированная социальная идентичность

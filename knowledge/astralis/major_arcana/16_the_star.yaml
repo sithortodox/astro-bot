@@ -1,0 +1,61 @@
+id: 16
+name_ru: Звезда
+name_en: The Star
+arcana: major
+suit: none
+rank: none
+theme: Надежда, Вдохновение, Верный путь
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 7
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 8
+  stability: 4
+  intuition: 9
+  transformation: 5
+  spirituality: 7
+  abundance: 3
+  conflict: 2
+  control: 1
+  risk: 6
+  creativity: 8
+  leadership: 3
+  harmony: 7
+  communication: 5
+  mystery: 9
+  discipline: 4
+  passion: 8
+  wisdom: 6
+  resilience: 7
+  influence: 5
+  destiny: 8
+light_meaning: Свет надежды освещает путь, вдохновение направляет действия.
+shadow_meaning: Потеря ориентиров приводит к сомнениям и разочарованию.
+love: Гармония в отношениях, поддержка друг друга.
+career: Новый этап профессионального роста, возможность самовыражения.
+money: Улучшение финансового положения через разумные решения.
+health: Необходимость отдыха и восстановления сил.
+spirituality: Время для самопознания и внутреннего обновления.
+advice: Следуйте за светом своего сердца и не бойтесь новых начинаний.
+warning: Не позволяйте страху затмить вашу веру в себя и свои способности.
+symbols:
+- Изображение звезды с лучами, указывающими вверх
+- Вода, символизирующая эмоциональную стабильность
+- Небо, представляющее бесконечные возможности
+visual_markers:
+  color: Голубой
+  element: Воздух
+  number: '17'
+jung:
+  persona: Открытый и дружелюбный человек, стремящийся помочь другим.
+  shadow: Скрытые страхи и неуверенность в своих силах.
+  anima_animus: Доверие и уважение к противоположному полу.
+  self: Синтез личного опыта и внутреннего знания.

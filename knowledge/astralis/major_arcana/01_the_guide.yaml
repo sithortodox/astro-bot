@@ -1,0 +1,61 @@
+id: '01'
+name_ru: Проводник
+name_en: The Guide
+arcana: major
+suit: none
+rank: none
+theme: Воля, Мастерство, Направление
+archetypes:
+  hero: 2
+  sage: 1
+  creator: 0
+  ruler: 0
+  explorer: 3
+  lover: 0
+  magician: 2
+  rebel: 0
+  caregiver: 0
+  shadow: 1
+metrics:
+  activity: 8
+  stability: 5
+  intuition: 7
+  transformation: 6
+  spirituality: 4
+  abundance: 3
+  conflict: 2
+  control: 7
+  risk: 4
+  creativity: 9
+  leadership: 8
+  harmony: 6
+  communication: 5
+  mystery: 3
+  discipline: 7
+  passion: 9
+  wisdom: 8
+  resilience: 6
+  influence: 7
+  destiny: 5
+light_meaning: Вы обретаете ясность цели и уверенно движетесь к своей мечте.
+shadow_meaning: Неясность направления может привести к потере пути и разочарованию.
+love: Поддержка партнёра и совместная работа над отношениями.
+career: Четкое видение целей и путей их достижения.
+money: Уверенное управление финансами и инвестициями.
+health: Необходимость следовать режиму и дисциплине для поддержания здоровья.
+spirituality: Поиск личного смысла через осознанность и самосовершенствование.
+advice: Определите свою цель и разработайте план действий.
+warning: Избегайте импульсивных решений, которые могут сбить вас с курса.
+symbols:
+- Светящаяся звезда
+- Огненный шар
+- Компас
+visual_markers:
+  color: Ярко-красный
+  element: Огонь (Игнис)
+  number: '1'
+jung:
+  persona: Надежный проводник, знающий путь.
+  shadow: Склонность к чрезмерной уверенности в своих силах.
+  anima_animus: Партнёр как источник вдохновения и поддержки.
+  self: Осознанный мастер своего пути.

@@ -1,0 +1,62 @@
+id: w14
+name_ru: Король Огня
+name_en: King of Fire
+arcana: minor
+suit: wands
+rank: king
+theme: Лидерство, Видение, Сила воли
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 1
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 8
+  stability: 5
+  intuition: 2
+  transformation: 6
+  spirituality: 3
+  abundance: 7
+  conflict: 9
+  control: 8
+  risk: 7
+  creativity: 6
+  leadership: 9
+  harmony: 4
+  communication: 5
+  mystery: 2
+  discipline: 8
+  passion: 9
+  wisdom: 3
+  resilience: 7
+  influence: 8
+  destiny: 6
+light_meaning: Вдохновляющий лидер с ясным видением будущего.
+shadow_meaning: Упор на силу вместо сотрудничества, риск деспотизма.
+love: Сильный лидер в отношениях, требует уважения и подчинения.
+career: Эффективный руководитель, стремится к доминированию.
+money: Активно вкладывает средства, успешен при рискованных проектах.
+health: Высокая энергия и страсть к жизни, может быть импульсивным.
+spirituality: Целенаправленно развивает духовность через действия.
+advice: Используйте свою волю и страсть для достижения целей, но учитывайте потребности
+  окружающих.
+warning: Будьте осторожны, чтобы не подавлять других своей силой.
+symbols:
+- Огненный шар, символизирующий власть и страсть
+- Коронованная фигура, олицетворяющая авторитет
+- Факел как источник света и тепла
+visual_markers:
+  color: Ярко-красный
+  element: Огонь
+  number: '9'
+jung:
+  persona: Открытый лидер, уверенный в своих решениях
+  shadow: Импульсивность и властолюбие
+  anima_animus: Партнер, способный вдохновить и поддержать
+  self: Баланс между властью и состраданием

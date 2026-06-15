@@ -1,0 +1,61 @@
+id: s12
+name_ru: Рыцарь Ветра
+name_en: Knight of Wind
+arcana: minor
+suit: swords
+rank: knight
+theme: Быстрота, Интеллект, Решительность
+archetypes:
+  hero: 2
+  sage: 1
+  creator: 0
+  ruler: 0
+  explorer: 3
+  lover: 0
+  magician: 2
+  rebel: 0
+  caregiver: 0
+  shadow: 1
+metrics:
+  activity: 8
+  stability: 4
+  intuition: 5
+  transformation: 6
+  spirituality: 3
+  abundance: 2
+  conflict: 7
+  control: 6
+  risk: 8
+  creativity: 5
+  leadership: 7
+  harmony: 4
+  communication: 6
+  mystery: 3
+  discipline: 7
+  passion: 5
+  wisdom: 4
+  resilience: 8
+  influence: 6
+  destiny: 3
+light_meaning: Вы движетесь быстро и уверенно, используя интеллект и решимость.
+shadow_meaning: Избегайте импульсивности и переоценки своих возможностей.
+love: В отношениях стремитесь к интеллектуальному общению и взаимному уважению.
+career: Используйте свои умственные способности и решительность для достижения целей.
+money: Осторожно управляйте рисками, чтобы не потерять контроль над финансами.
+health: Регулярные физические упражнения помогут поддерживать высокий уровень энергии.
+spirituality: Обращайте внимание на интуитивные подсказки и развитие внутреннего видения.
+advice: Доверяйте своему разуму и принимайте решения взвешенно.
+warning: Не позволяйте эмоциям взять верх над рациональностью.
+symbols:
+- Образ летящего орла
+- Лук и стрелы
+- Воздушный поток
+visual_markers:
+  color: Синий с белым акцентом
+  element: Воздух
+  number: '10'
+jung:
+  persona: Открытый и уверенный в себе
+  shadow: Импульсивность и нетерпение
+  anima_animus: Партнер как источник вдохновения и поддержки
+  self: Баланс между уверенностью и самоконтролем

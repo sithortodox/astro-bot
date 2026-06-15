@@ -1,0 +1,63 @@
+id: w11
+name_ru: Паж Пламени
+name_en: Page of Flame
+arcana: minor
+suit: wands
+rank: page
+theme: Энтузиазм, Новости, Обучение
+archetypes:
+  hero: 2
+  sage: 1
+  creator: 0
+  ruler: 0
+  explorer: 3
+  lover: 0
+  magician: 2
+  rebel: 0
+  caregiver: 0
+  shadow: 1
+metrics:
+  activity: 8
+  stability: 4
+  intuition: 7
+  transformation: 5
+  spirituality: 6
+  abundance: 3
+  conflict: 2
+  control: 3
+  risk: 7
+  creativity: 9
+  leadership: 4
+  harmony: 5
+  communication: 8
+  mystery: 2
+  discipline: 4
+  passion: 9
+  wisdom: 6
+  resilience: 7
+  influence: 5
+  destiny: 3
+light_meaning: Молодой искатель приключений, полный энтузиазма и новых идей.
+shadow_meaning: Неуверенность и импульсивность, которые могут привести к поспешным
+  решениям.
+love: Влюблённость и романтические приключения, но также риск необдуманных поступков.
+career: Новые возможности и вдохновляющие идеи, требующие решительных действий.
+money: Потенциал для финансовых начинаний, связанных с новыми проектами.
+health: Энергия и активность, но необходимость сохранять баланс между деятельностью
+  и отдыхом.
+spirituality: Поиск смысла через личное развитие и новые опыты.
+advice: Используйте свой энтузиазм для воплощения мечт, но не забывайте об осторожности.
+warning: Избегайте поспешных решений и переоценки своих возможностей.
+symbols:
+- Юноша с факелом
+- Огненная стрела
+- Гонцы с новостями
+visual_markers:
+  color: Ярко-красный
+  element: Огонь
+  number: '11'
+jung:
+  persona: Открытый и дружелюбный искатель знаний
+  shadow: Импульсивность и отсутствие самообладания
+  anima_animus: Сложность понимания глубоких чувств и эмоций
+  self: Баланс между детской непосредственностью и зрелостью

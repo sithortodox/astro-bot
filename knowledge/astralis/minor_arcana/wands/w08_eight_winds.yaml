@@ -1,0 +1,62 @@
+id: w08
+name_ru: Восемь Ветров
+name_en: Eight Winds
+arcana: minor
+suit: wands
+rank: eight
+theme: Скорость, Движение, Прогресс
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 7
+  lover: 0
+  magician: 6
+  rebel: 0
+  caregiver: 0
+  shadow: 4
+metrics:
+  activity: 9
+  stability: 2
+  intuition: 5
+  transformation: 7
+  spirituality: 3
+  abundance: 6
+  conflict: 8
+  control: 4
+  risk: 7
+  creativity: 9
+  leadership: 5
+  harmony: 2
+  communication: 6
+  mystery: 3
+  discipline: 5
+  passion: 8
+  wisdom: 4
+  resilience: 7
+  influence: 6
+  destiny: 3
+light_meaning: Ускорение движения вперёд, новые возможности благодаря активности.
+shadow_meaning: Переизбыток скорости приводит к утрате контроля и нестабильности.
+love: Поиск новых впечатлений и приключений в отношениях.
+career: Необходимость динамичного подхода к профессиональной деятельности.
+money: Быстрый рост доходов при условии эффективного управления ресурсами.
+health: Активный образ жизни способствует улучшению физического состояния.
+spirituality: Соединение с внутренним потоком через движение и практику.
+advice: Используйте энергию ветра, чтобы ускорить достижение целей, но не забывайте
+  о контроле.
+warning: Избегайте принятия поспешных решений, которые могут привести к хаосу.
+symbols:
+- Ветер, развевающие волосы
+- Летящий орёл
+- Колесо с восемью спицами
+visual_markers:
+  color: Ярко-жёлтый
+  element: Огонь
+  number: '8'
+jung:
+  persona: Открытая личность, всегда готовая к приключениям.
+  shadow: Импульсивность и неспособность остановиться вовремя.
+  anima_animus: Партнёр как источник вдохновения и новый опыт.
+  self: Баланс между свободой и контролем.

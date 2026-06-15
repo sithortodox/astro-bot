@@ -1,0 +1,62 @@
+id: 7
+name_ru: Колесница
+name_en: The Chariot
+arcana: major
+suit: none
+rank: none
+theme: Победа, Воля, Движение
+archetypes:
+  hero: 2
+  sage: 0
+  creator: 1
+  ruler: 1
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 1
+  caregiver: 0
+  shadow: 1
+metrics:
+  activity: 8
+  stability: 4
+  intuition: 2
+  transformation: 5
+  spirituality: 3
+  abundance: 6
+  conflict: 7
+  control: 9
+  risk: 3
+  creativity: 4
+  leadership: 8
+  harmony: 5
+  communication: 6
+  mystery: 2
+  discipline: 7
+  passion: 9
+  wisdom: 3
+  resilience: 8
+  influence: 7
+  destiny: 6
+light_meaning: Вы уверенно движетесь к цели, используя волю и решимость.
+shadow_meaning: Ваша настойчивость может привести к изоляции и одиночеству.
+love: Ваше стремление вперёд может оттолкнуть партнёра. Уделите внимание эмоциональной
+  близости.
+career: Успех зависит от чёткого плана и контроля над ситуацией.
+money: Финансовая стабильность требует дисциплины и планирования.
+health: Физическая активность помогает сохранять здоровье и энергию.
+spirituality: Используйте внутреннюю силу для преодоления препятствий.
+advice: Четко определите свои приоритеты и действуйте последовательно.
+warning: Избегайте чрезмерного контроля, который может вызвать стресс и недовольство.
+symbols:
+- Воин на колеснице с огненными крыльями
+- Звезда Игнис над головой воина
+- Огненный поток позади колесницы
+visual_markers:
+  color: Красный
+  element: Огонь
+  number: '7'
+jung:
+  persona: Открытая и уверенная личность
+  shadow: Контроль и властность могут скрывать неуверенность
+  anima_animus: Баланс между внутренней силой и эмоциональностью
+  self: Целостная личность, способная преодолевать трудности

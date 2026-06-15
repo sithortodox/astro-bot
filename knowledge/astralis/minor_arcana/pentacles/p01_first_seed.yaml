@@ -1,0 +1,62 @@
+id: p01
+name_ru: Первый Зерн
+name_en: First Seed
+arcana: minor
+suit: pentacles
+rank: ace
+theme: Новые возможности, Изобилие, Начало
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 1
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 8
+  stability: 5
+  intuition: 2
+  transformation: 4
+  spirituality: 1
+  abundance: 9
+  conflict: 3
+  control: 6
+  risk: 7
+  creativity: 8
+  leadership: 2
+  harmony: 5
+  communication: 3
+  mystery: 1
+  discipline: 6
+  passion: 8
+  wisdom: 2
+  resilience: 7
+  influence: 4
+  destiny: 9
+light_meaning: На пути к изобилию открываются новые возможности благодаря первым шагам.
+shadow_meaning: Ожидания изобилия могут привести к разочарованию из-за недостаточной
+  подготовки.
+love: Начало новых любовных приключений с перспективой роста и процветания.
+career: Успех в начале нового проекта, требующего материальных вложений и усилий.
+money: Прибыль от инвестиций или первых шагов в бизнесе.
+health: Физическое обновление и прилив энергии благодаря новым привычкам.
+spirituality: Открытие внутренних ресурсов и потенциала через практику заземления.
+advice: Используйте текущие ресурсы для создания прочной основы будущего успеха.
+warning: Не переоценивайте свои силы; подготовьтесь заранее.
+symbols:
+- Семечко, символизирующее потенциал роста.
+- Земля, представляющая материальные ресурсы.
+- Солнце, как источник жизненной энергии.
+visual_markers:
+  color: Зелёный
+  element: Земля
+  number: '1'
+jung:
+  persona: Внешний образ успешного человека.
+  shadow: Скрытая неуверенность в своих силах.
+  anima_animus: Внутренняя связь с природными ритмами.
+  self: Целостная личность, сочетающая материальную безопасность и духовную гармонию.

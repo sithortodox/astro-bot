@@ -1,0 +1,62 @@
+id: s13
+name_ru: Королева Ветра
+name_en: Queen of Wind
+arcana: minor
+suit: swords
+rank: queen
+theme: Ясность, Объективность, Мудрость
+archetypes:
+  hero: 0
+  sage: 8
+  creator: 2
+  ruler: 5
+  explorer: 7
+  lover: 4
+  magician: 6
+  rebel: 3
+  caregiver: 1
+  shadow: 9
+metrics:
+  activity: 7
+  stability: 3
+  intuition: 6
+  transformation: 8
+  spirituality: 4
+  abundance: 2
+  conflict: 9
+  control: 5
+  risk: 7
+  creativity: 6
+  leadership: 8
+  harmony: 3
+  communication: 9
+  mystery: 2
+  discipline: 5
+  passion: 4
+  wisdom: 8
+  resilience: 7
+  influence: 6
+  destiny: 3
+light_meaning: Вдохновляет объективность и ясность мышления.
+shadow_meaning: Может вызвать упрямство и неспособность принимать чужую точку зрения.
+love: Способствует поиску гармонии через диалог.
+career: Поддерживает профессиональный рост через умение видеть ситуацию целиком.
+money: Предлагает финансовую стабильность при условии рационального подхода.
+health: Призывает к осознанному подходу к здоровью и питанию.
+spirituality: Напоминает о важности внутренней мудрости и спокойствия.
+advice: Используйте свою мудрость и объективность для принятия взвешенных решений.
+warning: Будьте осторожны, чтобы не превратиться в критика, который отвергает всё
+  новое.
+symbols:
+- Изображение женщины с крыльями, держащей мечи
+- Звёздное небо
+- Листья, танцующие в воздухе
+visual_markers:
+  color: Голубой
+  element: Воздух
+  number: '13'
+jung:
+  persona: Образ умной и независимой личности
+  shadow: Упрямая и склонная к критике персона
+  anima_animus: Партнёр, способный уравновесить её стремление к объективности
+  self: Целостная личность, сочетающая объективность и эмоциональную глубину

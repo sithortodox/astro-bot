@@ -1,0 +1,61 @@
+id: '10'
+name_ru: Судьба
+name_en: Destiny
+arcana: major
+suit: none
+rank: none
+theme: Колесо, Циклы, Перемены
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 8
+  stability: 5
+  intuition: 7
+  transformation: 9
+  spirituality: 6
+  abundance: 4
+  conflict: 3
+  control: 2
+  risk: 7
+  creativity: 8
+  leadership: 5
+  harmony: 6
+  communication: 4
+  mystery: 9
+  discipline: 3
+  passion: 8
+  wisdom: 7
+  resilience: 6
+  influence: 5
+  destiny: 10
+light_meaning: Ваш путь предопределён звёздами, следуйте своему предназначению.
+shadow_meaning: Сопротивление судьбе приведёт к внутреннему конфликту и разочарованию.
+love: Ваша судьба связана с судьбой любимого человека; будьте готовы к переменам.
+career: Успех ждёт тех, кто готов принять изменения и следовать своим природным талантам.
+money: Финансовые циклы изменятся; доверяйте своей интуиции при принятии решений.
+health: Физическое здоровье связано с эмоциональной гармонией; заботьтесь о себе.
+spirituality: Следование духовному пути поможет раскрыть ваше истинное назначение.
+advice: Примите перемены как естественную часть вашего путешествия.
+warning: Не пытайтесь контролировать всё; позвольте жизни вести вас.
+symbols:
+- Карта Таро Сфирот Кетер
+- Звёздное небо
+- Колесо Фортуны
+visual_markers:
+  color: Серебристый с золотым отливом
+  element: Огонь (Игнис)
+  number: '10'
+jung:
+  persona: Открытая личность, стремящаяся к признанию
+  shadow: Скрытые страхи перед неизвестностью
+  anima_animus: Иллюзии о собственной уникальности
+  self: Гармония между внутренним и внешним

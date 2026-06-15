@@ -1,0 +1,61 @@
+id: '11'
+name_ru: Справедливость
+name_en: Justice
+arcana: major
+suit: none
+rank: none
+theme: Баланс, Истина, Ответственность
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 5
+  stability: 7
+  intuition: 2
+  transformation: 4
+  spirituality: 3
+  abundance: 6
+  conflict: 8
+  control: 9
+  risk: 1
+  creativity: 7
+  leadership: 5
+  harmony: 8
+  communication: 6
+  mystery: 2
+  discipline: 9
+  passion: 4
+  wisdom: 7
+  resilience: 8
+  influence: 5
+  destiny: 3
+light_meaning: Восстановление баланса и истины через осознанный выбор.
+shadow_meaning: Навязывание несправедливой системы правил и контроля.
+love: Поиск справедливости в отношениях требует честности и открытости.
+career: Требуется объективная оценка своих достижений и возможностей.
+money: Правильное распределение ресурсов способствует стабильности.
+health: Необходим баланс между физическим здоровьем и эмоциональной нагрузкой.
+spirituality: Духовный рост зависит от принятия ответственности за свои поступки.
+advice: Примите ответственность за свою жизнь и действия.
+warning: Избегайте манипуляций и несправедливости в любых ситуациях.
+symbols:
+- Весы как символ равновесия
+- Книги знаний и мудрости
+- Светлая фигура судьи
+visual_markers:
+  color: Серебристый с оттенками синего
+  element: Воздух (Зефир)
+  number: '11'
+jung:
+  persona: Открытая личность, стремящаяся к правосудию
+  shadow: Склонность к осуждению и контролю других
+  anima_animus: Идеал справедливого партнера
+  self: Совершенство внутреннего закона и морали

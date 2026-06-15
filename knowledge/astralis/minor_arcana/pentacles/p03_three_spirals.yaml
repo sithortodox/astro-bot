@@ -1,0 +1,61 @@
+id: p03
+name_ru: Три Спира
+name_en: Three Spirals
+arcana: minor
+suit: pentacles
+rank: three
+theme: Мастерство, Команда, Качество
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 7
+  stability: 8
+  intuition: 5
+  transformation: 4
+  spirituality: 2
+  abundance: 9
+  conflict: 3
+  control: 6
+  risk: 5
+  creativity: 7
+  leadership: 8
+  harmony: 6
+  communication: 5
+  mystery: 3
+  discipline: 8
+  passion: 7
+  wisdom: 4
+  resilience: 6
+  influence: 7
+  destiny: 5
+light_meaning: Укрепление командного взаимодействия и развитие профессиональных навыков.
+shadow_meaning: Проблемы с коллективной работой и недостаточная компетентность.
+love: Вдохновляет на совместный рост и поддержку друг друга.
+career: Поддерживает стабильную карьеру и укрепление профессионализма.
+money: Способствует улучшению финансового положения через профессионализм и мастерство.
+health: Призывает к заботе о физическом здоровье и внимании к деталям.
+spirituality: Напоминает о важности внутренней гармонии и дисциплине.
+advice: Работайте над своими профессиональными навыками и развивайтесь вместе с командой.
+warning: Будьте внимательны к недостаткам своих знаний и умений.
+symbols:
+- Спираль, символизирующая цикличность и развитие.
+- Копна пшеницы, отражающая материальное изобилие.
+- Гора, указывающая на стремление к мастерству и совершенству.
+visual_markers:
+  color: Золотистый
+  element: Земля
+  number: '3'
+jung:
+  persona: Ваш профессиональный образ и роль в команде.
+  shadow: Неудовлетворённые потребности и скрытые амбиции.
+  anima_animus: Партнёр по сотрудничеству и взаимопониманию.
+  self: Идеальная команда и профессиональная реализация.

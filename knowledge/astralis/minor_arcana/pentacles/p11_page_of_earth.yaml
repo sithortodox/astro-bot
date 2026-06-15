@@ -1,0 +1,63 @@
+id: p11
+name_ru: Паж Земли
+name_en: Page of Earth
+arcana: minor
+suit: pentacles
+rank: page
+theme: Практичность, Начинающий, Ученик
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 1
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 7
+  stability: 4
+  intuition: 2
+  transformation: 3
+  spirituality: 1
+  abundance: 5
+  conflict: 2
+  control: 3
+  risk: 2
+  creativity: 4
+  leadership: 2
+  harmony: 5
+  communication: 3
+  mystery: 1
+  discipline: 6
+  passion: 4
+  wisdom: 2
+  resilience: 7
+  influence: 3
+  destiny: 2
+light_meaning: Молодой ученик земли, готовый к практическим действиям и обучению.
+shadow_meaning: Неопытность и отсутствие дисциплины могут привести к беспорядку и
+  неэффективности.
+love: Влюблённость новичка, стремление к опыту и знаниям в отношениях.
+career: Начало профессиональной деятельности, поиск практики и наставника.
+money: Надежда на стабильность и материальную поддержку через трудолюбие.
+health: Здоровье связано с физическими усилиями и дисциплиной.
+spirituality: Поиск простых истин и мудрости через повседневный опыт.
+advice: Будьте терпеливы и последовательны в своих начинаниях, учитесь у окружающих
+  вас мастеров.
+warning: Избегайте поспешных решений и хаоса, держите свои действия под контролем.
+symbols:
+- Юноша с посохом
+- Земляная гряда
+- Кувалда и лопата
+visual_markers:
+  color: Коричневый
+  element: Земля
+  number: '11'
+jung:
+  persona: Открытый и любопытный новичок
+  shadow: Импульсивность и недостаток дисциплины
+  anima_animus: Партнёр, способствующий развитию практических навыков
+  self: Ищущий целостность и гармонию в своей жизни

@@ -1,0 +1,612 @@
+# Astralis Tarot — Каталог всех 78 карт
+# Файл: cards_catalog.yaml
+
+# ===========================
+# СТАРШИЕ АРКАНЫ (22)
+# Путь звёздной души
+# ===========================
+major_arcana:
+  - id: "00"
+    name_ru: "Начало"
+    name_en: "The Beginning"
+    arcana: "major"
+    theme: "Зарождение, Innocence, Potential"
+    element: "ether"
+    star: "Аеон"
+
+  - id: "01"
+    name_ru: "Проводник"
+    name_en: "The Guide"
+    arcana: "major"
+    theme: "Воля, Мастерство, Направление"
+    element: "fire"
+    star: "Игнис"
+
+  - id: "02"
+    name_ru: "Лунар"
+    name_en: "The Moon Star"
+    arcana: "major"
+    theme: "Интуиция, Тайна, Внутренний мир"
+    element: "water"
+    star: "Лунар"
+
+  - id: "03"
+    name_ru: "Игнис"
+    name_en: "The Flame Star"
+    arcana: "major"
+    theme: "Созидание, Изобилие, Женское начало"
+    element: "fire"
+    star: "Игнис"
+
+  - id: "04"
+    name_ru: "Зефир"
+    name_en: "The Wind Star"
+    arcana: "major"
+    theme: "Авторитет, Структура, Мужское начало"
+    element: "air"
+    star: "Зефир"
+
+  - id: "05"
+    name_ru: "Терра"
+    name_en: "The Earth Star"
+    arcana: "major"
+    theme: "Традиции, Знания, Духовность"
+    element: "earth"
+    star: "Терра"
+
+  - id: "06"
+    name_ru: "Союз"
+    name_en: "The Union"
+    arcana: "major"
+    theme: "Выбор, Гармония, Связь"
+    element: "water"
+    star: "Лунар"
+
+  - id: "07"
+    name_ru: "Колесница"
+    name_en: "The Chariot"
+    arcana: "major"
+    theme: "Победа, Воля, Движение"
+    element: "fire"
+    star: "Игнис"
+
+  - id: "08"
+    name_ru: "Сила"
+    name_en: "Strength"
+    arcana: "major"
+    theme: "Внутренняя сила, Терпение, Мужество"
+    element: "fire"
+    star: "Игнис"
+
+  - id: "09"
+    name_ru: "Отшельник"
+    name_en: "The Hermit"
+    arcana: "major"
+    theme: "Самопознание, Одиночество, Мудрость"
+    element: "air"
+    star: "Зефир"
+
+  - id: "10"
+    name_ru: "Судьба"
+    name_en: "Destiny"
+    arcana: "major"
+    theme: "Колесо, Циклы, Перемены"
+    element: "fire"
+    star: "Игнис"
+
+  - id: "11"
+    name_ru: "Справедливость"
+    name_en: "Justice"
+    arcana: "major"
+    theme: "Баланс, Истина, Ответственность"
+    element: "air"
+    star: "Зефир"
+
+  - id: "12"
+    name_ru: "Тень"
+    name_en: "The Shadow"
+    arcana: "major"
+    theme: "Жертва, Пауза, Новый взгляд"
+    element: "water"
+    star: "Лунар"
+
+  - id: "13"
+    name_ru: "Трансформация"
+    name_en: "Transformation"
+    arcana: "major"
+    theme: "Перерождение, Конец цикла, Обновление"
+    element: "water"
+    star: "Лунар"
+
+  - id: "14"
+    name_ru: "Поток"
+    name_en: "The Flow"
+    arcana: "major"
+    theme: "Баланс, Терпение, Умеренность"
+    element: "water"
+    star: "Лунар"
+
+  - id: "15"
+    name_ru: "Разлом"
+    name_en: "The Rift"
+    arcana: "major"
+    theme: "Разрушение, Прорыв, Освобождение"
+    element: "fire"
+    star: "Игнис"
+
+  - id: "16"
+    name_ru: "Звезда"
+    name_en: "The Star"
+    arcana: "major"
+    theme: "Надежда, Вдохновение, Верный путь"
+    element: "air"
+    star: "Зефир"
+
+  - id: "17"
+    name_ru: "Затмение"
+    name_en: "The Eclipse"
+    arcana: "major"
+    theme: "Иллюзии, Подсознание, Страхи"
+    element: "water"
+    star: "Лунар"
+
+  - id: "18"
+    name_ru: "Рассвет"
+    name_en: "The Dawn"
+    arcana: "major"
+    theme: "Ясность, Энергия, Радость"
+    element: "fire"
+    star: "Игнис"
+
+  - id: "19"
+    name_ru: "Пробуждение"
+    name_en: "The Awakening"
+    arcana: "major"
+    theme: "Возрождение, Призвание, Обновление"
+    element: "air"
+    star: "Зефир"
+
+  - id: "20"
+    name_ru: "Вечность"
+    name_en: "Eternity"
+    arcana: "major"
+    theme: "Завершенность, Целостность, Гармония"
+    element: "ether"
+    star: "Аеон"
+
+  - id: "21"
+    name_ru: "Бесконечность"
+    name_en: "Infinity"
+    arcana: "major"
+    theme: "Бесконечный цикл, Возвращение, Новый виток"
+    element: "ether"
+    star: "Аеон"
+
+# ===========================
+# МЛАДШИЕ АРКАНЫ
+# Четыре Космических Потока
+# ===========================
+
+# ---
+# ЖЕЗЛЫ — Поток Огня (Созидание, Действие, Воля)
+# ---
+wands:
+  - id: "w01"
+    name_ru: "Искра Начала"
+    name_en: "Spark of Beginning"
+    suit: "wands"
+    rank: "ace"
+    theme: "Новая энергия, Вдохновение, Начало"
+
+  - id: "w02"
+    name_ru: "Два Пламени"
+    name_en: "Two Flames"
+    suit: "wands"
+    rank: "two"
+    theme: "Планирование, Выбор направления"
+
+  - id: "w03"
+    name_ru: "Три Факела"
+    name_en: "Three Torches"
+    suit: "wands"
+    rank: "three"
+    theme: "Расширение, Ожидание результата"
+
+  - id: "w04"
+    name_ru: "Четыре Колонны"
+    name_en: "Four Pillars"
+    suit: "wands"
+    rank: "four"
+    theme: "Стабильность, Celebration, Дом"
+
+  - id: "w05"
+    name_ru: "Пять Битв"
+    name_en: "Five Battles"
+    suit: "wands"
+    rank: "five"
+    theme: "Конфликт, Соревнование, Вызов"
+
+  - id: "w06"
+    name_ru: "Шесть Триумфов"
+    name_en: "Six Triumphs"
+    suit: "wands"
+    rank: "six"
+    theme: "Победа, Признание, Успех"
+
+  - id: "w07"
+    name_ru: "Семь Стражей"
+    name_en: "Seven Guardians"
+    suit: "wands"
+    rank: "seven"
+    theme: "Защита, Отстаивание позиции"
+
+  - id: "w08"
+    name_ru: "Восемь Ветров"
+    name_en: "Eight Winds"
+    suit: "wands"
+    rank: "eight"
+    theme: "Скорость, Движение, Прогресс"
+
+  - id: "w09"
+    name_ru: "Девять Копий"
+    name_en: "Nine Spears"
+    suit: "wands"
+    rank: "nine"
+    theme: "Упорство, Выносливость, Готовность"
+
+  - id: "w10"
+    name_ru: "Десять Нагрузок"
+    name_en: "Ten Burdens"
+    suit: "wands"
+    rank: "ten"
+    theme: "Перегрузка, Ответственность, Бремя"
+
+  - id: "w11"
+    name_ru: "Паж Пламени"
+    name_en: "Page of Flame"
+    suit: "wands"
+    rank: "page"
+    theme: "Энтузиазм, Новости, Обучение"
+
+  - id: "w12"
+    name_ru: "Рыцарь Огня"
+    name_en: "Knight of Fire"
+    suit: "wands"
+    rank: "knight"
+    theme: "Действие, Решительность, Дерзость"
+
+  - id: "w13"
+    name_ru: "Королева Пламени"
+    name_en: "Queen of Flame"
+    suit: "wands"
+    rank: "queen"
+    theme: "Харизма, Вдохновение, Тепло"
+
+  - id: "w14"
+    name_ru: "Король Огня"
+    name_en: "King of Fire"
+    suit: "wands"
+    rank: "king"
+    theme: "Лидерство, Видение, Сила воли"
+
+# ---
+# КУБКИ — Поток Воды (Чувства, Связи, Интуиция)
+# ---
+cups:
+  - id: "c01"
+    name_ru: "Первая Капля"
+    name_en: "First Drop"
+    suit: "cups"
+    rank: "ace"
+    theme: "Новые чувства, Любовь, Интуиция"
+
+  - id: "c02"
+    name_ru: "Два Зеркала"
+    name_en: "Two Mirrors"
+    suit: "cups"
+    rank: "two"
+    theme: "Партнёрство, Взаимность, Связь"
+
+  - id: "c03"
+    name_ru: "Три Чаши"
+    name_en: "Three Chalices"
+    suit: "cups"
+    rank: "three"
+    theme: "Дружба, Celebration, Радость"
+
+  - id: "c04"
+    name_ru: "Четыре Волны"
+    name_en: "Four Waves"
+    suit: "cups"
+    rank: "four"
+    theme: "Апатия, Размышление, Поиск смысла"
+
+  - id: "c05"
+    name_ru: "Пять Осколков"
+    name_en: "Five Shards"
+    suit: "cups"
+    rank: "five"
+    theme: "Потеря, Сожаление, Принятие"
+
+  - id: "c06"
+    name_ru: "Шесть Источников"
+    name_en: "Six Sources"
+    suit: "cups"
+    rank: "six"
+    theme: "Ностальгия, Детство, Чистота"
+
+  - id: "c07"
+    name_ru: "Семь Иллюзий"
+    name_en: "Seven Illusions"
+    suit: "cups"
+    rank: "seven"
+    theme: "Мечты, Фантазии, Выбор"
+
+  - id: "c08"
+    name_ru: "Восемь Течений"
+    name_en: "Eight Currents"
+    suit: "cups"
+    rank: "eight"
+    theme: "Уход, Поиск глубины, Отпускание"
+
+  - id: "c09"
+    name_ru: "Девять Истин"
+    name_en: "Nine Truths"
+    suit: "cups"
+    rank: "nine"
+    theme: "Исполнение желаний, Удовлетворение"
+
+  - id: "c10"
+    name_ru: "Десять Берегов"
+    name_en: "Ten Shores"
+    suit: "cups"
+    rank: "ten"
+    theme: "Семья, Гармония, Эмоциональное завершение"
+
+  - id: "c11"
+    name_ru: "Паж Вод"
+    name_en: "Page of Waters"
+    suit: "cups"
+    rank: "page"
+    theme: "Мечтательность, Чувствительность"
+
+  - id: "c12"
+    name_ru: "Рыцарь Вод"
+    name_en: "Knight of Waters"
+    suit: "cups"
+    rank: "knight"
+    theme: "Романтика, Интуиция, Следование сердцу"
+
+  - id: "c13"
+    name_ru: "Королева Вод"
+    name_en: "Queen of Waters"
+    suit: "cups"
+    rank: "queen"
+    theme: "Эмпатия, Мудрость сердца, Забота"
+
+  - id: "c14"
+    name_ru: "Король Вод"
+    name_en: "King of Waters"
+    suit: "cups"
+    rank: "king"
+    theme: "Эмоциональный баланс, Дипломатия"
+
+# ---
+# МЕЧИ — Поток Воздуха (Разум, Истина, Конфликт)
+# ---
+swords:
+  - id: "s01"
+    name_ru: "Первый Вздох"
+    name_en: "First Breath"
+    suit: "swords"
+    rank: "ace"
+    theme: "Ясность, Прорыв, Новая идея"
+
+  - id: "s02"
+    name_ru: "Два Лезвия"
+    name_en: "Two Blades"
+    suit: "swords"
+    rank: "two"
+    theme: "Нерешённость, Выбор, Тупик"
+
+  - id: "s03"
+    name_ru: "Три Шипа"
+    name_en: "Three Thorns"
+    suit: "swords"
+    rank: "three"
+    theme: "Боль, Предательство, Печаль"
+
+  - id: "s04"
+    name_ru: "Четыре Клинков"
+    name_en: "Four Blades"
+    suit: "swords"
+    rank: "four"
+    theme: "Отдых, Восстановление, Пауза"
+
+  - id: "s05"
+    name_ru: "Пять Зеркал"
+    name_en: "Five Mirrors"
+    suit: "swords"
+    rank: "five"
+    theme: "Поражение, Конфликт, Победа ценой потерь"
+
+  - id: "s06"
+    name_ru: "Шесть Переходов"
+    name_en: "Six Passages"
+    suit: "swords"
+    rank: "six"
+    theme: "Переход, Отпускание, Движение вперёд"
+
+  - id: "s07"
+    name_ru: "Семь Уловок"
+    name_en: "Seven Tricks"
+    suit: "swords"
+    rank: "seven"
+    theme: "Хитрость, Стратегия, Обман"
+
+  - id: "s08"
+    name_ru: "Восемь Оков"
+    name_en: "Eight Shackles"
+    suit: "swords"
+    rank: "eight"
+    theme: "Ограничения, Страхи, Самоизоляция"
+
+  - id: "s09"
+    name_ru: "Девять Теней"
+    name_en: "Nine Shadows"
+    suit: "swords"
+    rank: "nine"
+    theme: "Тревога, Кошмары, Бессонница"
+
+  - id: "s10"
+    name_ru: "Десять Клинков"
+    name_en: "Ten Blades"
+    suit: "swords"
+    rank: "ten"
+    theme: "Конец, Боль, Возрождение из пепла"
+
+  - id: "s11"
+    name_ru: "Паж Ветра"
+    name_en: "Page of Wind"
+    suit: "swords"
+    rank: "page"
+    theme: "Любознательность, Наблюдение, Анализ"
+
+  - id: "s12"
+    name_ru: "Рыцарь Ветра"
+    name_en: "Knight of Wind"
+    suit: "swords"
+    rank: "knight"
+    theme: "Быстрота, Интеллект, Решительность"
+
+  - id: "s13"
+    name_ru: "Королева Ветра"
+    name_en: "Queen of Wind"
+    suit: "swords"
+    rank: "queen"
+    theme: "Ясность, Объективность, Мудрость"
+
+  - id: "s14"
+    name_ru: "Король Ветра"
+    name_en: "King of Wind"
+    suit: "swords"
+    rank: "king"
+    theme: "Авторитет, Стратегия, Интеллект"
+
+# ---
+# ПЕНТАКЛИ — Поток Земли (Материя, Ресурсы, Тело)
+# ---
+pentacles:
+  - id: "p01"
+    name_ru: "Первый Зерн"
+    name_en: "First Seed"
+    suit: "pentacles"
+    rank: "ace"
+    theme: "Новые возможности, Изобилие, Начало"
+
+  - id: "p02"
+    name_ru: "Два Плода"
+    name_en: "Two Fruits"
+    suit: "pentacles"
+    rank: "two"
+    theme: "Баланс, Многообразие, Адаптивность"
+
+  - id: "p03"
+    name_ru: "Три Спира"
+    name_en: "Three Spirals"
+    suit: "pentacles"
+    rank: "three"
+    theme: "Мастерство, Команда, Качество"
+
+  - id: "p04"
+    name_ru: "Четыре Стены"
+    name_en: "Four Walls"
+    suit: "pentacles"
+    rank: "four"
+    theme: "Стабильность, Охрана, Консерватизм"
+
+  - id: "p05"
+    name_ru: "Пять Теней"
+    name_en: "Five Shadows"
+    suit: "pentacles"
+    rank: "five"
+    theme: "Нужда, Испытание, Поиск помощи"
+
+  - id: "p06"
+    name_ru: "Шесть Даров"
+    name_en: "Six Gifts"
+    suit: "pentacles"
+    rank: "six"
+    theme: "Щедрость, Баланс, Обмен"
+
+  - id: "p07"
+    name_ru: "Семь Урожаев"
+    name_en: "Seven Harvests"
+    suit: "pentacles"
+    rank: "seven"
+    theme: "Терпение, Инвестиции, Ожидание"
+
+  - id: "p08"
+    name_ru: "Восемь Рук"
+    name_en: "Eight Hands"
+    suit: "pentacles"
+    rank: "eight"
+    theme: "Труд, Мастерство, Совершенствование"
+
+  - id: "p09"
+    name_ru: "Девять Сокровищ"
+    name_en: "Nine Treasures"
+    suit: "pentacles"
+    rank: "nine"
+    theme: "Изобилие, Самодостаточность, Роскошь"
+
+  - id: "p10"
+    name_ru: "Десять Корней"
+    name_en: "Ten Roots"
+    suit: "pentacles"
+    rank: "ten"
+    theme: "Наследие, Семья, Долгосрочная стабильность"
+
+  - id: "p11"
+    name_ru: "Паж Земли"
+    name_en: "Page of Earth"
+    suit: "pentacles"
+    rank: "page"
+    theme: "Практичность, Начинающий, Ученик"
+
+  - id: "p12"
+    name_ru: "Рыцарь Земли"
+    name_en: "Knight of Earth"
+    suit: "pentacles"
+    rank: "knight"
+    theme: "Надёжность, Практичность, Методичность"
+
+  - id: "p13"
+    name_ru: "Королева Земли"
+    name_en: "Queen of Earth"
+    suit: "pentacles"
+    rank: "queen"
+    theme: "Плодородие, Забота, Уют"
+
+  - id: "p14"
+    name_ru: "Король Земли"
+    name_en: "King of Earth"
+    suit: "pentacles"
+    rank: "king"
+    theme: "Богатство, Управление, Стабильность"
+
+# ===========================
+# СВЯЗИ МЕЖДУ КАРТАМИ
+# ===========================
+relations:
+  # Стихии усиливают/ослабляют друг друга
+  elemental:
+    fire_weakens: ["water", "earth"]      # Огонь ослабляется Водой и Землёй
+    water_weakens: ["fire", "air"]         # Вода ослабляется Огнём и Воздухом
+    air_weakens: ["earth", "fire"]         # Воздух ослабляется Землёй и Огнём
+    earth_weakens: ["water", "air"]        # Земля ослабляется Водой и Воздухом
+
+    fire_strengthens: ["air"]              # Огонь усиливается Воздухом
+    water_strengthens: ["earth"]           # Вода усиливается Землёй
+    air_strengthens: ["fire"]              # Воздух усиливается Огнём
+    earth_strengthens: ["water"]           # Земля усиливается Водой

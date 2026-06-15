@@ -1,0 +1,61 @@
+id: '04'
+name_ru: Зефир
+name_en: The Wind Star
+arcana: major
+suit: none
+rank: none
+theme: Авторитет, Структура, Мужское начало
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 8
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 9
+  stability: 5
+  intuition: 2
+  transformation: 6
+  spirituality: 3
+  abundance: 7
+  conflict: 4
+  control: 8
+  risk: 5
+  creativity: 7
+  leadership: 9
+  harmony: 6
+  communication: 8
+  mystery: 2
+  discipline: 7
+  passion: 4
+  wisdom: 5
+  resilience: 8
+  influence: 9
+  destiny: 6
+light_meaning: Ваш авторитет укрепляется через структурированные действия.
+shadow_meaning: Не позволяйте своей структуре сковывать свободу действий.
+love: В отношениях царит гармония благодаря чёткой структуре взаимодействия.
+career: Четкая структура поможет добиться успехов в карьере.
+money: Уверенно управляйте финансами с помощью продуманной структуры расходов.
+health: Физическое здоровье улучшится благодаря организованному распорядку дня.
+spirituality: Структурируйте духовный путь для достижения целей.
+advice: Организуйте свои дела, чтобы достичь поставленных целей.
+warning: Избегайте перегрузки структурой, оставайтесь гибкими.
+symbols:
+- Образ ветра, символизирующий движение вперёд.
+- Звезда, указывающая направление пути.
+- Флагшток как символ руководства.
+visual_markers:
+  color: Светло-голубой
+  element: Воздух
+  number: '4'
+jung:
+  persona: Образ уверенного лидера.
+  shadow: Склонность к чрезмерной строгости и контролю.
+  anima_animus: Желание гармонии и сотрудничества.
+  self: Личность, объединяющая лидерство и открытость.

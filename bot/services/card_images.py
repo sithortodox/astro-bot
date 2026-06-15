@@ -6,9 +6,12 @@ import hashlib
 import logging
 from pathlib import Path
 
+import yaml
+
 logger = logging.getLogger(__name__)
 
 KB_DIR = Path(__file__).resolve().parent.parent.parent / "knowledge_base"
+ASTRALIS_DIR = Path(__file__).resolve().parent.parent.parent / "knowledge" / "astralis"
 
 SUIT_COLORS = {
     "wands": {"primary": (180, 60, 40), "secondary": (240, 160, 80), "accent": (255, 220, 150)},
@@ -40,6 +43,11 @@ def _card_hash(card_id: str) -> int:
 
 
 def _extract_card_index(card_id: str) -> int:
+    """Извлекает числовой индекс из ID карты (w01 -> 1, 00 -> 0)."""
+    # Для формата "w01", "c01", "s01", "p01"
+    if len(card_id) == 3 and card_id[0] in "wcsp":
+        return int(card_id[1:]) - 1
+    # Для формата "00", "01", ..., "21"
     parts = card_id.split("_")
     for p in parts:
         if p.isdigit():
@@ -48,13 +56,43 @@ def _extract_card_index(card_id: str) -> int:
 
 
 def load_cards() -> dict[str, dict]:
+    """Загружает карты из YAML-файлов Astralis колоды."""
     cards = {}
-    for f in ["tarot_major.json", "tarot_minor.json"]:
-        path = KB_DIR / f
-        if path.exists():
-            with open(path, encoding="utf-8") as fh:
-                for card in json.load(fh):
-                    cards[card["id"]] = card
+
+    # Загружаем старшие арканы
+    major_dir = ASTRALIS_DIR / "major_arcana"
+    if major_dir.exists():
+        for yaml_file in major_dir.glob("*.yaml"):
+            try:
+                with open(yaml_file, encoding="utf-8") as fh:
+                    card = yaml.safe_load(fh)
+                    if card and "id" in card:
+                        cards[card["id"]] = card
+            except Exception as e:
+                logger.warning(f"Failed to load {yaml_file}: {e}")
+
+    # Загружаем младшие арканы
+    for suit in ["wands", "cups", "swords", "pentacles"]:
+        suit_dir = ASTRALIS_DIR / "minor_arcana" / suit
+        if suit_dir.exists():
+            for yaml_file in suit_dir.glob("*.yaml"):
+                try:
+                    with open(yaml_file, encoding="utf-8") as fh:
+                        card = yaml.safe_load(fh)
+                        if card and "id" in card:
+                            cards[card["id"]] = card
+                except Exception as e:
+                    logger.warning(f"Failed to load {yaml_file}: {e}")
+
+    # Фолбэк на старые JSON-файлы если YAML нет
+    if not cards:
+        for f in ["tarot_major.json", "tarot_minor.json"]:
+            path = KB_DIR / f
+            if path.exists():
+                with open(path, encoding="utf-8") as fh:
+                    for card in json.load(fh):
+                        cards[card["id"]] = card
+
     return cards
 
 
@@ -220,14 +258,16 @@ def generate_card_image(card: dict, is_reversed: bool = False) -> BytesIO:
 
     cx, cy = width // 2, height // 2 - 60
 
-    is_court = card_id.endswith(("page", "knight", "queen", "king"))
-    is_numbered_minor = suit != "major" and not is_court
+    # Определяем тип карты (court card, numbered minor, major)
+    rank = card.get("rank", "")
+    is_court = rank in ("page", "knight", "queen", "king")
+    is_numbered_minor = suit != "major" and not is_court and rank != "ace"
 
     if is_numbered_minor:
         num = idx + 1
         draw_suit_symbols(draw, cx, cy, suit, num, 36, colors["accent"])
     elif is_court:
-        court_type = card_id.split("_")[-1]
+        court_type = rank  # "page", "knight", "queen", "king"
         draw_court_card_element(draw, cx, cy, court_type, colors["accent"], size=45)
         symbol = SUIT_SYMBOLS.get(suit, "\u2B50")
         try:
@@ -244,8 +284,14 @@ def generate_card_image(card: dict, is_reversed: bool = False) -> BytesIO:
         draw.text((cx - tw // 2, cy - 35), symbol, fill=(255, 255, 255), font=font_large)
 
     numeral = CARD_NUMERALS.get(idx, str(idx))
-    if suit != "major" and not is_court:
-        numeral = str(idx + 1) if idx + 1 <= 10 else numeral
+    if suit != "major":
+        if rank == "ace":
+            numeral = "I"
+        elif is_numbered_minor:
+            numeral = str(idx + 1) if idx + 1 <= 10 else numeral
+        elif is_court:
+            court_numerals = {"page": "XI", "knight": "XII", "queen": "XIII", "king": "XIV"}
+            numeral = court_numerals.get(rank, str(idx + 1))
     bbox = draw.textbbox((0, 0), numeral, font=font_numeral)
     tw = bbox[2] - bbox[0]
     numeral_y = cy + 90 if not is_numbered_minor else cy + 100

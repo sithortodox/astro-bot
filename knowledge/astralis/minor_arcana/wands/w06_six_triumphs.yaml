@@ -1,0 +1,62 @@
+id: w06
+name_ru: Шесть Триумфов
+name_en: Six Triumphs
+arcana: minor
+suit: wands
+rank: six
+theme: Победа, Признание, Успех
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 7
+  ruler: 2
+  explorer: 3
+  lover: 0
+  magician: 5
+  rebel: 1
+  caregiver: 0
+  shadow: 4
+metrics:
+  activity: 8
+  stability: 2
+  intuition: 5
+  transformation: 3
+  spirituality: 1
+  abundance: 7
+  conflict: 4
+  control: 6
+  risk: 9
+  creativity: 8
+  leadership: 5
+  harmony: 2
+  communication: 3
+  mystery: 1
+  discipline: 6
+  passion: 9
+  wisdom: 4
+  resilience: 7
+  influence: 8
+  destiny: 5
+light_meaning: Успех достигнут благодаря упорному труду и решимости.
+shadow_meaning: Ощущение триумфа может скрывать внутреннюю неуверенность и потребность
+  в признании.
+love: Признание достижений в отношениях усиливает взаимное уважение.
+career: Новый этап профессионального роста требует уверенности и самодостаточности.
+money: Финансовый успех возможен при грамотном управлении ресурсами.
+health: Физическое здоровье укрепляется через активность и позитивный настрой.
+spirituality: Духовный рост происходит через осознание своей роли и миссии.
+advice: Продолжайте двигаться вперёд с уверенностью и настойчивостью.
+warning: Не позволяйте потребности в признании затмевать истинные ценности.
+symbols:
+- Триумфальная арка
+- Лавровая ветвь
+- Горящий факел
+visual_markers:
+  color: Ярко-красный
+  element: Огонь
+  number: '6'
+jung:
+  persona: Открытый победитель
+  shadow: Скрытая неуверенность
+  anima_animus: Партнёр как источник поддержки
+  self: Цельный и уверенный в себе человек

@@ -1,0 +1,64 @@
+id: '05'
+name_ru: Терра
+name_en: The Earth Star
+arcana: major
+suit: none
+rank: none
+theme: Традиции, Знания, Духовность
+archetypes:
+  hero: 0
+  sage: 8
+  creator: 0
+  ruler: 4
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 6
+metrics:
+  activity: 2
+  stability: 9
+  intuition: 3
+  transformation: 7
+  spirituality: 8
+  abundance: 5
+  conflict: 1
+  control: 4
+  risk: 2
+  creativity: 3
+  leadership: 4
+  harmony: 7
+  communication: 2
+  mystery: 5
+  discipline: 6
+  passion: 4
+  wisdom: 8
+  resilience: 7
+  influence: 5
+  destiny: 8
+light_meaning: Укоренённость в традициях и знаниях приносит стабильность и духовную
+  силу.
+shadow_meaning: Излишняя привязанность к устоям может затормозить развитие и мешать
+  изменениям.
+love: Укрепляет семейные традиции и поддерживает глубокую связь с партнёром.
+career: Стабильность профессии и накопленные знания ведут к успеху.
+money: Финансовая безопасность через устойчивые источники дохода.
+health: Здоровый образ жизни и внимание к телу укрепляют физическое благополучие.
+spirituality: Связь с корнями и природой способствует духовному росту.
+advice: Изучайте древние учения и поддерживайте традиции, чтобы обрести внутреннюю
+  устойчивость.
+warning: Не позволяйте старым привычкам ограничивать ваш рост и развитие.
+symbols:
+- Земляная пирамида как символ стабильности
+- Кристалл мудрости внутри пирамиды
+- Цветущая яблоня как символ изобилия
+visual_markers:
+  color: Коричневый с золотистыми оттенками
+  element: Земля
+  number: '5'
+jung:
+  persona: Представитель традиций и знаний
+  shadow: Приверженность устаревшим идеям
+  anima_animus: Внутренний проводник между прошлым и будущим
+  self: Гармоническая интеграция прошлого и настоящего

@@ -10,7 +10,7 @@ from aiogram.fsm.storage.redis import RedisStorage
 from aiohttp import web
 
 from bot.config import settings
-from bot.handlers import start, tarot, numerology, horoscope, lunar, history, premium, admin
+from bot.handlers import start, tarot_astralis as tarot, numerology, horoscope, lunar, history, premium, admin
 from bot.middlewares.user import UserMiddleware, RateLimitMiddleware
 import bot.state as state
 

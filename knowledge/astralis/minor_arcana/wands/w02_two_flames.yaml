@@ -1,0 +1,61 @@
+id: w02
+name_ru: Два Пламени
+name_en: Two Flames
+arcana: minor
+suit: wands
+rank: two
+theme: Планирование, Выбор направления
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 1
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 7
+  stability: 4
+  intuition: 6
+  transformation: 5
+  spirituality: 3
+  abundance: 2
+  conflict: 8
+  control: 5
+  risk: 7
+  creativity: 9
+  leadership: 4
+  harmony: 3
+  communication: 6
+  mystery: 2
+  discipline: 5
+  passion: 8
+  wisdom: 3
+  resilience: 7
+  influence: 6
+  destiny: 4
+light_meaning: Время выбрать путь и вложить энергию в его развитие.
+shadow_meaning: Неопределённость выбора может привести к утрате импульса и энергии.
+love: В отношениях требуется чёткое планирование совместных действий.
+career: Определите стратегию карьерного роста и действуйте решительно.
+money: Инвестируйте с осторожностью, чтобы избежать финансовых рисков.
+health: Составьте план оздоровления и придерживайтесь его.
+spirituality: Медитируйте регулярно, чтобы лучше понять своё предназначение.
+advice: Разработайте конкретный план действий и уверенно следуйте ему.
+warning: Избегайте хаоса и неопределённости в принятии решений.
+symbols:
+- Две свечи, горящие ярко и ровно
+- Огненная спираль, символизирующая движение вперёд
+- Звезда с двумя лучами, указывающая направление
+visual_markers:
+  color: Ярко-красный
+  element: Огонь
+  number: '2'
+jung:
+  persona: Ваш личный стиль и манера поведения
+  shadow: Скрытые страхи перед принятием решений
+  anima_animus: Инь-Ян противоположностей внутри вас
+  self: Ваш истинный потенциал и цель

@@ -1,0 +1,61 @@
+id: s05
+name_ru: Пять Зеркал
+name_en: Five Mirrors
+arcana: minor
+suit: swords
+rank: five
+theme: Поражение, Конфликт, Победа ценой потерь
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 7
+  stability: 4
+  intuition: 2
+  transformation: 6
+  spirituality: 3
+  abundance: 5
+  conflict: 9
+  control: 8
+  risk: 7
+  creativity: 2
+  leadership: 5
+  harmony: 3
+  communication: 4
+  mystery: 2
+  discipline: 6
+  passion: 7
+  wisdom: 3
+  resilience: 5
+  influence: 4
+  destiny: 8
+light_meaning: Осознание конфликта и поиск компромисса.
+shadow_meaning: Необдуманный конфликт ведёт к разрушению связей.
+love: Конфликт с партнёром требует открытого диалога.
+career: Профессиональная конкуренция может привести к развитию или поражению.
+money: Финансовый конфликт сигнализирует о необходимости пересмотреть приоритеты.
+health: Эмоциональный стресс ухудшает физическое состояние.
+spirituality: Поиск гармонии через принятие конфликтов неизбежности.
+advice: Признайте наличие конфликта и работайте над его разрешением.
+warning: Игнорирование разногласий усугубит ситуацию.
+symbols:
+- Пять отражающих поверхностей
+- Ломаные линии
+- Изломанное лезвие меча
+visual_markers:
+  color: Серебристый с оттенком синего
+  element: Воздух (Мечи)
+  number: '5'
+jung:
+  persona: Представление себя перед другими
+  shadow: Скрытые обиды и враждебность
+  anima_animus: Необходимость понять противоположную точку зрения
+  self: Идентичность формируется через преодоление противоречий

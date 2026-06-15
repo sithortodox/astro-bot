@@ -1,0 +1,66 @@
+id: 0
+name_ru: Начало
+name_en: The Beginning
+arcana: major
+suit: none
+rank: none
+theme: Зарождение, Innocence, Potential
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 2
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 5
+  stability: 2
+  intuition: 8
+  transformation: 7
+  spirituality: 6
+  abundance: 4
+  conflict: 3
+  control: 2
+  risk: 3
+  creativity: 9
+  leadership: 2
+  harmony: 5
+  communication: 4
+  mystery: 7
+  discipline: 3
+  passion: 8
+  wisdom: 5
+  resilience: 6
+  influence: 4
+  destiny: 8
+light_meaning: Это карта нового начала, чистого потенциала и невинности. Время пробуждения
+  творческих сил.
+shadow_meaning: Перевернутая версия указывает на утрату направления, ощущение пустоты
+  и потерянность.
+love: В отношениях это знак свежих чувств и зарождения новых связей.
+career: На работе символизирует стартовый период, возможности для самовыражения и
+  творческого роста.
+money: Финансовые перспективы обещают новые начинания и потенциал для заработка.
+health: Для физического состояния это сигнал о необходимости начать заботиться о себе
+  заново.
+spirituality: Духовно эта карта указывает на поиск смысла жизни и открытие внутреннего
+  света.
+advice: Используйте этот момент для воплощения своих мечт и идей в реальность.
+warning: Будьте внимательны к своим чувствам и желаниям, чтобы избежать потерь.
+symbols:
+- Звездное небо с одной яркой звездой
+- Спираль ДНК
+- Семя, только что посаженное в землю
+visual_markers:
+  color: Светло-голубой с золотыми акцентами
+  element: Эфир
+  number: '0'
+jung:
+  persona: Первая встреча с миром
+  shadow: Страх перед неизвестностью
+  anima_animus: Потенциальный спутник судьбы
+  self: Гармония между внутренним и внешним

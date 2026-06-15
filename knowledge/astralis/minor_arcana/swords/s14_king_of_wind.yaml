@@ -1,0 +1,61 @@
+id: s14
+name_ru: Король Ветра
+name_en: King of Wind
+arcana: minor
+suit: swords
+rank: king
+theme: Авторитет, Стратегия, Интеллект
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 1
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 7
+  stability: 4
+  intuition: 2
+  transformation: 5
+  spirituality: 3
+  abundance: 6
+  conflict: 8
+  control: 9
+  risk: 7
+  creativity: 2
+  leadership: 9
+  harmony: 4
+  communication: 7
+  mystery: 3
+  discipline: 6
+  passion: 5
+  wisdom: 2
+  resilience: 8
+  influence: 9
+  destiny: 5
+light_meaning: Вдохновляющий лидер с острым умом и стратегическим мышлением.
+shadow_meaning: Надменный диктатор, подверженный импульсивности и высокомерию.
+love: Твёрдая рука и холодный расчёт могут привести к охлаждению чувств.
+career: Уверенность и решительность помогут достичь карьерных высот.
+money: Холодный рассудок может помешать увидеть возможности финансовых выгод.
+health: Стресс от принятия решений подрывает здоровье.
+spirituality: Поиск гармонии требует баланса между разумом и эмоциями.
+advice: Используйте интеллект для взвешенных решений и сохраняйте эмоциональную гибкость.
+warning: Избегайте излишней самоуверенности и жёсткости в отношениях.
+symbols:
+- Образ птицы, парящей высоко в небе
+- Флаг со звёздами, символизирующий власть
+- Сферические облака, олицетворяющие поток воздуха
+visual_markers:
+  color: Голубой с оттенками серебра
+  element: Воздух (Мечи)
+  number: '10'
+jung:
+  persona: Открытый и авторитетный лидер
+  shadow: Самодовольный и властолюбивый тиран
+  anima_animus: Эмоциональная глубина и интуитивность партнёра
+  self: Баланс разума и сердца в управлении

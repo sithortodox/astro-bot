@@ -1,0 +1,62 @@
+id: 18
+name_ru: Рассвет
+name_en: The Dawn
+arcana: major
+suit: none
+rank: none
+theme: Ясность, Энергия, Радость
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 5
+  ruler: 0
+  explorer: 2
+  lover: 0
+  magician: 4
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 9
+  stability: 3
+  intuition: 6
+  transformation: 7
+  spirituality: 2
+  abundance: 8
+  conflict: 1
+  control: 5
+  risk: 4
+  creativity: 8
+  leadership: 6
+  harmony: 7
+  communication: 5
+  mystery: 3
+  discipline: 2
+  passion: 9
+  wisdom: 6
+  resilience: 8
+  influence: 7
+  destiny: 4
+light_meaning: Возрождение, начало нового цикла, ясность видения будущего.
+shadow_meaning: Ощущение растерянности, неспособность принять решения из-за избытка
+  информации.
+love: Вдохновение и новые идеи в отношениях, возможность свежих начинаний.
+career: Новый проект или идея, требующая энергичного подхода.
+money: Возможность заработать через творчество и оригинальность.
+health: Необходимость свежего воздуха и активности для восстановления сил.
+spirituality: Поиск новых смыслов и вдохновения в духовной практике.
+advice: Используйте энергию рассвета для начала важного дела или проекта.
+warning: Избегайте перегрузки информацией, чтобы не утратить ясность мышления.
+symbols:
+- Светящаяся звезда
+- Восходящее солнце
+- Красная птица свободы
+visual_markers:
+  color: Ярко-красный
+  element: Огонь
+  number: '1'
+jung:
+  persona: Ваш внутренний герой готов к новым подвигам.
+  shadow: Не позволяйте страху перед неизвестностью затмить вашу смелость.
+  anima_animus: Прислушайтесь к своему внутреннему голосу для гармонии души.
+  self: Вы — творец своей судьбы.

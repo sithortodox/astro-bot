@@ -1,0 +1,61 @@
+id: c01
+name_ru: Первая Капля
+name_en: First Drop
+arcana: minor
+suit: cups
+rank: ace
+theme: Новые чувства, Любовь, Интуиция
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 1
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 2
+  stability: 4
+  intuition: 8
+  transformation: 6
+  spirituality: 5
+  abundance: 3
+  conflict: 2
+  control: 2
+  risk: 3
+  creativity: 7
+  leadership: 2
+  harmony: 5
+  communication: 4
+  mystery: 6
+  discipline: 2
+  passion: 9
+  wisdom: 3
+  resilience: 4
+  influence: 3
+  destiny: 5
+light_meaning: Волнение новых чувств, начало глубоких эмоциональных связей.
+shadow_meaning: Излишняя зависимость от эмоций, потеря объективности.
+love: Начало романтических переживаний, усиление чувственности.
+career: Необходимость довериться интуиции в принятии решений.
+money: Повышение чувствительности к финансам, интуитивные инвестиции.
+health: Усиление интуиции о собственном здоровье.
+spirituality: Открытие новой духовной перспективы через эмоции.
+advice: Доверяй своим чувствам и следуй внутреннему голосу.
+warning: Не позволяй эмоциям затмевать рациональность.
+symbols:
+- Капля воды, символизирующая начало эмоций.
+- Сердце, олицетворяющее любовь и интуицию.
+- Звезда, указывающая путь.
+visual_markers:
+  color: Глубокий синий
+  element: Вода (Кубки)
+  number: '1'
+jung:
+  persona: Открытая искренность и чувствительность.
+  shadow: Эмоциональная уязвимость и импульсивность.
+  anima_animus: Поиск гармонии между сердцем и разумом.
+  self: Баланс между эмоциональной глубиной и осознанностью.

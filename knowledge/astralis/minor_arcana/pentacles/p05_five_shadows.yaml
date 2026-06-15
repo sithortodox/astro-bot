@@ -1,0 +1,61 @@
+id: p05
+name_ru: Пять Теней
+name_en: Five Shadows
+arcana: minor
+suit: pentacles
+rank: five
+theme: Нужда, Испытание, Поиск помощи
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 1
+metrics:
+  activity: 4
+  stability: 2
+  intuition: 3
+  transformation: 6
+  spirituality: 1
+  abundance: 2
+  conflict: 7
+  control: 3
+  risk: 8
+  creativity: 2
+  leadership: 1
+  harmony: 5
+  communication: 3
+  mystery: 4
+  discipline: 2
+  passion: 5
+  wisdom: 1
+  resilience: 7
+  influence: 3
+  destiny: 6
+light_meaning: Время испытать ограничения реальности, найти поддержку среди окружающих.
+shadow_meaning: Ощущение изоляции, недостаток ресурсов для преодоления трудностей.
+love: В отношениях нужна поддержка близких людей; одиночество может стать испытанием.
+career: Необходимость обратиться за помощью к коллегам или руководству.
+money: Финансовые трудности могут возникнуть из-за недостатка ресурсов.
+health: Физическое истощение требует отдыха и восстановления сил.
+spirituality: Поиск духовной поддержки через общение с единомышленниками.
+advice: Признайте свою уязвимость и попросите помощи у тех, кто вас любит.
+warning: Избегайте попыток справиться самостоятельно, это только усугубит ситуацию.
+symbols:
+- Темная земля, покрытая трещинами
+- Тени, закрывающие свет
+- Переплетенные корни деревьев
+visual_markers:
+  color: Глубокий тёмно-коричневый
+  element: Земля
+  number: '5'
+jung:
+  persona: Привычный образ себя, скрывающий слабость.
+  shadow: Скрытая нужда и зависимость от других.
+  anima_animus: Поддержка и понимание со стороны партнера.
+  self: Синтез личного опыта и внешней помощи.

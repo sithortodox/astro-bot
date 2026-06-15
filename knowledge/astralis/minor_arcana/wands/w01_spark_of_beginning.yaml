@@ -1,0 +1,61 @@
+id: w01
+name_ru: Искра Начала
+name_en: Spark of Beginning
+arcana: minor
+suit: wands
+rank: ace
+theme: Новая энергия, Вдохновение, Начало
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 1
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 1
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 8
+  stability: 2
+  intuition: 6
+  transformation: 7
+  spirituality: 4
+  abundance: 3
+  conflict: 2
+  control: 3
+  risk: 5
+  creativity: 9
+  leadership: 4
+  harmony: 2
+  communication: 3
+  mystery: 6
+  discipline: 2
+  passion: 8
+  wisdom: 3
+  resilience: 5
+  influence: 6
+  destiny: 7
+light_meaning: Вдохновляющий импульс к творческому самовыражению и новым начинаниям.
+shadow_meaning: Неуёмная страсть и импульсивность могут привести к непродуманным решениям.
+love: Призыв к экспериментированию и открытости новому опыту в отношениях.
+career: Время для инновационных идей и смелых шагов вперёд.
+money: Инвестируйте энергию в проекты с потенциалом роста.
+health: Дайте волю фантазии и воображению для улучшения ментального состояния.
+spirituality: Поиск внутреннего огня и страсти к жизни.
+advice: Следуйте за вдохновением, но не забывайте планировать шаги.
+warning: Будьте осторожны с необдуманными действиями из-за энтузиазма.
+symbols:
+- Огненный шар как символ начала
+- Факел как инструмент творчества
+- Семена новых возможностей
+visual_markers:
+  color: Ярко-красный
+  element: Огонь
+  number: '1'
+jung:
+  persona: Активный инициатор перемен
+  shadow: Импульсивность и рискованность
+  anima_animus: Сила вдохновения и креативности
+  self: Источник личной силы и энергии

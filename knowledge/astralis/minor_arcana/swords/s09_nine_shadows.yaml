@@ -1,0 +1,61 @@
+id: s09
+name_ru: Девять Теней
+name_en: Nine Shadows
+arcana: minor
+suit: swords
+rank: nine
+theme: Тревога, Кошмары, Бессонница
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 1
+metrics:
+  activity: 7
+  stability: 3
+  intuition: 4
+  transformation: 6
+  spirituality: 2
+  abundance: 5
+  conflict: 8
+  control: 7
+  risk: 9
+  creativity: 3
+  leadership: 6
+  harmony: 2
+  communication: 5
+  mystery: 8
+  discipline: 4
+  passion: 6
+  wisdom: 3
+  resilience: 7
+  influence: 5
+  destiny: 8
+light_meaning: Внутренние страхи требуют осознанного внимания.
+shadow_meaning: Бессонница и кошмары указывают на подавленные эмоции.
+love: Спокойствие и открытость помогут преодолеть страх близости.
+career: Конфликты могут привести к неожиданным изменениям.
+money: Неожиданные расходы заставляют пересмотреть приоритеты.
+health: Физическое напряжение усиливает эмоциональную тревогу.
+spirituality: Медитация поможет обрести внутренний покой.
+advice: Признайте свои страхи и найдите способы их проработать.
+warning: Игнорирование тревоги может привести к истощению ресурсов.
+symbols:
+- Лицо с закрытыми глазами
+- Темная комната с мерцающим светом
+- Извивающаяся тень
+visual_markers:
+  color: Темно-серый
+  element: Воздух
+  number: '9'
+jung:
+  persona: Страх перед неизвестностью
+  shadow: Подавленные эмоции и тревоги
+  anima_animus: Необходимость интеграции внутреннего конфликта
+  self: Поиск баланса между внутренним миром и реальностью

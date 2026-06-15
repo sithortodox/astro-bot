@@ -1,0 +1,62 @@
+id: 14
+name_ru: Поток
+name_en: The Flow
+arcana: major
+suit: none
+rank: none
+theme: Баланс, Терпение, Умеренность
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 7
+  stability: 5
+  intuition: 8
+  transformation: 6
+  spirituality: 4
+  abundance: 3
+  conflict: 2
+  control: 1
+  risk: 2
+  creativity: 7
+  leadership: 3
+  harmony: 9
+  communication: 6
+  mystery: 5
+  discipline: 4
+  passion: 7
+  wisdom: 8
+  resilience: 6
+  influence: 5
+  destiny: 7
+light_meaning: Ваша жизнь течёт плавно и гармонично. Поддерживайте баланс и терпение.
+shadow_meaning: Перепады настроения и нестабильность могут нарушить внутренний поток.
+  Будьте внимательны к себе.
+love: Вы открыты чувствам и интуитивно понимаете партнёра. Сохраняйте гармонию.
+career: Успех приходит через терпеливую работу и гибкость. Не торопитесь.
+money: Финансовая стабильность поддерживается умеренностью и рациональностью.
+health: Физическое здоровье требует внимания и заботы. Регулярная активность важна.
+spirituality: Медитация и время наедине с собой помогут сохранить духовный баланс.
+advice: Доверяйте своему внутреннему ритму и следуйте за ним.
+warning: Избегайте спешки и перегрузок, чтобы не потерять равновесие.
+symbols:
+- Течение реки
+- Лодка с парусом
+- Капли росы на листе
+visual_markers:
+  color: Голубой
+  element: Вода
+  number: '14'
+jung:
+  persona: Ваш внешний образ отражает вашу открытость миру.
+  shadow: Не подавляйте свои эмоции, они важны для внутреннего баланса.
+  anima_animus: Ищите понимание между вашим внутренним миром и окружающим.
+  self: Соединяя противоположности, вы становитесь цельной личностью.

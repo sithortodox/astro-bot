@@ -1,0 +1,62 @@
+id: w05
+name_ru: Пять Битв
+name_en: Five Battles
+arcana: minor
+suit: wands
+rank: five
+theme: Конфликт, Соревнование, Вызов
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 2
+  caregiver: 0
+  shadow: 2
+metrics:
+  activity: 8
+  stability: 4
+  intuition: 3
+  transformation: 7
+  spirituality: 2
+  abundance: 6
+  conflict: 9
+  control: 5
+  risk: 8
+  creativity: 7
+  leadership: 6
+  harmony: 3
+  communication: 4
+  mystery: 2
+  discipline: 5
+  passion: 8
+  wisdom: 3
+  resilience: 7
+  influence: 6
+  destiny: 4
+light_meaning: Преодоление препятствий через смелость и решимость.
+shadow_meaning: Неудачи из-за излишней агрессии и чрезмерного стремления к победе.
+love: Призывает найти баланс между страстью и уважением в отношениях.
+career: Советует проявить инициативу и не бояться конкуренции.
+money: Предупреждает о риске необдуманных финансовых решений.
+health: Подчеркивает важность физической активности и преодоления трудностей.
+spirituality: Напоминает о необходимости сохранять внутреннюю гармонию в борьбе с
+  внешними вызовами.
+advice: Будьте уверены в своих силах, но оставайтесь открытыми к диалогу.
+warning: Избегайте конфликтов, которые могут привести к разрушению.
+symbols:
+- Воин с мечом и щитом
+- Огненный поток
+- Пламя битвы
+visual_markers:
+  color: Ярко-красный
+  element: Огонь
+  number: '5'
+jung:
+  persona: Открытая часть личности, участвующая в битвах.
+  shadow: Скрытые агрессивные импульсы.
+  anima_animus: Необходимость баланса эмоций и рациональности.
+  self: Идентичность, объединяющая борьбу и покой.

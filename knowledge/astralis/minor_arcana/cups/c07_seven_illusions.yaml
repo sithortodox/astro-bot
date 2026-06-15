@@ -1,0 +1,64 @@
+id: c07
+name_ru: Семь Иллюзий
+name_en: Seven Illusions
+arcana: minor
+suit: cups
+rank: seven
+theme: Мечты, Фантазии, Выбор
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 5
+  stability: 3
+  intuition: 8
+  transformation: 4
+  spirituality: 6
+  abundance: 2
+  conflict: 1
+  control: 2
+  risk: 3
+  creativity: 9
+  leadership: 1
+  harmony: 7
+  communication: 5
+  mystery: 6
+  discipline: 2
+  passion: 8
+  wisdom: 4
+  resilience: 3
+  influence: 2
+  destiny: 5
+light_meaning: Погружение в мир мечтаний и фантазий, необходимость сделать важный
+  выбор.
+shadow_meaning: Убегание от реальности через иллюзии и фантазии, избегание ответственности
+  за выбор.
+love: Влюблённость в мечты о любви вместо реальной близости партнёра.
+career: Иллюзии о карьерном росте мешают объективно оценивать возможности.
+money: Потеря денег из-за иллюзий о лёгких доходах.
+health: Игнорирование реальных проблем со здоровьем ради фантазий о выздоровлении.
+spirituality: Поиск духовных ответов не там, где нужно, уход от практики к иллюзиям.
+advice: Проявите осознанность и внимательность к своим фантазиям, определитесь с реальными
+  целями.
+warning: Не позволяйте иллюзиям затмить реальность и помешать принятию важных решений.
+symbols:
+- Фонтан желаний
+- Разбитая чаша
+- Зеркало иллюзий
+visual_markers:
+  color: Бирюзовый
+  element: Вода
+  number: '7'
+jung:
+  persona: Идеализированный образ себя в мечтах.
+  shadow: Страхи и сомнения, скрывающиеся за фантазиями.
+  anima_animus: Партнёрские отношения, основанные на иллюзиях.
+  self: Реалистичное восприятие самого себя и своих возможностей.

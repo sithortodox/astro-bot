@@ -1,0 +1,61 @@
+id: 21
+name_ru: Бесконечность
+name_en: Infinity
+arcana: major
+suit: none
+rank: none
+theme: Бесконечный цикл, Возвращение, Новый виток
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 7
+  stability: 4
+  intuition: 8
+  transformation: 9
+  spirituality: 6
+  abundance: 5
+  conflict: 2
+  control: 3
+  risk: 1
+  creativity: 8
+  leadership: 2
+  harmony: 7
+  communication: 5
+  mystery: 9
+  discipline: 3
+  passion: 7
+  wisdom: 6
+  resilience: 8
+  influence: 4
+  destiny: 9
+light_meaning: Цикл завершен, начинается новый этап с сохранением достигнутых результатов.
+shadow_meaning: Ощущение застоя, повторение старых ошибок вместо движения вперёд.
+love: Завершение одного любовного цикла и подготовка к новому опыту.
+career: Успех в завершении проекта, пора задуматься о следующем шаге.
+money: Финансовая стабильность, но важно не останавливаться на достигнутом.
+health: Стабильное здоровье, однако требуется уделять внимание профилактике.
+spirituality: Духовный рост через осознание цикличности жизни.
+advice: Признайте завершение старого периода и подготовьтесь к новому вызову.
+warning: Не застревайте в прошлом, иначе рискуете пропустить важные изменения.
+symbols:
+- Круг с расходящимися лучами
+- Звезда с бесконечными гранями
+- Знак бесконечности ∞
+visual_markers:
+  color: Серебристый с золотым оттенком
+  element: Эфир
+  number: Нет числового значения
+jung:
+  persona: Открытая личность, готовая принять перемены.
+  shadow: Страх перед неизвестностью нового этапа.
+  anima_animus: Необходимость найти баланс между прошлым и будущим.
+  self: Осознание целостности жизненного пути.

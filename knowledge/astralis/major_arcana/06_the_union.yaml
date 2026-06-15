@@ -1,0 +1,61 @@
+id: '06'
+name_ru: Союз
+name_en: The Union
+arcana: major
+suit: none
+rank: none
+theme: Выбор, Гармония, Связь
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 1
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 5
+  stability: 7
+  intuition: 8
+  transformation: 4
+  spirituality: 6
+  abundance: 3
+  conflict: 2
+  control: 1
+  risk: 3
+  creativity: 6
+  leadership: 2
+  harmony: 9
+  communication: 8
+  mystery: 4
+  discipline: 5
+  passion: 7
+  wisdom: 6
+  resilience: 7
+  influence: 5
+  destiny: 8
+light_meaning: Гармония отношений и взаимопонимание.
+shadow_meaning: Неумение находить компромисс и застой в связях.
+love: Улучшение общения и укрепление привязанности в паре.
+career: Сотрудничество и совместная работа принесут успех.
+money: Финансовая стабильность через партнёрство и взаимовыгодные сделки.
+health: Поддержка и забота друг о друге укрепляют здоровье.
+spirituality: Поиск общего пути и совместного роста духовно обогащает.
+advice: Будьте открыты к новым союзам и сотрудничеству.
+warning: Избегайте навязывания своей воли партнёру.
+symbols:
+- Объединённые руки двух людей
+- Звезда как символ гармонии
+- Кристалл как символ единства
+visual_markers:
+  color: Голубой
+  element: Вода
+  number: '6'
+jung:
+  persona: Образ гармоничных взаимоотношений
+  shadow: Страх потерять индивидуальность в отношениях
+  anima_animus: Необходимость баланса между личной свободой и общностью
+  self: Идеал союза, где оба партнёра поддерживают и дополняют друг друга

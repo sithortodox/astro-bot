@@ -1,0 +1,61 @@
+id: c05
+name_ru: Пять Осколков
+name_en: Five Shards
+arcana: minor
+suit: cups
+rank: five
+theme: Потеря, Сожаление, Принятие
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 7
+  stability: 4
+  intuition: 9
+  transformation: 6
+  spirituality: 8
+  abundance: 3
+  conflict: 2
+  control: 5
+  risk: 1
+  creativity: 7
+  leadership: 2
+  harmony: 6
+  communication: 4
+  mystery: 8
+  discipline: 3
+  passion: 9
+  wisdom: 5
+  resilience: 7
+  influence: 4
+  destiny: 6
+light_meaning: Глубокая печаль заставляет пересмотреть жизненные ценности.
+shadow_meaning: Упрямство мешает принять неизбежную утрату, погружая в сожаления.
+love: Сложность в отношениях из-за внутреннего замешательства и утраты опоры.
+career: Необходимость переосмыслить карьерный путь вследствие потерь и изменений.
+money: Финансовые потери могут стать катализатором роста при принятии правильных решений.
+health: Эмоциональная боль может временно повлиять на физическое состояние.
+spirituality: Духовное прозрение приходит через принятие боли и потерь.
+advice: Признайте свою боль, чтобы освободиться от неё и двигаться дальше.
+warning: Не застревайте в сожалении о прошлом, это мешает будущему росту.
+symbols:
+- Разбитый кубок
+- Падающие слёзы
+- Светлая луна
+visual_markers:
+  color: Темно-синий
+  element: Вода
+  number: '5'
+jung:
+  persona: Открытая рана души
+  shadow: Уклонение от принятия реальности
+  anima_animus: Требует соединения с глубинными чувствами
+  self: Целостность, достигаемая принятием потерь

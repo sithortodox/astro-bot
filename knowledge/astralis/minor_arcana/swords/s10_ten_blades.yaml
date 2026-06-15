@@ -1,0 +1,61 @@
+id: s10
+name_ru: Десять Клинков
+name_en: Ten Blades
+arcana: minor
+suit: swords
+rank: ten
+theme: Конец, Боль, Возрождение из пепла
+archetypes:
+  hero: 0
+  sage: 0
+  creator: 0
+  ruler: 0
+  explorer: 0
+  lover: 0
+  magician: 0
+  rebel: 0
+  caregiver: 0
+  shadow: 0
+metrics:
+  activity: 8
+  stability: 2
+  intuition: 4
+  transformation: 7
+  spirituality: 3
+  abundance: 1
+  conflict: 9
+  control: 6
+  risk: 8
+  creativity: 2
+  leadership: 5
+  harmony: 1
+  communication: 7
+  mystery: 3
+  discipline: 4
+  passion: 8
+  wisdom: 2
+  resilience: 6
+  influence: 5
+  destiny: 7
+light_meaning: Завершение старого цикла открывает путь к новому началу.
+shadow_meaning: Углубление конфликта может привести к саморазрушению.
+love: Конфликт в отношениях требует глубокого понимания и компромисса.
+career: Критические моменты требуют решительных действий и ясности мыслей.
+money: Финансовые потери могут стать стимулом для переосмысления приоритетов.
+health: Физическое истощение указывает на необходимость отдыха и восстановления.
+spirituality: Время для глубоких размышлений о смысле жизни и целях.
+advice: Признайте боль как часть процесса трансформации.
+warning: Избегайте упорства в ошибочных убеждениях и действиях.
+symbols:
+- Десять клинков, пересекающих поле
+- Горящий костер среди руин
+- Ветер, уносящий пепел прошлого
+visual_markers:
+  color: Темно-красный с черными акцентами
+  element: Воздух (Мечи)
+  number: '10'
+jung:
+  persona: Открытая рана как напоминание о прошлых травмах
+  shadow: Глубокая боль и страх перед будущим
+  anima_animus: Необходимость соединения противоположностей для исцеления
+  self: Новый баланс внутри себя после переживания боли
